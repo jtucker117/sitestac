@@ -70,47 +70,19 @@ import Brick from "../components/Brick.astro";
     </div>
   </section>
 
-  <!-- PROCESS -->
-  <section class="block" id="process" style="background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(243,246,251,.9));border-block:1px solid var(--line)">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="kicker"><span class="idx">02</span> How it works</span>
-        <h2>From your Google profile to live — in days.</h2>
-        <p>You barely lift a finger. Send us your business, we build the preview, you approve, we launch.</p>
-      </div>
-      <div class="steps">
-        <div class="step reveal">
-          <span class="num"><Brick color="blue" studs={2}>1</Brick></span>
-          <h3>Send your business</h3>
-          <p>Drop us your Google Business Profile link. We pull your photos, reviews, hours and details — no forms to fill out.</p>
-        </div>
-        <div class="step reveal">
-          <span class="num"><Brick color="pink" studs={2}>2</Brick></span>
-          <h3>We build your preview</h3>
-          <p>We design a custom site around your brand and review it with you on a private preview link. Tweaks are free.</p>
-        </div>
-        <div class="step reveal">
-          <span class="num"><Brick color="green" studs={2}>3</Brick></span>
-          <h3>Approve &amp; go live</h3>
-          <p>Love it? We point it at your domain (we'll grab one for you if needed) and flip it live with secure hosting.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- PRICING -->
   <section class="block" id="pricing">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">03</span> Pricing</span>
+        <span class="kicker"><span class="idx">02</span> Pricing</span>
         <h2>Pick your stack.</h2>
-        <p>Simple, transparent pricing. Start small, stack up whenever you're ready. <em>(Prices are starting points — adjust to your market.)</em></p>
+        <p>Simple, transparent pricing. Every site is different, so these are starting points — your final price depends on the stack you build.</p>
       </div>
       <div class="tiers">
         <div class="tier t-blue reveal">
           <span class="cap"></span><span class="pill">Starter Brick</span>
           <h3>One-Page</h3>
-          <div class="price">$499<small> + $19/mo</small></div>
+          <div class="price">From $849<small> + $150/mo</small></div>
           <p class="desc">A beautiful single landing page that converts.</p>
           <ul>
             <li><span class="d">▪</span> Custom one-page design</li>
@@ -121,44 +93,46 @@ import Brick from "../components/Brick.astro";
           <a class="btn ghost" href="#start">Start here</a>
         </div>
         <div class="tier t-pink feat reveal">
-          <span class="cap"></span><span class="feat-tag">Popular</span><span class="pill">Stak</span>
-          <h3>Landing + Blog</h3>
-          <div class="price">$899<small> + $29/mo</small></div>
-          <p class="desc">Everything in One-Page, plus a blog you control.</p>
+          <span class="cap"></span><span class="feat-tag">Popular</span><span class="pill">Cornerstone</span>
+          <h3>3-Page Site</h3>
+          <div class="price">From $1,499<small> + $200/mo</small></div>
+          <p class="desc">Three pages plus a blog you control.</p>
           <ul>
             <li><span class="d">▪</span> Everything in One-Page</li>
+            <li><span class="d">▪</span> Up to 3 pages</li>
             <li><span class="d">▪</span> Blog with easy login</li>
-            <li><span class="d">▪</span> Up to 3 extra sections</li>
             <li><span class="d">▪</span> Basic SEO setup</li>
           </ul>
-          <a class="btn" href="#start">Build my stak</a>
+          <a class="btn" href="#start">Build my site</a>
         </div>
         <div class="tier t-orange reveal">
           <span class="cap"></span><span class="pill">Tower</span>
           <h3>Multi-Page</h3>
-          <div class="price">$1,499<small> + $49/mo</small></div>
-          <p class="desc">A full multi-page site with the works.</p>
+          <div class="price">From $1,899<small> + $200/mo</small></div>
+          <p class="desc">More than three pages, built to rank.</p>
           <ul>
-            <li><span class="d">▪</span> Everything in Stak</li>
-            <li><span class="d">▪</span> Unlimited pages</li>
-            <li><span class="d">▪</span> SEO + social setup</li>
+            <li><span class="d">▪</span> Everything in Cornerstone</li>
+            <li><span class="d">▪</span> More than 3 pages</li>
+            <li><span class="d">▪</span> Full SEO + blog program</li>
             <li><span class="d">▪</span> Priority edits</li>
           </ul>
           <a class="btn ghost" href="#start">Go big</a>
         </div>
-        <div class="tier t-green reveal">
-          <span class="cap"></span><span class="pill">Own It</span>
-          <h3>Buy &amp; Keep</h3>
-          <div class="price">From $2,500</div>
-          <p class="desc">One-time build. We hand you the keys — you own everything.</p>
-          <ul>
-            <li><span class="d">▪</span> Full custom build</li>
-            <li><span class="d">▪</span> Code + domain transfer</li>
-            <li><span class="d">▪</span> No monthly fee</li>
-            <li><span class="d">▪</span> Optional care plan</li>
-          </ul>
-          <a class="btn ghost" href="#start">Own it</a>
+      </div>
+
+      <!-- ADD-ONS -->
+      <div class="addons reveal">
+        <h3 class="addons-title">Stack on add-ons</h3>
+        <p class="addons-sub">Bolt any of these onto any plan whenever you're ready. <em>(Pricing quoted per project.)</em></p>
+        <div class="addon-grid">
+          <div class="addon"><span class="addon-dot">🚀</span><div><b>Social media setup</b><span>Profiles built and branded, wired back to your site.</span></div></div>
+          <div class="addon"><span class="addon-dot">📍</span><div><b>Google Business setup</b><span>Get found in local + maps search and start collecting reviews.</span></div></div>
+          <div class="addon"><span class="addon-dot">✍️</span><div><b>Monthly blog updates</b><span>Fresh SEO posts written and published for you each month.</span></div></div>
+          <div class="addon"><span class="addon-dot">🎨</span><div><b>Logo &amp; branding</b><span>A clean logo and color set so everything looks consistent.</span></div></div>
+          <div class="addon"><span class="addon-dot">⭐</span><div><b>Review generation</b><span>Automated review requests to grow your reputation.</span></div></div>
+          <div class="addon"><span class="addon-dot">📧</span><div><b>Email &amp; domain setup</b><span>Custom domain and professional email, configured for you.</span></div></div>
         </div>
+        <span class="addons-tag">More add-ons available — just ask.</span>
       </div>
     </div>
   </section>
@@ -167,7 +141,7 @@ import Brick from "../components/Brick.astro";
   <section class="block" id="work" style="background:linear-gradient(180deg,rgba(243,246,251,.9),rgba(255,255,255,.5));border-block:1px solid var(--line)">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">04</span> Work</span>
+        <span class="kicker"><span class="idx">03</span> Work</span>
         <h2>Built block by block.</h2>
         <p>A taste of the kinds of sites we build. <em>(Swap these for your real client previews.)</em></p>
       </div>
@@ -192,7 +166,7 @@ import Brick from "../components/Brick.astro";
   <section class="block">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">05</span> Why SiteStac</span>
+        <span class="kicker"><span class="idx">04</span> Why SiteStac</span>
         <h2>Beautiful is just the base brick.</h2>
       </div>
       <div class="trust">

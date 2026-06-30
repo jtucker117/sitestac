@@ -155,7 +155,17 @@ section.block{padding:84px 0}
 .step p{color:var(--ink-soft);font-size:1rem}
 
 /* ---------- PRICING ---------- */
-.tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+/* Add-ons */
+.addons{margin-top:48px;text-align:center}
+.addons-title{font-family:"Sora";font-size:1.6rem;font-weight:800;color:var(--ink);margin-bottom:.25em}
+.addons-sub{color:var(--ink-soft);max-width:560px;margin:0 auto 1.6em}
+.addon-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:left}
+.addon{display:flex;gap:.8em;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:16px;padding:1em 1.1em}
+.addon-dot{font-size:1.3rem;line-height:1.2;flex:0 0 auto}
+.addon b{display:block;color:var(--ink);font-weight:700;margin-bottom:.15em}
+.addon span{display:block;color:var(--ink-soft);font-size:.95rem;line-height:1.4}
+.addons-tag{display:inline-block;margin-top:1.4em;color:var(--blue);font-weight:600}
 .tier{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px 24px;display:flex;flex-direction:column;box-shadow:0 26px 50px -34px rgba(15,26,51,.55);position:relative;overflow:hidden}
 .tier .cap{position:absolute;top:0;left:0;right:0;height:8px}
 .tier.t-blue .cap{background:var(--blue)} .tier.t-pink .cap{background:var(--pink)}
@@ -240,12 +250,13 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line)}
   .stak-wrap{grid-template-columns:1fr;gap:30px}
   .steps{grid-template-columns:1fr}
   .tiers{grid-template-columns:1fr 1fr}
+  .addon-grid{grid-template-columns:1fr 1fr}
   .work-grid{grid-template-columns:1fr}
   .trust{grid-template-columns:1fr}
   .post-list{grid-template-columns:1fr}
   .nav nav .link{display:none}
 }
-@media(max-width:560px){ .tiers{grid-template-columns:1fr} .nav nav{gap:.8rem} }
+@media(max-width:560px){ .tiers{grid-template-columns:1fr} .addon-grid{grid-template-columns:1fr} .nav nav{gap:.8rem} }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
   .stack .brick{opacity:1!important}
