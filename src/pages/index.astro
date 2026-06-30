@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Brick from "../components/Brick.astro";
+import Icon from "../components/Icon.astro";
 ---
 <Base>
   <!-- HERO -->
@@ -56,14 +57,14 @@ import Brick from "../components/Brick.astro";
           <Brick color="blue" base class="stak-base" data-title="Landing page" data-desc="The foundation every site starts on — a fast, beautiful one-page site with your story, services, and one clear call to action that turns visitors into customers.">Landing page</Brick>
         </div>
         <div class="stak-text reveal" id="stakText">
-          <span class="stak-hint">👆 Tap any block to see what it does</span>
+          <span class="stak-hint"><Icon name="pointer" size={15} /> Tap any block to see what it does</span>
           <h3>One foundation. Endless add-ons.</h3>
           <p>Your landing page is the base brick — fast, modern, and built to convert visitors into customers. Everything else stacks on top, only when you want it.</p>
           <ul>
-            <li><span class="chk">✓</span><span><b>You only pay for blocks you use.</b> No bundles you'll never touch.</span></li>
-            <li><span class="chk">✓</span><span><b>Add a blog with a simple login.</b> Post updates yourself, no code.</span></li>
-            <li><span class="chk">✓</span><span><b>Secure, lightning-fast hosting.</b> SSL and DDoS protection included.</span></li>
-            <li><span class="chk">✓</span><span><b>Want to own it outright?</b> We hand you the keys, one-time.</span></li>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span><b>You only pay for blocks you use.</b> No bundles you'll never touch.</span></li>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span><b>Add a blog with a simple login.</b> Post updates yourself, no code.</span></li>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span><b>Secure, lightning-fast hosting.</b> SSL and DDoS protection included.</span></li>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span><b>Want to own it outright?</b> We hand you the keys, one-time.</span></li>
           </ul>
         </div>
       </div>
@@ -125,12 +126,12 @@ import Brick from "../components/Brick.astro";
         <h3 class="addons-title">Stack on add-ons</h3>
         <p class="addons-sub">Bolt any of these onto any plan whenever you're ready. <em>(Pricing quoted per project.)</em></p>
         <div class="addon-grid">
-          <div class="addon b-pink"><span class="studs" aria-hidden="true"><i></i><i></i><i></i></span><span class="addon-dot">🚀</span><div class="addon-body"><b>Social media setup</b><span>Profiles built and branded, wired back to your site.</span></div></div>
-          <div class="addon b-purple"><span class="studs" aria-hidden="true"><i></i><i></i><i></i></span><span class="addon-dot">📍</span><div class="addon-body"><b>Google Business setup</b><span>Get found in local + maps search and start collecting reviews.</span></div></div>
-          <div class="addon b-orange"><span class="studs" aria-hidden="true"><i></i><i></i><i></i></span><span class="addon-dot">✍️</span><div class="addon-body"><b>Monthly blog updates</b><span>Fresh SEO posts written and published for you each month.</span></div></div>
-          <div class="addon b-green"><span class="studs" aria-hidden="true"><i></i><i></i><i></i></span><span class="addon-dot">🎨</span><div class="addon-body"><b>Logo &amp; branding</b><span>A clean logo and color set so everything looks consistent.</span></div></div>
-          <div class="addon b-teal"><span class="studs" aria-hidden="true"><i></i><i></i><i></i></span><span class="addon-dot">⭐</span><div class="addon-body"><b>Review generation</b><span>Automated review requests to grow your reputation.</span></div></div>
-          <div class="addon b-blue"><span class="studs" aria-hidden="true"><i></i><i></i><i></i></span><span class="addon-dot">📧</span><div class="addon-body"><b>Email &amp; domain setup</b><span>Custom domain and professional email, configured for you.</span></div></div>
+          <div class="addon b-pink"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="addon-dot"><Icon name="share" size={22} /></span><div class="addon-body"><b>Social media setup</b><span>Profiles built and branded, wired back to your site.</span></div></div>
+          <div class="addon b-purple"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="addon-dot"><Icon name="mappin" size={22} /></span><div class="addon-body"><b>Google Business setup</b><span>Get found in local + maps search and start collecting reviews.</span></div></div>
+          <div class="addon b-orange"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="addon-dot"><Icon name="pencil" size={22} /></span><div class="addon-body"><b>Monthly blog updates</b><span>Fresh SEO posts written and published for you each month.</span></div></div>
+          <div class="addon b-green"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="addon-dot"><Icon name="palette" size={22} /></span><div class="addon-body"><b>Logo &amp; branding</b><span>A clean logo and color set so everything looks consistent.</span></div></div>
+          <div class="addon b-teal"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="addon-dot"><Icon name="star" size={22} /></span><div class="addon-body"><b>Review generation</b><span>Automated review requests to grow your reputation.</span></div></div>
+          <div class="addon b-blue"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="addon-dot"><Icon name="mail" size={22} /></span><div class="addon-body"><b>Email &amp; domain setup</b><span>Custom domain and professional email, configured for you.</span></div></div>
         </div>
         <span class="addons-tag">More add-ons available — just ask.</span>
       </div>
@@ -171,17 +172,17 @@ import Brick from "../components/Brick.astro";
       </div>
       <div class="trust">
         <div class="t reveal">
-          <div class="ic" style="background:linear-gradient(180deg,var(--blue-l),var(--blue-d))">🔒</div>
+          <div class="ic" style="background:linear-gradient(180deg,var(--blue-l),var(--blue-d))"><Icon name="lock" size={26} /></div>
           <h3>Secure by default</h3>
           <p>Every site ships with SSL, DDoS protection and a tiny attack surface — far safer than a typical WordPress install.</p>
         </div>
         <div class="t reveal">
-          <div class="ic" style="background:linear-gradient(180deg,#4fc96e,var(--green-d))">⚡</div>
+          <div class="ic" style="background:linear-gradient(180deg,#4fc96e,var(--green-d))"><Icon name="zap" size={26} /></div>
           <h3>Fast &amp; effortless</h3>
           <p>Pages load in a blink and you never touch the tech. Want changes? Send a message — we handle it.</p>
         </div>
         <div class="t reveal">
-          <div class="ic" style="background:linear-gradient(180deg,#ffa642,var(--orange-d))">🔑</div>
+          <div class="ic" style="background:linear-gradient(180deg,#ffa642,var(--orange-d))"><Icon name="key" size={26} /></div>
           <h3>You can own it</h3>
           <p>Stay month-to-month or buy your site outright. No lock-in, no hostage situations. It's your business.</p>
         </div>

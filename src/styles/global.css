@@ -169,7 +169,8 @@ section.block{padding:84px 0}
 .addon:hover{transform:translateY(-5px) rotate(-.6deg)}
 .addon .studs{position:absolute;top:-.34em;left:9%;right:9%;display:flex;justify-content:space-between;pointer-events:none}
 .addon .studs i{display:block;width:1.6em;height:.58em;border-radius:.3em .3em .1em .1em;background:linear-gradient(180deg,var(--bl),var(--bc));box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(0,0,0,.18)}
-.addon-dot{font-size:1.35rem;line-height:1.2;flex:0 0 auto}
+.addon-dot{flex:0 0 auto;display:flex;align-items:center;color:#fff;margin-top:1px}
+.addon-dot svg{display:block}
 .addon-body b{display:block;color:#fff;font-weight:800;margin-bottom:.2em}
 .addon-body span{display:block;color:rgba(255,255,255,.92);font-size:.95rem;line-height:1.45}
 .addon.b-pink{--bc:var(--pink);--bl:#f06bac;--bd:var(--pink-d)}
@@ -218,6 +219,7 @@ section.block{padding:84px 0}
 .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .trust .t{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:0 22px 44px -32px rgba(15,26,51,.5)}
 .trust .t .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff;font-size:1.4rem;margin-bottom:16px;box-shadow:inset 0 -4px 6px rgba(0,0,0,.18)}
+.trust .t .ic svg{display:block}
 .trust h3{font-size:1.25rem;font-weight:700;margin-bottom:.3em}
 .trust p{color:var(--ink-soft)}
 
