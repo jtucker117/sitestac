@@ -1,0 +1,27 @@
+# Decap CMS config — the blog "back end" for clients.
+# After deploying, connect this repo via GitHub so the client can log in at /admin
+# and write posts. Two common auth options:
+#   1) Cloudflare Pages + GitHub OAuth (set up an OAuth app), or
+#   2) Switch backend to "git-gateway" if you front it with Netlify Identity.
+# Until auth is wired up, this file is harmless and the public site works fine.
+
+backend:
+  name: github
+  repo: your-github-username/staksites   # <-- change to your repo
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
+      - { label: "Body", name: "body", widget: "markdown" }

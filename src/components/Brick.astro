@@ -1,0 +1,19 @@
+---
+// Reusable SiteStac brick. Usage: <Brick color="pink">SEO</Brick>
+// studs: 4 for standard/wide bricks, 2 for small/square bricks. Extra attrs (data-*) are passed through.
+interface Props {
+  color?: "blue" | "pink" | "purple" | "teal" | "orange" | "yellow" | "green" | "red";
+  base?: boolean;
+  studs?: number;
+  class?: string;
+  [key: string]: any;
+}
+const { color = "blue", base = false, studs = 4, class: cls = "", ...rest } = Astro.props;
+const count = Math.max(1, studs);
+---
+<span class={`brick b-${color} ${base ? "base" : ""} ${cls}`.trim()} {...rest}>
+  <span class="studs" aria-hidden="true">
+    {Array.from({ length: count }).map(() => <i></i>)}
+  </span>
+  <slot />
+</span>

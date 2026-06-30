@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+import Brick from "../components/Brick.astro";
+---
+<Base title="Page not found — SiteStac" description="That block isn't here.">
+  <section class="block" style="text-align:center">
+    <div class="wrap">
+      <div style="display:flex;justify-content:center;margin-bottom:24px">
+        <Brick color="red" base>404</Brick>
+      </div>
+      <h2 style="font-family:'Sora';font-weight:800;font-size:clamp(2rem,5vw,3rem)">That block isn't here.</h2>
+      <p style="color:var(--ink-soft);margin:.6em 0 1.6em">The page you're after may have moved or never existed.</p>
+      <a class="btn" href="/">Back to home</a>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,30 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+<Base title="Blog — SiteStac" description="Tips on websites, local marketing and getting found online — from SiteStac.">
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head reveal in">
+        <span class="kicker"><span class="idx">✦</span> The Blog</span>
+        <h2>Build smarter, get found.</h2>
+        <p>Short, practical notes on websites and getting more local customers.</p>
+      </div>
+      <div class="post-list">
+        {posts.map((post) => (
+          <a class="post-card reveal in" href={`/blog/${post.id}/`}>
+            <time>{fmt(post.data.date)}</time>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

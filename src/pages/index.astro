@@ -1,0 +1,276 @@
+---
+import Base from "../layouts/Base.astro";
+import Brick from "../components/Brick.astro";
+---
+<Base>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy reveal in">
+        <span class="eyebrow">● Built for local businesses</span>
+        <h1>Your website,<br />built <span class="hl">block by block.</span></h1>
+        <p class="lede">We design a beautiful one-page site for your business — then you stack on exactly what you need. No bloat. No long contracts.</p>
+        <div class="hero-cta">
+          <a class="btn" href="#start" data-magnetic>Get a free preview</a>
+          <a class="btn ghost" href="#stak">See the blocks</a>
+        </div>
+        <div class="hero-note"><span class="dot"></span> See your site before you pay a cent.</div>
+      </div>
+      <div class="stage" aria-hidden="true">
+        <div class="stack">
+          <Brick color="pink">Content</Brick>
+          <Brick color="orange">Hosting &amp; care</Brick>
+          <Brick color="green">SEO</Brick>
+          <Brick color="purple">Blog</Brick>
+          <Brick color="teal">Landing page</Brick>
+          <Brick color="blue" base>SiteStac</Brick>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span>Landing pages</span><span>Blogs</span><span>SEO</span><span>Hosting</span><span>Lead generation</span><span>Social</span><span>Content</span><span>You own it</span>
+      <span>Landing pages</span><span>Blogs</span><span>SEO</span><span>Hosting</span><span>Lead generation</span><span>Social</span><span>Content</span><span>You own it</span>
+    </div>
+  </div>
+
+  <!-- THE STAK -->
+  <section class="block" id="stak">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">01</span> The Stak</span>
+        <h2>Start with one block. Add more anytime.</h2>
+        <p>Every site starts with a stunning landing page. Need a blog next month? Want SEO or social? Snap on another block — your site grows with you.</p>
+      </div>
+      <div class="stak-wrap">
+        <div class="stak-col reveal" id="stakBricks">
+          <Brick color="pink" data-title="Content creation" data-desc="We craft the words and visuals that sell — sharp headlines, clear service descriptions, and polished photos so your business looks its best everywhere.">Content creation</Brick>
+          <Brick color="purple" data-title="Blog & updates" data-desc="A simple blog with an easy login. Post news, offers, and articles yourself — no code — to keep customers coming back and give Google fresh reasons to rank you.">Blog &amp; updates</Brick>
+          <Brick color="orange" data-title="Hosting & maintenance" data-desc="Secure, lightning-fast hosting with SSL and DDoS protection built in. We handle updates, backups, and uptime so your site just works — you never think about it.">Hosting &amp; maintenance</Brick>
+          <Brick color="green" data-title="SEO & local search" data-desc="Get found by nearby customers. We optimize your pages and Google Business Profile so you show up when people search for what you offer.">SEO &amp; local search</Brick>
+          <Brick color="teal" data-title="Lead generation" data-desc="Turn visitors into customers with click-to-call buttons, smart contact forms, and instant booking wired straight to your inbox or phone.">Lead generation</Brick>
+          <Brick color="red" data-title="Social media" data-desc="Keep your social presence consistent and on-brand, connected right into your site so every post points back to you.">Social media</Brick>
+          <Brick color="blue" base class="stak-base" data-title="Landing page" data-desc="The foundation every site starts on — a fast, beautiful one-page site with your story, services, and one clear call to action that turns visitors into customers.">Landing page</Brick>
+        </div>
+        <div class="stak-text reveal" id="stakText">
+          <span class="stak-hint">👆 Tap any block to see what it does</span>
+          <h3>One foundation. Endless add-ons.</h3>
+          <p>Your landing page is the base brick — fast, modern, and built to convert visitors into customers. Everything else stacks on top, only when you want it.</p>
+          <ul>
+            <li><span class="chk">✓</span><span><b>You only pay for blocks you use.</b> No bundles you'll never touch.</span></li>
+            <li><span class="chk">✓</span><span><b>Add a blog with a simple login.</b> Post updates yourself, no code.</span></li>
+            <li><span class="chk">✓</span><span><b>Secure, lightning-fast hosting.</b> SSL and DDoS protection included.</span></li>
+            <li><span class="chk">✓</span><span><b>Want to own it outright?</b> We hand you the keys, one-time.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="block" id="process" style="background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(243,246,251,.9));border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">02</span> How it works</span>
+        <h2>From your Google profile to live — in days.</h2>
+        <p>You barely lift a finger. Send us your business, we build the preview, you approve, we launch.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <span class="num"><Brick color="blue" studs={2}>1</Brick></span>
+          <h3>Send your business</h3>
+          <p>Drop us your Google Business Profile link. We pull your photos, reviews, hours and details — no forms to fill out.</p>
+        </div>
+        <div class="step reveal">
+          <span class="num"><Brick color="pink" studs={2}>2</Brick></span>
+          <h3>We build your preview</h3>
+          <p>We design a custom site around your brand and review it with you on a private preview link. Tweaks are free.</p>
+        </div>
+        <div class="step reveal">
+          <span class="num"><Brick color="green" studs={2}>3</Brick></span>
+          <h3>Approve &amp; go live</h3>
+          <p>Love it? We point it at your domain (we'll grab one for you if needed) and flip it live with secure hosting.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="block" id="pricing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">03</span> Pricing</span>
+        <h2>Pick your stack.</h2>
+        <p>Simple, transparent pricing. Start small, stack up whenever you're ready. <em>(Prices are starting points — adjust to your market.)</em></p>
+      </div>
+      <div class="tiers">
+        <div class="tier t-blue reveal">
+          <span class="cap"></span><span class="pill">Starter Brick</span>
+          <h3>One-Page</h3>
+          <div class="price">$499<small> + $19/mo</small></div>
+          <p class="desc">A beautiful single landing page that converts.</p>
+          <ul>
+            <li><span class="d">▪</span> Custom one-page design</li>
+            <li><span class="d">▪</span> Mobile-perfect &amp; fast</li>
+            <li><span class="d">▪</span> Secure hosting + SSL</li>
+            <li><span class="d">▪</span> Contact / booking button</li>
+          </ul>
+          <a class="btn ghost" href="#start">Start here</a>
+        </div>
+        <div class="tier t-pink feat reveal">
+          <span class="cap"></span><span class="feat-tag">Popular</span><span class="pill">Stak</span>
+          <h3>Landing + Blog</h3>
+          <div class="price">$899<small> + $29/mo</small></div>
+          <p class="desc">Everything in One-Page, plus a blog you control.</p>
+          <ul>
+            <li><span class="d">▪</span> Everything in One-Page</li>
+            <li><span class="d">▪</span> Blog with easy login</li>
+            <li><span class="d">▪</span> Up to 3 extra sections</li>
+            <li><span class="d">▪</span> Basic SEO setup</li>
+          </ul>
+          <a class="btn" href="#start">Build my stak</a>
+        </div>
+        <div class="tier t-orange reveal">
+          <span class="cap"></span><span class="pill">Tower</span>
+          <h3>Multi-Page</h3>
+          <div class="price">$1,499<small> + $49/mo</small></div>
+          <p class="desc">A full multi-page site with the works.</p>
+          <ul>
+            <li><span class="d">▪</span> Everything in Stak</li>
+            <li><span class="d">▪</span> Unlimited pages</li>
+            <li><span class="d">▪</span> SEO + social setup</li>
+            <li><span class="d">▪</span> Priority edits</li>
+          </ul>
+          <a class="btn ghost" href="#start">Go big</a>
+        </div>
+        <div class="tier t-green reveal">
+          <span class="cap"></span><span class="pill">Own It</span>
+          <h3>Buy &amp; Keep</h3>
+          <div class="price">From $2,500</div>
+          <p class="desc">One-time build. We hand you the keys — you own everything.</p>
+          <ul>
+            <li><span class="d">▪</span> Full custom build</li>
+            <li><span class="d">▪</span> Code + domain transfer</li>
+            <li><span class="d">▪</span> No monthly fee</li>
+            <li><span class="d">▪</span> Optional care plan</li>
+          </ul>
+          <a class="btn ghost" href="#start">Own it</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="block" id="work" style="background:linear-gradient(180deg,rgba(243,246,251,.9),rgba(255,255,255,.5));border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">04</span> Work</span>
+        <h2>Built block by block.</h2>
+        <p>A taste of the kinds of sites we build. <em>(Swap these for your real client previews.)</em></p>
+      </div>
+      <div class="work-grid">
+        <a class="card reveal" href="#start">
+          <div class="thumb" style="background:linear-gradient(140deg,var(--teal),var(--teal-d))"><span class="meta">Landing page</span>Greenline Lawn Co.</div>
+          <div class="body"><h3>Greenline Lawn Co.</h3><p>One-page site with instant quote button.</p></div>
+        </a>
+        <a class="card reveal" href="#start">
+          <div class="thumb" style="background:linear-gradient(140deg,var(--pink),var(--pink-d))"><span class="meta">Landing + Blog</span>Maple &amp; Thread</div>
+          <div class="body"><h3>Maple &amp; Thread</h3><p>Boutique site with a self-serve blog.</p></div>
+        </a>
+        <a class="card reveal" href="#start">
+          <div class="thumb" style="background:linear-gradient(140deg,var(--orange),var(--orange-d))"><span class="meta">Multi-page</span>Apex HVAC</div>
+          <div class="body"><h3>Apex HVAC</h3><p>Service pages, reviews and lead capture.</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST -->
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">05</span> Why SiteStac</span>
+        <h2>Beautiful is just the base brick.</h2>
+      </div>
+      <div class="trust">
+        <div class="t reveal">
+          <div class="ic" style="background:linear-gradient(180deg,var(--blue-l),var(--blue-d))">🔒</div>
+          <h3>Secure by default</h3>
+          <p>Every site ships with SSL, DDoS protection and a tiny attack surface — far safer than a typical WordPress install.</p>
+        </div>
+        <div class="t reveal">
+          <div class="ic" style="background:linear-gradient(180deg,#4fc96e,var(--green-d))">⚡</div>
+          <h3>Fast &amp; effortless</h3>
+          <p>Pages load in a blink and you never touch the tech. Want changes? Send a message — we handle it.</p>
+        </div>
+        <div class="t reveal">
+          <div class="ic" style="background:linear-gradient(180deg,#ffa642,var(--orange-d))">🔑</div>
+          <h3>You can own it</h3>
+          <p>Stay month-to-month or buy your site outright. No lock-in, no hostage situations. It's your business.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="start">
+    <div class="wrap">
+      <div class="box">
+        <Brick color="pink" class="floatbrick" studs={2}>SEO</Brick>
+        <Brick color="orange" class="floatbrick" studs={2}>Blog</Brick>
+        <h2>Ready to stack?</h2>
+        <p>Send us your Google Business Profile and get a free preview of your new site — no commitment, no credit card.</p>
+        <a class="btn" href="mailto:hello@sitestac.com?subject=Free%20site%20preview&body=Here's%20my%20Google%20Business%20Profile%20link%3A%20">Get my free preview</a>
+        <div style="margin-top:18px;opacity:.85;font-size:.95rem">or email <b>hello@sitestac.com</b></div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* position the two floating bricks inside the CTA box */
+  .cta .box :global(.floatbrick:nth-of-type(1)){top:24px;left:40px;transform:rotate(-12deg)}
+  .cta .box :global(.floatbrick:nth-of-type(2)){bottom:26px;right:50px;transform:rotate(10deg)}
+  .stak-col :global(.stak-base){min-width:300px;font-size:1.35rem}
+</style>
+
+<script>
+  // Interactive "The Stak": click a block to read about it
+  const panel = document.getElementById("stakText");
+  const bricks = Array.from(document.querySelectorAll<HTMLElement>("#stakBricks .brick"));
+  if (panel && bricks.length) {
+    const COLORS: Record<string, string> = {
+      "b-pink": "--pink", "b-purple": "--purple", "b-orange": "--orange",
+      "b-green": "--green", "b-teal": "--teal", "b-red": "--red", "b-blue": "--blue",
+    };
+    const defaultHTML = panel.innerHTML;
+    const reset = () => {
+      bricks.forEach((b) => b.classList.remove("active"));
+      panel.innerHTML = defaultHTML;
+    };
+    const show = (brick: HTMLElement) => {
+      bricks.forEach((b) => b.classList.remove("active"));
+      brick.classList.add("active");
+      const title = brick.getAttribute("data-title") || "";
+      const desc = brick.getAttribute("data-desc") || "";
+      let token = "--ink";
+      for (const c in COLORS) { if (brick.classList.contains(c)) { token = COLORS[c]; break; } }
+      panel.innerHTML =
+        '<div class="stak-tag" style="--c:var(' + token + ')">' + title + "</div>" +
+        '<p class="stak-desc">' + desc + "</p>" +
+        '<button class="stak-reset" type="button">← Back to overview</button>';
+      panel.querySelector(".stak-reset")?.addEventListener("click", reset);
+    };
+    bricks.forEach((b) => {
+      b.setAttribute("role", "button");
+      b.setAttribute("tabindex", "0");
+      b.addEventListener("click", () => show(b));
+      b.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(b); }
+      });
+    });
+  }
+</script>

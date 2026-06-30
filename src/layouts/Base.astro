@@ -1,0 +1,77 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = "SiteStac — Websites built block by block",
+  description = "SiteStac builds beautiful one-page websites for local businesses, then lets you stack on the features you need — blog, SEO, hosting and more. Free preview before you pay.",
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:image" content="/logo.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "SiteStac",
+      "description": description,
+      "url": Astro.site?.href,
+      "email": "hello@sitestac.com",
+      "areaServed": "United States",
+      "serviceType": "Website design and hosting for local businesses"
+    })} />
+  </head>
+  <body>
+    <Nav />
+    <main id="top">
+      <slot />
+    </main>
+    <Footer />
+
+    <script is:inline>
+      // Scroll reveal
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.14 });
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      // Magnetic CTA
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.querySelectorAll("[data-magnetic]").forEach((btn) => {
+          btn.addEventListener("mousemove", (e) => {
+            const r = btn.getBoundingClientRect();
+            const x = e.clientX - r.left - r.width / 2;
+            const y = e.clientY - r.top - r.height / 2;
+            btn.style.transform = `translate(${x * 0.25}px,${y * 0.35}px)`;
+          });
+          btn.addEventListener("mouseleave", () => (btn.style.transform = ""));
+        });
+      }
+    </script>
+  </body>
+</html>
