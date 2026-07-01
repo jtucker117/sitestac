@@ -71,11 +71,48 @@ import Icon from "../components/Icon.astro";
     </div>
   </section>
 
+  <!-- BUILD YOUR STACK -->
+  <section class="block" id="build" style="background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(243,246,251,.9));border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">02</span> Build your stack</span>
+        <h2>Build your stack.</h2>
+        <p>Your landing page is the base brick. Snap on the blocks you want, then send us your stack for a quote — no obligation.</p>
+      </div>
+      <div class="builder">
+        <div class="builder-palette reveal">
+          <h3 class="builder-h">Tap to add blocks</h3>
+          <div class="palette-grid">
+            <button class="palette-item brick b-pink" data-id="content" data-label="Content creation"><span class="studs" aria-hidden="true"><i></i><i></i></span>Content creation</button>
+            <button class="palette-item brick b-purple" data-id="blog" data-label="Blog & updates"><span class="studs" aria-hidden="true"><i></i><i></i></span>Blog &amp; updates</button>
+            <button class="palette-item brick b-orange" data-id="hosting" data-label="Hosting & maintenance"><span class="studs" aria-hidden="true"><i></i><i></i></span>Hosting &amp; maintenance</button>
+            <button class="palette-item brick b-green" data-id="seo" data-label="SEO & local search"><span class="studs" aria-hidden="true"><i></i><i></i></span>SEO &amp; local search</button>
+            <button class="palette-item brick b-teal" data-id="leads" data-label="Lead generation"><span class="studs" aria-hidden="true"><i></i><i></i></span>Lead generation</button>
+            <button class="palette-item brick b-red" data-id="social" data-label="Social media"><span class="studs" aria-hidden="true"><i></i><i></i></span>Social media</button>
+          </div>
+          <p class="builder-hint">Tap a block again to remove it from your stack.</p>
+        </div>
+
+        <div class="builder-stack reveal">
+          <h3 class="builder-h">Your stack</h3>
+          <div class="stack-zone" id="stackZone">
+            <span class="brick b-blue stack-brick stack-base" data-id="base"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Landing page (base)</span>
+          </div>
+          <div class="stack-summary">
+            <span class="stack-count" id="stackCount">1 block</span>
+            <a class="btn" id="requestQuote" href="#">Send my stack to sales</a>
+          </div>
+          <p class="builder-hint">We'll review your stack and get back with a tailored quote.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- PRICING -->
   <section class="block" id="pricing">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">02</span> Pricing</span>
+        <span class="kicker"><span class="idx">03</span> Pricing</span>
         <h2>Pick your stack.</h2>
         <p>Simple, transparent pricing. Every site is different, so these are starting points — your final price depends on the stack you build.</p>
       </div>
@@ -142,7 +179,7 @@ import Icon from "../components/Icon.astro";
   <section class="block" id="work" style="background:linear-gradient(180deg,rgba(243,246,251,.9),rgba(255,255,255,.5));border-block:1px solid var(--line)">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">03</span> Work</span>
+        <span class="kicker"><span class="idx">04</span> Work</span>
         <h2>Built block by block.</h2>
         <p>A taste of the kinds of sites we build. <em>(Swap these for your real client previews.)</em></p>
       </div>
@@ -167,7 +204,7 @@ import Icon from "../components/Icon.astro";
   <section class="block">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">04</span> Why SiteStac</span>
+        <span class="kicker"><span class="idx">05</span> Why SiteStac</span>
         <h2>Beautiful is just the base brick.</h2>
       </div>
       <div class="trust">
@@ -247,5 +284,50 @@ import Icon from "../components/Icon.astro";
         if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(b); }
       });
     });
+  }
+
+  // ── Build your stack (mock cart) ─────────────────────────────────
+  const stackZone = document.getElementById("stackZone");
+  const stackCount = document.getElementById("stackCount");
+  const requestBtn = document.getElementById("requestQuote") as HTMLAnchorElement | null;
+  const paletteItems = Array.from(document.querySelectorAll<HTMLButtonElement>(".palette-item"));
+  if (stackZone && stackCount && requestBtn && paletteItems.length) {
+    const SALES_EMAIL = "hello@sitestac.com";
+    const colorOf = (el: Element) => (Array.from(el.classList).find((c) => c.startsWith("b-")) || "b-blue");
+
+    function updateSummary() {
+      const chosen = paletteItems.filter((p) => p.classList.contains("is-added"));
+      const total = chosen.length + 1; // + base landing page
+      stackCount!.textContent = total + (total === 1 ? " block" : " blocks");
+      const lines = ["Landing page (base)", ...chosen.map((p) => p.dataset.label || "")];
+      const subject = "SiteStac quote — my stack (" + total + " blocks)";
+      const body =
+        "Hi SiteStac team,\n\nI built this stack and would like a quote / to speak with sales:\n\n" +
+        lines.map((l) => "  • " + l).join("\n") +
+        "\n\nName:\nBusiness:\nGoogle Business Profile link:\n\nThanks!";
+      requestBtn!.href = "mailto:" + SALES_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    }
+
+    function addBrick(item: HTMLButtonElement) {
+      const el = document.createElement("span");
+      el.className = "brick " + colorOf(item) + " stack-brick dropin";
+      el.dataset.id = item.dataset.id || "";
+      el.innerHTML = '<span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>' + (item.dataset.label || "");
+      stackZone!.insertBefore(el, stackZone!.firstChild); // newest lands on top; base stays at bottom
+      el.addEventListener("animationend", () => el.classList.remove("dropin"), { once: true });
+    }
+    function removeBrick(id: string) {
+      const el = stackZone!.querySelector('.stack-brick[data-id="' + id + '"]:not(.stack-base)');
+      if (el) el.remove();
+    }
+
+    paletteItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const added = item.classList.toggle("is-added");
+        if (added) addBrick(item); else removeBrick(item.dataset.id || "");
+        updateSummary();
+      });
+    });
+    updateSummary();
   }
 </script>

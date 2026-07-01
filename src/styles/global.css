@@ -183,6 +183,23 @@ section.block{padding:84px 0}
 .addon.b-teal{--bc:var(--teal);--bl:#3ec5c5;--bd:var(--teal-d)}
 .addon.b-blue{--bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d)}
 .addons-tag{display:inline-block;margin-top:1.4em;color:var(--blue);font-weight:600}
+
+/* ---------- BUILD YOUR STACK (mock cart) ---------- */
+.builder{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start;margin-top:8px}
+.builder-h{font-family:"Sora";font-size:1.05rem;font-weight:800;color:var(--ink);margin-bottom:14px;text-transform:uppercase;letter-spacing:.04em}
+.builder-hint{color:var(--ink-soft);font-size:.9rem;margin-top:12px}
+.palette-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.palette-item{width:100%;justify-content:center;text-align:center;font-size:1rem;cursor:pointer;border:0;transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease}
+.palette-item:hover{transform:translateY(-3px)}
+.palette-item.is-added{opacity:.5;box-shadow:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -6px 10px rgba(0,0,0,.16),0 0 0 3px #fff,0 0 0 6px var(--blue)}
+.builder-stack{background:var(--panel-2,#fff);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 22px 44px -32px rgba(15,26,51,.5)}
+.stack-zone{display:flex;flex-direction:column;justify-content:flex-end;gap:5px;min-height:230px;padding-bottom:2px}
+.stack-brick{width:100%;justify-content:center;text-align:center;font-size:1.02rem}
+.stack-brick.dropin{animation:drop .55s cubic-bezier(.2,1.5,.4,1) both}
+.stack-base{opacity:1}
+.stack-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap}
+.stack-count{font-weight:700;color:var(--ink)}
+.stack-summary .btn{white-space:nowrap}
 .tier{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px 24px;display:flex;flex-direction:column;box-shadow:0 26px 50px -34px rgba(15,26,51,.55);position:relative;overflow:hidden}
 .tier .cap{position:absolute;top:0;left:0;right:0;height:8px}
 .tier.t-blue .cap{background:var(--blue)} .tier.t-pink .cap{background:var(--pink)}
@@ -270,6 +287,7 @@ footer{padding:70px 0 40px;border-top:1px solid var(--line)}
   .steps{grid-template-columns:1fr}
   .tiers{grid-template-columns:1fr 1fr}
   .addon-grid{grid-template-columns:1fr 1fr}
+  .builder{grid-template-columns:1fr;gap:26px}
   .work-grid{grid-template-columns:1fr}
   .trust{grid-template-columns:1fr}
   .post-list{grid-template-columns:1fr}
