@@ -71,48 +71,11 @@ import Icon from "../components/Icon.astro";
     </div>
   </section>
 
-  <!-- BUILD YOUR STACK -->
-  <section class="block" id="build" style="background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(243,246,251,.9));border-block:1px solid var(--line)">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="kicker"><span class="idx">02</span> Build your stack</span>
-        <h2>Build your stack.</h2>
-        <p>Your landing page is the base brick. Snap on the blocks you want, then send us your stack for a quote — no obligation.</p>
-      </div>
-      <div class="builder">
-        <div class="builder-palette reveal">
-          <h3 class="builder-h">Tap to add blocks</h3>
-          <div class="palette-grid">
-            <button class="palette-item brick b-pink" data-id="content" data-label="Content creation"><span class="studs" aria-hidden="true"><i></i><i></i></span>Content creation</button>
-            <button class="palette-item brick b-purple" data-id="blog" data-label="Blog & updates"><span class="studs" aria-hidden="true"><i></i><i></i></span>Blog &amp; updates</button>
-            <button class="palette-item brick b-orange" data-id="hosting" data-label="Hosting & maintenance"><span class="studs" aria-hidden="true"><i></i><i></i></span>Hosting &amp; maintenance</button>
-            <button class="palette-item brick b-green" data-id="seo" data-label="SEO & local search"><span class="studs" aria-hidden="true"><i></i><i></i></span>SEO &amp; local search</button>
-            <button class="palette-item brick b-teal" data-id="leads" data-label="Lead generation"><span class="studs" aria-hidden="true"><i></i><i></i></span>Lead generation</button>
-            <button class="palette-item brick b-red" data-id="social" data-label="Social media"><span class="studs" aria-hidden="true"><i></i><i></i></span>Social media</button>
-          </div>
-          <p class="builder-hint">Tap a block again to remove it from your stack.</p>
-        </div>
-
-        <div class="builder-stack reveal">
-          <h3 class="builder-h">Your stack</h3>
-          <div class="stack-zone" id="stackZone">
-            <span class="brick b-blue stack-brick stack-base" data-id="base"><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Landing page (base)</span>
-          </div>
-          <div class="stack-summary">
-            <span class="stack-count" id="stackCount">1 block</span>
-            <a class="btn" id="requestQuote" href="#">Send my stack to sales</a>
-          </div>
-          <p class="builder-hint">We'll review your stack and get back with a tailored quote.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- PRICING -->
   <section class="block" id="pricing">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">03</span> Pricing</span>
+        <span class="kicker"><span class="idx">02</span> Pricing</span>
         <h2>Pick your stack.</h2>
         <p>Simple, transparent pricing. Every site is different, so these are starting points — your final price depends on the stack you build.</p>
       </div>
@@ -204,7 +167,7 @@ import Icon from "../components/Icon.astro";
   <section class="block">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">05</span> Why SiteStac</span>
+        <span class="kicker"><span class="idx">04</span> Why SiteStac</span>
         <h2>Beautiful is just the base brick.</h2>
       </div>
       <div class="trust">
@@ -240,6 +203,54 @@ import Icon from "../components/Icon.astro";
       </div>
     </div>
   </section>
+
+  <!-- BUILD YOUR STACK — floating cart button -->
+  <button class="cart-fab cart-open" type="button" aria-haspopup="dialog"><Icon name="layers" size={18} /> Build your stack</button>
+
+  <!-- BUILD YOUR STACK — cart modal -->
+  <div class="cart-overlay" id="cartOverlay" aria-hidden="true">
+    <div class="cart-modal" role="dialog" aria-modal="true" aria-label="Build your stack">
+      <button class="cart-close" id="cartClose" type="button" aria-label="Close"><Icon name="x" size={20} /></button>
+      <div class="cart-head">
+        <h3>Build your stack</h3>
+        <p>Pick a base layer, snap on the features you want, then send us your stack for a tailored quote.</p>
+      </div>
+      <div class="cart-body">
+        <div class="cart-picks">
+          <div class="pick-group">
+            <span class="pick-label">1 — Choose your base layer</span>
+            <div class="base-opts" id="baseOpts">
+              <button class="opt-brick brick b-blue" data-id="one" data-label="One-Page" data-desc="a single high-converting landing page" data-benefit="One focused page built to turn visitors into customers."><span class="studs" aria-hidden="true"><i></i><i></i></span>One-Page</button>
+              <button class="opt-brick brick b-pink" data-id="three" data-label="3-Page Site" data-desc="a three-page site with a blog you control" data-benefit="Room to tell your story across three pages, plus a blog."><span class="studs" aria-hidden="true"><i></i><i></i><i></i></span>3-Page Site</button>
+              <button class="opt-brick brick b-orange" data-id="multi" data-label="Multi-Page" data-desc="a multi-page site built to rank" data-benefit="A full multi-page site engineered to rank and scale."><span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Multi-Page</button>
+            </div>
+          </div>
+          <div class="pick-group">
+            <span class="pick-label">2 — Add features</span>
+            <div class="feat-opts" id="featOpts">
+              <button class="opt-brick brick b-green" data-id="seo" data-label="SEO &amp; local search" data-benefit="Get found in local + maps search."><span class="studs" aria-hidden="true"><i></i><i></i></span>SEO &amp; local search</button>
+              <button class="opt-brick brick b-red" data-id="social" data-label="Social media management" data-benefit="We post and manage your socials, on-brand."><span class="studs" aria-hidden="true"><i></i><i></i></span>Social media mgmt</button>
+              <button class="opt-brick brick b-purple" data-id="gbp" data-label="Google Business setup" data-benefit="Optimized Google Business Profile + reviews."><span class="studs" aria-hidden="true"><i></i><i></i></span>Google Business</button>
+              <button class="opt-brick brick b-pink" data-id="content" data-label="Content creation" data-benefit="Sharp copy and polished photos that sell."><span class="studs" aria-hidden="true"><i></i><i></i></span>Content creation</button>
+              <button class="opt-brick brick b-teal" data-id="blog" data-label="Blog &amp; updates" data-benefit="A blog you control to keep customers coming back."><span class="studs" aria-hidden="true"><i></i><i></i></span>Blog &amp; updates</button>
+              <button class="opt-brick brick b-orange" data-id="leads" data-label="Lead generation" data-benefit="Click-to-call, forms and booking wired to your inbox."><span class="studs" aria-hidden="true"><i></i><i></i></span>Lead generation</button>
+              <button class="opt-brick brick b-blue" data-id="branding" data-label="Logo &amp; branding" data-benefit="A clean logo and color set for a consistent look."><span class="studs" aria-hidden="true"><i></i><i></i></span>Logo &amp; branding</button>
+              <button class="opt-brick brick b-green" data-id="reviews" data-label="Review generation" data-benefit="Automated review requests to grow your reputation."><span class="studs" aria-hidden="true"><i></i><i></i></span>Review generation</button>
+            </div>
+          </div>
+        </div>
+        <div class="cart-stack-col">
+          <span class="pick-label">Your stack</span>
+          <div class="stack-zone" id="stackZone"></div>
+          <div class="stack-desc" id="stackDesc"></div>
+          <div class="stack-summary">
+            <span class="stack-count" id="stackCount"></span>
+            <a class="btn" id="requestQuote" href="#">Send my stack to sales</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </Base>
 
 <style>
@@ -286,48 +297,82 @@ import Icon from "../components/Icon.astro";
     });
   }
 
-  // ── Build your stack (mock cart) ─────────────────────────────────
+  // ── Build your stack (cart modal) ───────────────────────────────
+  const overlay = document.getElementById("cartOverlay");
   const stackZone = document.getElementById("stackZone");
   const stackCount = document.getElementById("stackCount");
+  const stackDesc = document.getElementById("stackDesc");
   const requestBtn = document.getElementById("requestQuote") as HTMLAnchorElement | null;
-  const paletteItems = Array.from(document.querySelectorAll<HTMLButtonElement>(".palette-item"));
-  if (stackZone && stackCount && requestBtn && paletteItems.length) {
+  const baseOpts = Array.from(document.querySelectorAll<HTMLButtonElement>("#baseOpts .opt-brick"));
+  const featOpts = Array.from(document.querySelectorAll<HTMLButtonElement>("#featOpts .opt-brick"));
+  if (overlay && stackZone && stackCount && stackDesc && requestBtn && baseOpts.length) {
     const SALES_EMAIL = "hello@sitestac.com";
     const colorOf = (el: Element) => (Array.from(el.classList).find((c) => c.startsWith("b-")) || "b-blue");
+    const studsFor = (el: Element) => (el.querySelector(".studs")?.innerHTML) || "<i></i><i></i><i></i><i></i>";
+    let base = baseOpts[0];
 
-    function updateSummary() {
-      const chosen = paletteItems.filter((p) => p.classList.contains("is-added"));
-      const total = chosen.length + 1; // + base landing page
+    function makeBrick(src: HTMLButtonElement, animate: boolean, isBase: boolean) {
+      const el = document.createElement("span");
+      el.className = "brick " + colorOf(src) + " stack-brick" + (animate ? " dropin" : "") + (isBase ? " stack-base" : "");
+      el.dataset.id = src.dataset.id || "";
+      el.innerHTML = '<span class="studs" aria-hidden="true">' + studsFor(src) + "</span>" + (src.dataset.label || "");
+      if (animate) el.addEventListener("animationend", () => el.classList.remove("dropin"), { once: true });
+      return el;
+    }
+    function renderBase() {
+      const old = stackZone!.querySelector(".stack-base");
+      const fresh = makeBrick(base, false, true);
+      if (old) stackZone!.replaceChild(fresh, old);
+      else stackZone!.appendChild(fresh); // column-reverse → first child sits at the bottom
+    }
+    function chosenFeats() { return featOpts.filter((f) => f.classList.contains("is-picked")); }
+
+    function refresh() {
+      const feats = chosenFeats();
+      const total = feats.length + 1;
       stackCount!.textContent = total + (total === 1 ? " block" : " blocks");
-      const lines = ["Landing page (base)", ...chosen.map((p) => p.dataset.label || "")];
+      // description + benefits for this exact combination
+      const intro = "<b>Your " + (base.dataset.label || "") + " stack</b> — " + (base.dataset.desc || "") +
+        (feats.length ? ", plus " + feats.map((f) => (f.dataset.label || "").replace(/&amp;/g, "&").toLowerCase()).join(", ") + "." : ".");
+      const CHK = '<span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>';
+      const benefits = [base, ...feats].map((b) => "<li>" + CHK + " " + (b.dataset.benefit || "") + "</li>").join("");
+      stackDesc!.innerHTML = intro + "<ul>" + benefits + "</ul>";
+      // mailto
+      const lines = [(base.dataset.label || "") + " (base)", ...feats.map((f) => (f.dataset.label || "").replace(/&amp;/g, "&"))];
       const subject = "SiteStac quote — my stack (" + total + " blocks)";
-      const body =
-        "Hi SiteStac team,\n\nI built this stack and would like a quote / to speak with sales:\n\n" +
-        lines.map((l) => "  • " + l).join("\n") +
-        "\n\nName:\nBusiness:\nGoogle Business Profile link:\n\nThanks!";
+      const body = "Hi SiteStac team,\n\nI built this stack and would like a quote / to speak with sales:\n\n" +
+        lines.map((l) => "  • " + l).join("\n") + "\n\nName:\nBusiness:\nGoogle Business Profile link:\n\nThanks!";
       requestBtn!.href = "mailto:" + SALES_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
     }
 
-    function addBrick(item: HTMLButtonElement) {
-      const el = document.createElement("span");
-      el.className = "brick " + colorOf(item) + " stack-brick dropin";
-      el.dataset.id = item.dataset.id || "";
-      el.innerHTML = '<span class="studs" aria-hidden="true"><i></i><i></i><i></i><i></i></span>' + (item.dataset.label || "");
-      stackZone!.insertBefore(el, stackZone!.firstChild); // newest lands on top; base stays at bottom
-      el.addEventListener("animationend", () => el.classList.remove("dropin"), { once: true });
-    }
-    function removeBrick(id: string) {
-      const el = stackZone!.querySelector('.stack-brick[data-id="' + id + '"]:not(.stack-base)');
-      if (el) el.remove();
-    }
+    // base = single choice
+    baseOpts.forEach((b) => b.addEventListener("click", () => {
+      base = b;
+      baseOpts.forEach((o) => o.classList.toggle("is-picked", o === b));
+      baseOpts.forEach((o) => o.classList.toggle("is-off", o !== b));
+      renderBase(); refresh();
+    }));
+    // features = multi toggle, each drops onto the stack
+    featOpts.forEach((f) => f.addEventListener("click", () => {
+      const on = f.classList.toggle("is-picked");
+      if (on) {
+        stackZone!.appendChild(makeBrick(f, true, false)); // append → lands on top (column-reverse)
+      } else {
+        stackZone!.querySelector('.stack-brick[data-id="' + f.dataset.id + '"]:not(.stack-base)')?.remove();
+      }
+      refresh();
+    }));
 
-    paletteItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        const added = item.classList.toggle("is-added");
-        if (added) addBrick(item); else removeBrick(item.dataset.id || "");
-        updateSummary();
-      });
-    });
-    updateSummary();
+    baseOpts[0].classList.add("is-picked");
+    baseOpts.slice(1).forEach((o) => o.classList.add("is-off"));
+    renderBase(); refresh();
+
+    // open / close
+    const open = () => { overlay.classList.add("open"); document.body.style.overflow = "hidden"; };
+    const close = () => { overlay.classList.remove("open"); document.body.style.overflow = ""; };
+    document.querySelectorAll<HTMLElement>(".cart-open").forEach((t) => t.addEventListener("click", (e) => { e.preventDefault(); open(); }));
+    document.getElementById("cartClose")?.addEventListener("click", close);
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
   }
 </script>
