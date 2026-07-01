@@ -54,9 +54,14 @@ a{color:inherit;text-decoration:none}
   box-shadow:inset 0 -.45em .5em -.35em rgba(0,0,0,.14), 0 10px 18px -11px rgba(15,26,51,.4);
   --bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d);
 }
-.brick .studs{position:absolute;top:-.52em;left:.85em;right:.85em;display:flex;justify-content:space-between;pointer-events:none}
-.brick .studs i{display:block;width:1.35em;height:1em;border-radius:.28em .28em .14em .14em;
-  background:var(--bc);box-shadow:0 2px 3px -1px rgba(15,26,51,.22)}
+/* Studs auto-tile across the full width (a wide brick gets more studs, a
+   narrow one fewer) so every block reads like a real Lego regardless of size. */
+.brick .studs{position:absolute;top:-.5em;left:.6em;right:.6em;height:.92em;pointer-events:none;
+  background:var(--bc);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='16'%3E%3Crect%20x='6'%20width='18'%20height='16'%20rx='5'%20fill='%23000'/%3E%3C/svg%3E")%20repeat-x%20center%20/%2030px%20100%25;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='30'%20height='16'%3E%3Crect%20x='6'%20width='18'%20height='16'%20rx='5'%20fill='%23000'/%3E%3C/svg%3E")%20repeat-x%20center%20/%2030px%20100%25;
+  filter:drop-shadow(0 2px 2px rgba(15,26,51,.18))}
+.brick .studs i{display:none}
 .brick.b-blue{--bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d)}
 .brick.b-pink{--bc:var(--pink);--bl:#f06bac;--bd:var(--pink-d)}
 .brick.b-purple{--bc:var(--purple);--bl:#9d68e6;--bd:var(--purple-d)}
