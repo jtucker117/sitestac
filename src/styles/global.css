@@ -54,7 +54,7 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 10px 18px -11px rgba(15,26,51,.4);
   --bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d);
 }
-.brick .studs{position:absolute;top:-.82em;left:12%;right:12%;display:flex;justify-content:space-between;pointer-events:none}
+.brick .studs{position:absolute;top:-.82em;left:5%;right:5%;display:flex;justify-content:space-between;pointer-events:none}
 .brick .studs i{display:block;width:1.85em;height:1.1em;border-radius:.5em .5em .18em .18em;
   background:var(--bc);box-shadow:inset 0 .14em 0 rgba(255,255,255,.16)}
 .brick.b-blue{--bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d)}
@@ -171,7 +171,7 @@ section.block{padding:84px 0}
   box-shadow:0 12px 24px -14px rgba(15,26,51,.45);
   --bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d);transition:transform .18s ease, box-shadow .18s ease}
 .addon:hover{transform:translateY(-5px) rotate(-.6deg)}
-.addon .studs{position:absolute;top:-.72em;left:14%;right:14%;display:flex;justify-content:space-between;pointer-events:none}
+.addon .studs{position:absolute;top:-.72em;left:7%;right:7%;display:flex;justify-content:space-between;pointer-events:none}
 .addon .studs i{display:block;width:1.7em;height:1em;border-radius:.45em .45em .16em .16em;background:var(--bc);box-shadow:inset 0 .14em 0 rgba(255,255,255,.16)}
 .addon-dot{flex:0 0 auto;display:flex;align-items:center;color:#fff;margin-top:1px}
 .addon-dot svg{display:block}
