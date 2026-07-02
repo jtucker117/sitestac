@@ -6,16 +6,26 @@ import Icon from "../components/Icon.astro";
 <Base>
   <!-- HERO -->
   <section class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <div class="grid"></div>
+      <span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span>
+    </div>
     <div class="wrap">
       <div class="hero-copy reveal in">
-        <span class="eyebrow">● Built for local businesses</span>
-        <h1>Grow your brand<br /><span class="hl">block by block.</span></h1>
-        <p class="lede">We design a beautiful one-page site for your business — then you stack on exactly what you need. No bloat. No long contracts.</p>
+        <span class="eyebrow">● Websites for local businesses</span>
+        <h1>Your website should bring<br />you customers — <span class="hl">not just sit there.</span></h1>
+        <p class="lede">SiteStac builds fast, beautiful websites that turn visitors into calls and leads — then lets you stack on exactly what you need, block by block. No bloat. No long contracts.</p>
         <div class="hero-cta">
-          <a class="btn" href="#start" data-magnetic>Get a free preview</a>
-          <a class="btn ghost" href="#stak">See the blocks</a>
+          <a class="btn" href="#audit" data-magnetic>Get a free website audit</a>
+          <a class="btn ghost" href="#work">View demo sites</a>
         </div>
-        <div class="hero-note"><span class="dot"></span> See your site before you pay a cent.</div>
+        <div class="trust-chips">
+          <span class="chip"><span class="tick"><Icon name="check" size={11} /></span> Launch in 7–14 days</span>
+          <span class="chip"><span class="tick"><Icon name="check" size={11} /></span> Mobile optimized</span>
+          <span class="chip"><span class="tick"><Icon name="check" size={11} /></span> SEO ready</span>
+          <span class="chip"><span class="tick"><Icon name="check" size={11} /></span> No long-term contracts</span>
+          <span class="chip"><span class="tick"><Icon name="check" size={11} /></span> Built to convert</span>
+        </div>
       </div>
       <div class="stage" aria-hidden="true">
         <div class="stack">
@@ -38,11 +48,39 @@ import Icon from "../components/Icon.astro";
     </div>
   </div>
 
+  <!-- PROBLEM -->
+  <section class="block" id="problem">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">01</span> The problem</span>
+        <h2>Most small-business websites don't convert.</h2>
+        <p>A pretty site that nobody finds — or that visitors don't trust — is just an expensive business card. Here's where they usually break down.</p>
+      </div>
+      <div class="prob-grid">
+        <div class="prob-card reveal">
+          <div class="pico"><Icon name="search" size={24} /></div>
+          <h3>No Google visibility</h3>
+          <p>You're not showing up in local search or maps, so nearby customers never find you in the first place.</p>
+        </div>
+        <div class="prob-card reveal">
+          <div class="pico"><Icon name="clock" size={24} /></div>
+          <h3>Outdated design</h3>
+          <p>A slow, dated site makes people bounce. If it doesn't look trustworthy, visitors assume the business isn't either.</p>
+        </div>
+        <div class="prob-card reveal">
+          <div class="pico"><Icon name="target" size={24} /></div>
+          <h3>No conversion strategy</h3>
+          <p>Even with traffic, there's no clear next step — so visitors read, leave, and never turn into a call or a lead.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- THE STAK -->
   <section class="block" id="stak">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">01</span> The Stack</span>
+        <span class="kicker"><span class="idx">02</span> The Stack</span>
         <h2>Start with one block. Add more anytime.</h2>
         <p>Every site starts with a stunning landing page. Need a blog next month? Want SEO or social? Snap on another block — your site grows with you.</p>
       </div>
@@ -75,15 +113,15 @@ import Icon from "../components/Icon.astro";
   <section class="block" id="pricing">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">02</span> Pricing</span>
+        <span class="kicker"><span class="idx">03</span> Pricing</span>
         <h2>Pick your stack.</h2>
-        <p>Simple, transparent pricing. Every site is different, so these are starting points — your final price depends on the stack you build.</p>
+        <p>Every business is different, so every stack is priced to fit. Pick the shape that matches where you are — we'll send a clear, tailored quote with no surprises.</p>
       </div>
       <div class="tiers">
         <div class="tier t-blue reveal">
           <span class="cap"></span><span class="pill">Starter Brick</span>
           <h3>One-Page</h3>
-          <div class="price">From $849<small> + $150/mo</small></div>
+          <div class="price"><span class="price-scale"><b>$</b><i>$</i><i>$</i></span><small>Tailored quote + simple monthly care</small></div>
           <p class="desc">A beautiful single landing page that converts.</p>
           <ul>
             <li><span class="d">▪</span> Custom one-page design</li>
@@ -96,7 +134,7 @@ import Icon from "../components/Icon.astro";
         <div class="tier t-pink feat reveal">
           <span class="cap"></span><span class="feat-tag">Popular</span><span class="pill">Cornerstone</span>
           <h3>3-Page Site</h3>
-          <div class="price">From $1,499<small> + $200/mo</small></div>
+          <div class="price"><span class="price-scale"><b>$</b><b>$</b><i>$</i></span><small>Tailored quote + simple monthly care</small></div>
           <p class="desc">Three pages plus a blog you control.</p>
           <ul>
             <li><span class="d">▪</span> Everything in One-Page</li>
@@ -109,7 +147,7 @@ import Icon from "../components/Icon.astro";
         <div class="tier t-orange reveal">
           <span class="cap"></span><span class="pill">Tower</span>
           <h3>Multi-Page</h3>
-          <div class="price">From $1,899<small> + $200/mo</small></div>
+          <div class="price"><span class="price-scale"><b>$</b><b>$</b><b>$</b></span><small>Tailored quote + simple monthly care</small></div>
           <p class="desc">More than three pages, built to rank.</p>
           <ul>
             <li><span class="d">▪</span> Everything in Cornerstone</li>
@@ -163,11 +201,73 @@ import Icon from "../components/Icon.astro";
     </div>
   </section>
 
+  <!-- TESTIMONIALS -->
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker"><span class="idx">05</span> Reviews</span>
+        <h2>Trusted by growing local businesses.</h2>
+        <p>Owners come to SiteStac for a site that actually pulls in customers — and stay for how easy it is to run.</p>
+      </div>
+      <div class="tstm-grid">
+        <div class="tstm reveal">
+          <div class="stars"><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/></div>
+          <blockquote>"We started getting calls the first week the new site went live. It finally looks like the business we actually are."</blockquote>
+          <div class="who"><span class="av" style="background:linear-gradient(180deg,var(--teal),var(--teal-d))">GL</span><div><b>Greenline Lawn Co.</b><span>Landscaping</span></div></div>
+        </div>
+        <div class="tstm reveal">
+          <div class="stars"><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/></div>
+          <blockquote>"Fast, clean, and I can post to the blog myself. They handled everything — I never touch the tech."</blockquote>
+          <div class="who"><span class="av" style="background:linear-gradient(180deg,#f06bac,var(--pink-d))">MT</span><div><b>Maple &amp; Thread</b><span>Boutique retail</span></div></div>
+        </div>
+        <div class="tstm reveal">
+          <div class="stars"><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/><Icon name="starfill" size={16}/></div>
+          <blockquote>"We show up on Google now and the booking button goes straight to my phone. Worth every penny."</blockquote>
+          <div class="who"><span class="av" style="background:linear-gradient(180deg,#ffa642,var(--orange-d))">AH</span><div><b>Apex HVAC</b><span>Home services</span></div></div>
+        </div>
+      </div>
+      <p class="sample-note">Sample reviews shown for layout — real client quotes drop in here as we launch them.</p>
+    </div>
+  </section>
+
+  <!-- WHY SITESTAC (comparison) -->
+  <section class="block" style="background:linear-gradient(180deg,rgba(243,246,251,.9),rgba(255,255,255,.5));border-block:1px solid var(--line)">
+    <div class="wrap">
+      <div class="section-head reveal" style="margin-inline:auto;text-align:center;max-width:52ch">
+        <span class="kicker" style="justify-content:center"><span class="idx">06</span> Why SiteStac</span>
+        <h2>Why businesses choose SiteStac.</h2>
+        <p>Cheap templates and gig-site freelancers leave you on your own. We build to convert — and stick around.</p>
+      </div>
+      <div class="vs">
+        <div class="vs-col us reveal">
+          <h3><Icon name="layers" size={22}/> SiteStac</h3>
+          <ul>
+            <li><span class="vs-mark"><Icon name="check" size={13}/></span> Fast 7–14 day turnaround</li>
+            <li><span class="vs-mark"><Icon name="check" size={13}/></span> Premium, custom design</li>
+            <li><span class="vs-mark"><Icon name="check" size={13}/></span> Conversion &amp; SEO strategy built in</li>
+            <li><span class="vs-mark"><Icon name="check" size={13}/></span> Ongoing hosting, care &amp; edits</li>
+            <li><span class="vs-mark"><Icon name="check" size={13}/></span> You can own it outright</li>
+          </ul>
+        </div>
+        <div class="vs-col them reveal">
+          <h3>Cheap templates &amp; freelancers</h3>
+          <ul>
+            <li><span class="vs-mark"><Icon name="x" size={13}/></span> Slow, drawn-out timelines</li>
+            <li><span class="vs-mark"><Icon name="x" size={13}/></span> Recycled cookie-cutter templates</li>
+            <li><span class="vs-mark"><Icon name="x" size={13}/></span> No strategy — just a pretty page</li>
+            <li><span class="vs-mark"><Icon name="x" size={13}/></span> You're on your own after launch</li>
+            <li><span class="vs-mark"><Icon name="x" size={13}/></span> Locked in, or left stranded</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- TRUST -->
   <section class="block">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="kicker"><span class="idx">04</span> Why SiteStac</span>
+        <span class="kicker"><span class="idx">07</span> Peace of mind</span>
         <h2>Beautiful is just the base brick.</h2>
       </div>
       <div class="trust">
@@ -190,6 +290,65 @@ import Icon from "../components/Icon.astro";
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="section-head reveal" style="margin-inline:auto;text-align:center">
+        <span class="kicker" style="justify-content:center"><span class="idx">08</span> FAQ</span>
+        <h2>Questions, answered.</h2>
+      </div>
+      <div class="faq reveal">
+        <details open>
+          <summary>How long does it take?<span class="ic"><Icon name="plus" size={15}/></span></summary>
+          <div class="ans"><p>Most sites launch in about 7–14 days once we have your content and go-ahead. Larger multi-page builds can take a little longer.</p></div>
+        </details>
+        <details>
+          <summary>Do you offer hosting?<span class="ic"><Icon name="plus" size={15}/></span></summary>
+          <div class="ans"><p>Yes — secure, lightning-fast hosting with SSL and DDoS protection is included with every plan. We handle updates, backups and uptime so you never think about it.</p></div>
+        </details>
+        <details>
+          <summary>Can you redesign my current site?<span class="ic"><Icon name="plus" size={15}/></span></summary>
+          <div class="ans"><p>Absolutely. Send us your existing site and we'll rebuild it — faster, cleaner, and built to convert. Your free audit is a great place to start.</p></div>
+        </details>
+        <details>
+          <summary>Do you help with SEO?<span class="ic"><Icon name="plus" size={15}/></span></summary>
+          <div class="ans"><p>Yes. Every site ships with solid SEO structure, and we offer local search and Google Business optimization as add-ons so nearby customers can find you.</p></div>
+        </details>
+        <details>
+          <summary>Is there a monthly plan?<span class="ic"><Icon name="plus" size={15}/></span></summary>
+          <div class="ans"><p>Yes. A simple monthly care plan covers hosting, security, backups and text edits. Prefer to own your site outright? We can hand you the keys — no lock-in.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FREE AUDIT (lead capture) -->
+  <section class="block" id="audit">
+    <div class="wrap">
+      <div class="audit-wrap reveal">
+        <div class="audit-lead">
+          <span class="kicker"><span class="idx">09</span> Free audit</span>
+          <h2>Get a free website audit.</h2>
+          <p>Send us your business and we'll show you exactly where you're leaving customers on the table — no cost, no commitment.</p>
+          <ul>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span>What's hurting your conversions</span></li>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span>Local SEO opportunities</span></li>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span>Speed &amp; mobile issues</span></li>
+            <li><span class="chk"><Icon name="check" size={14} /></span><span>The easy wins to fix first</span></li>
+          </ul>
+        </div>
+        <form class="audit-form" id="auditForm">
+          <label>Name<input type="text" name="name" autocomplete="name" placeholder="Jane Smith" required /></label>
+          <label>Email<input type="email" name="email" autocomplete="email" placeholder="jane@business.com" required /></label>
+          <label>Business<input type="text" name="business" placeholder="Smith Roofing Co." required /></label>
+          <label>Website URL <span style="font-weight:500;text-transform:none">(optional)</span><input type="text" name="url" inputmode="url" placeholder="yourbusiness.com — or leave blank" /></label>
+          <button class="btn" type="submit">Get my free audit</button>
+          <span class="fineprint">We'll reply within one business day. No spam, ever.</span>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA -->
   <section class="cta" id="start">
     <div class="wrap">
@@ -206,6 +365,12 @@ import Icon from "../components/Icon.astro";
 
   <!-- BUILD YOUR STACK — floating cart button -->
   <button class="cart-fab cart-open" type="button" aria-haspopup="dialog"><Icon name="layers" size={18} /> Build your stack</button>
+
+  <!-- STICKY MOBILE CTA -->
+  <div class="mobile-cta" aria-hidden="false">
+    <a class="btn ghost cart-open" href="#build">Build stack</a>
+    <a class="btn" href="#audit">Get a free audit</a>
+  </div>
 
   <!-- BUILD YOUR STACK — cart modal -->
   <div class="cart-overlay" id="cartOverlay" aria-hidden="true">
@@ -374,5 +539,28 @@ import Icon from "../components/Icon.astro";
     document.getElementById("cartClose")?.addEventListener("click", close);
     overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  }
+
+  // ── Free audit form → build a prefilled email (no backend needed) ──
+  const auditForm = document.getElementById("auditForm") as HTMLFormElement | null;
+  if (auditForm) {
+    const AUDIT_EMAIL = "hello@sitestac.com";
+    auditForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const data = new FormData(auditForm);
+      const name = (data.get("name") || "").toString().trim();
+      const email = (data.get("email") || "").toString().trim();
+      const business = (data.get("business") || "").toString().trim();
+      const url = (data.get("url") || "").toString().trim();
+      const subject = "Free website audit — " + (business || name || "new request");
+      const body =
+        "Hi SiteStac team,\n\nI'd like a free website audit.\n\n" +
+        "  • Name: " + name + "\n" +
+        "  • Email: " + email + "\n" +
+        "  • Business: " + business + "\n" +
+        "  • Website: " + (url || "(none yet)") + "\n\nThanks!";
+      window.location.href =
+        "mailto:" + AUDIT_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    });
   }
 </script>

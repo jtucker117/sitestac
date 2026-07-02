@@ -12,6 +12,7 @@ const {
   description = "SiteStac builds beautiful one-page websites for local businesses, then lets you stack on the features you need — blog, SEO, hosting and more. Free preview before you pay.",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL("/logo.png", Astro.site).href;
 ---
 <!doctype html>
 <html lang="en">
@@ -20,15 +21,24 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content="small business website design, affordable business websites, contractor websites, local business web design, website for contractors, HVAC website design, roofer website, landscaper website, plumber website, lead generation website" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#2563eb" />
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="SiteStac" />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta property="og:image" content="/logo.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -43,6 +53,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       "areaServed": "United States",
       "serviceType": "Website design and hosting for local businesses"
     })} />
+    {Astro.url.pathname === "/" && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "How long does it take?", "acceptedAnswer": { "@type": "Answer", "text": "Most sites launch in about 7–14 days once we have your content and go-ahead. Larger multi-page builds can take a little longer." } },
+          { "@type": "Question", "name": "Do you offer hosting?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — secure, fast hosting with SSL and DDoS protection is included with every plan, along with updates, backups and uptime monitoring." } },
+          { "@type": "Question", "name": "Can you redesign my current site?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Send us your existing site and we'll rebuild it faster, cleaner, and built to convert. A free website audit is a great place to start." } },
+          { "@type": "Question", "name": "Do you help with SEO?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every site ships with solid SEO structure, plus optional local search and Google Business Profile optimization so nearby customers can find you." } },
+          { "@type": "Question", "name": "Is there a monthly plan?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. A simple monthly care plan covers hosting, security, backups and text edits. You can also choose to own your site outright with no lock-in." } }
+        ]
+      })} />
+    )}
   </head>
   <body>
     <Nav />
