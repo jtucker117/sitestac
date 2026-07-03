@@ -1,0 +1,10 @@
+# Cloudflare Worker config for the SiteStac static site.
+# `astro build` outputs static files to ./dist, which are served as
+# Workers Static Assets (no server code — assets-only Worker).
+name = "sitestac"
+compatibility_date = "2025-06-01"
+
+[assets]
+directory = "./dist"
+# Serve Astro's generated 404.html for unknown paths.
+not_found_handling = "404-page"
