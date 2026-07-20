@@ -8,3 +8,6 @@ npm-debug.log*
 
 # Relay CRM prototype (local tool, not part of the marketing site)
 RELAY/
+
+# Nested client repo accidentally swept in — keep local, not tracked
+Sites/Ember&Oak Media/
