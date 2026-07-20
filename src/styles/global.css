@@ -435,7 +435,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:920px){
   .hero .wrap{grid-template-columns:1fr;gap:24px}
-  .stage{height:380px;order:-1}
+  .stage{height:auto;order:-1;padding-top:6px}
   .stak-wrap{grid-template-columns:1fr;gap:30px}
   .steps{grid-template-columns:1fr}
   .tiers{grid-template-columns:1fr 1fr}
