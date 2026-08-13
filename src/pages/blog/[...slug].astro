@@ -4,15 +4,32 @@ import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog", ({ data }) => !data.draft);
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
 }
 
-const { post } = Astro.props;
+const { post, posts } = Astro.props;
 const { Content } = await render(post);
 const fmt = (d: Date) =>
   d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+const related = post.data.related
+  .map((slug) => posts.find((p) => p.id === slug))
+  .filter((p) => p !== undefined && !p.data.draft);
+
+const faqSchema = post.data.faqs.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: post.data.faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    }
+  : null;
 ---
 <Base title={`${post.data.title} — SiteStac`} description={post.data.description}>
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <section class="block">
     <div class="wrap">
       <article class="prose">
@@ -20,6 +37,31 @@ const fmt = (d: Date) =>
         <h1 style="margin-top:.6em">{post.data.title}</h1>
         <div class="meta">{fmt(post.data.date)}</div>
         <Content />
+
+        {post.data.faqs.length > 0 && (
+          <>
+            <h2>Common questions</h2>
+            <div class="faq">
+              {post.data.faqs.map((faq) => (
+                <details>
+                  <summary>{faq.q}<span class="ic" aria-hidden="true">+</span></summary>
+                  <p>{faq.a}</p>
+                </details>
+              ))}
+            </div>
+          </>
+        )}
+
+        {related.length > 0 && (
+          <>
+            <h2>Keep reading</h2>
+            <ul>
+              {related.map((r) => (
+                <li><a href={`/blog/${r!.id}/`} style="color:var(--blue);font-weight:600">{r!.data.title}</a></li>
+              ))}
+            </ul>
+          </>
+        )}
       </article>
     </div>
   </section>

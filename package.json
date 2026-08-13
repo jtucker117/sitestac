@@ -6,12 +6,17 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "blog:seed": "node scripts/seed-calendar.mjs",
+    "blog:calendar": "node scripts/calendar.mjs",
+    "blog:generate": "node scripts/generate.mjs"
   },
   "dependencies": {
     "astro": "^5.7.0"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.70.0",
+    "@supabase/supabase-js": "^2.45.0",
     "@tailwindcss/vite": "^4.1.0",
     "tailwindcss": "^4.1.0"
   }
