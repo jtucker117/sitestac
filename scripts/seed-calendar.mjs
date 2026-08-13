@@ -165,7 +165,7 @@ const insert = rows.map((r) => ({
 
 for (const r of insert) {
   console.log(
-    `${r.scheduled_for}  c${String(r.cluster_id).padStart(2)}  ${r.post_type.padEnd(14)}  ${r.keyword}`,
+    `${r.scheduled_for}  c${String(r.cluster_id).padStart(2)}  ${r.post_type.padEnd(14)}  ${r.keyword_targeted}`,
   );
 }
 console.log(`\n${insert.length} posts queued across ${WEEKS} weeks (${POSTS_PER_WEEK}/week).`);
