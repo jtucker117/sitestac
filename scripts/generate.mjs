@@ -63,7 +63,7 @@ Open by answering the question in two or three sentences before anything else, s
 
 End with a light call to action pointing at a free consult with SiteStac. One or two sentences, no pressure.`;
 
-function buildPrompt(post, cluster, location, related) {
+function buildPrompt(post, cluster, location, related, siblingCityPosts) {
   const lines = [
     `Write a blog post targeting the keyword: "${post.keyword_targeted}"`,
     ``,
@@ -78,8 +78,19 @@ function buildPrompt(post, cluster, location, related) {
     lines.push(
       `Post type: LOCAL — 800-1,200 words, written for ${location.city}, ${location.state}.`,
       ``,
-      `This must read as though it was written for ${location.city} specifically, not as a template with the city name pasted in. Reference the kinds of businesses that actually operate there, how customers in that market search, and anything true about competing for local search in that metro. If you don't know something specific about ${location.city}, write around it rather than inventing a fact — never fabricate local landmarks, statistics, neighborhoods, or business names.`,
+      `This must read as though it was written for ${location.city} specifically, not as a template with the city name pasted in. Reference the kinds of businesses that actually operate there, how customers in that market search, and anything true about competing for local search in that market. If you don't know something specific about ${location.city}, write around it rather than inventing a fact — never fabricate local landmarks, statistics, neighborhoods, or business names.`,
     );
+
+    if (siblingCityPosts.length) {
+      lines.push(
+        ``,
+        `We have already published these city posts:`,
+        ...siblingCityPosts.map((s) => `  - ${s.title}`),
+        ``,
+        `Do not reuse their structure. Give this one its own opening, its own section headings, and its own order of argument. A reader who found two of these pages should not be able to tell they came from the same outline — if they can, Google can too, and the whole set gets treated as filler rather than as pages worth ranking.`,
+        `${location.city} is not interchangeable with those markets. Lead with what is actually different about doing business there — the trades that dominate, how big the competition is, whether customers are searching from a phone on a job site or from a desk.`,
+      );
+    }
   } else {
     lines.push(`Post type: SUPPORTING — 800-1,200 words. Focused on this one question.`);
   }
@@ -174,6 +185,13 @@ for (const post of queue) {
     .neq("id", post.id)
     .limit(10);
 
+  // City pages all come from the same handful of templates, so each one needs to
+  // see what the others already said in order to not repeat it.
+  const siblingCityPosts =
+    post.post_type === "local_variant"
+      ? (siblings ?? []).filter((s) => s.post_type === "local_variant")
+      : [];
+
   // Internal links: the cluster pillar plus two others from the same cluster.
   const pool = siblings ?? [];
   const related = [
@@ -188,7 +206,9 @@ for (const post of queue) {
     max_tokens: 16000,
     system: SYSTEM,
     output_config: { format: { type: "json_schema", schema: POST_SCHEMA } },
-    messages: [{ role: "user", content: buildPrompt(post, cluster, location, related) }],
+    messages: [
+      { role: "user", content: buildPrompt(post, cluster, location, related, siblingCityPosts) },
+    ],
   });
 
   if (response.stop_reason === "refusal") {

@@ -10,7 +10,7 @@
 //   npm run blog:seed -- --dry-run -- print the plan without writing
 //   npm run blog:calendar          -- show what's already queued
 
-import { ORDERED_CLUSTERS, fillTemplate, slugify } from "./clusters.mjs";
+import { ORDERED_CLUSTERS, LOCAL_CLUSTER, fillTemplate, slugify } from "./clusters.mjs";
 import { supabase } from "./supabase.mjs";
 
 const POSTS_PER_WEEK = 3;
@@ -25,6 +25,13 @@ const PUBLISH_DAYS = [1, 3, 5]; // Mon, Wed, Fri
 // the review load spreads to roughly one PR a week.
 const STARTING_CLUSTERS = 2;
 const ACTIVATION_INTERVAL = 4;
+
+// City pages get a fixed share of the calendar rather than one turn in the
+// cluster rotation, which capped them at 1 post in 10 — far too slow to cover a
+// list this size. Every LOCAL_SLOT_EVERY-th slot is a city page; when the city
+// list is exhausted the slot falls back to the normal rotation, so the calendar
+// never runs short.
+const LOCAL_SLOT_EVERY = 2;
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -136,9 +143,21 @@ for (const [i, date] of dates.entries()) {
   );
 
   let topic = null;
+  let picked = null;
   const previous = rows.at(-1)?.cluster_id;
+
+  // Reserved city slot. Falls through to the rotation once every city page has
+  // been queued.
+  if (slot % LOCAL_SLOT_EVERY === 1) {
+    const local = nextTopic(LOCAL_CLUSTER, taken, locations);
+    if (local) {
+      topic = local;
+      picked = LOCAL_CLUSTER;
+    }
+  }
+
   // Walk the active clusters until one still has an unwritten topic.
-  for (let attempt = 0; attempt < activeCount; attempt++) {
+  for (let attempt = 0; !topic && attempt < activeCount; attempt++) {
     const cluster = ORDERED_CLUSTERS[rotation % activeCount];
     rotation++;
     // The pool grows as clusters activate, so the modulo can land on the same
@@ -146,22 +165,22 @@ for (const [i, date] of dates.entries()) {
     // posts from one cluster back to back.
     if (cluster.id === previous && attempt < activeCount - 1) continue;
     topic = nextTopic(cluster, taken, locations);
-    if (topic) {
-      taken.add(`${topic.keyword}|${topic.location_id ?? 0}`);
-      rows.push({
-        slug: topic.slug,
-        title: topic.title,
-        cluster_id: cluster.id,
-        keyword_targeted: topic.keyword,
-        post_type: topic.post_type,
-        status: "approved",
-        location_id: topic.location_id,
-        scheduled_for: date,
-      });
-      break;
-    }
+    if (topic) picked = cluster;
   }
-  if (!topic) break; // every active cluster exhausted
+
+  if (!topic) break; // every cluster exhausted
+
+  taken.add(`${topic.keyword}|${topic.location_id ?? 0}`);
+  rows.push({
+    slug: topic.slug,
+    title: topic.title,
+    cluster_id: picked.id,
+    keyword_targeted: topic.keyword,
+    post_type: topic.post_type,
+    status: "approved",
+    location_id: topic.location_id,
+    scheduled_for: date,
+  });
 }
 
 if (!rows.length) {

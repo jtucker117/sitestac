@@ -160,9 +160,16 @@ export const CLUSTERS = [
 // Publish order, highest commercial intent first. Cost and local-SEO lead
 // because those are the searches that end in a phone call; "do I even need a
 // website" is real traffic but the slowest to convert, so it waits.
-export const ROTATION = [2, 4, 10, 5, 6, 3, 9, 1, 7, 8];
+//
+// Cluster 10 is deliberately absent: city pages no longer take their turn in the
+// rotation, they get a fixed share of slots (see LOCAL_SLOT_EVERY in the seeder).
+// Sharing a rotation slot capped them at one post in ten, which would have taken
+// years to cover a city list this size.
+export const ROTATION = [2, 4, 5, 6, 3, 9, 1, 7, 8];
 
 export const ORDERED_CLUSTERS = ROTATION.map((id) => CLUSTERS.find((c) => c.id === id));
+
+export const LOCAL_CLUSTER = CLUSTERS.find((c) => c.id === 10);
 
 export const CLUSTER_IDS = CLUSTERS.map((c) => c.id);
 
