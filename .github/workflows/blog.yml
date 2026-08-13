@@ -22,7 +22,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 22+, not 20: @supabase/supabase-js needs a native WebSocket and
+          # throws at client construction without one.
+          node-version: 22
           cache: npm
       - run: npm ci
 
