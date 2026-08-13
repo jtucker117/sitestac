@@ -194,8 +194,9 @@ for (const r of rows) {
   );
 }
 console.log(`\n${rows.length} posts queued across ${WEEKS} weeks (${POSTS_PER_WEEK}/week).`);
-console.log(`  pillars needing review: ${rows.filter((r) => r.post_type === "pillar").length}`);
-console.log(`  location variants:      ${rows.filter((r) => r.post_type === "local_variant").length}`);
+console.log(`  pillars:          ${rows.filter((r) => r.post_type === "pillar").length}`);
+console.log(`  city pages:       ${rows.filter((r) => r.post_type === "local_variant").length}`);
+console.log(`  supporting posts: ${rows.filter((r) => r.post_type === "supporting").length}`);
 
 if (dryRun) {
   console.log("\n--dry-run: nothing written.");
