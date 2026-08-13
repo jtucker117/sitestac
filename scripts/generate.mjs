@@ -1,10 +1,9 @@
 // Drafts whatever is due in the queue and writes it to src/content/blog/.
-// The GitHub Action commits supporting/local posts straight to main; pillars go
-// out as a PR for Jordan to read before they go live.
+// Everything auto-publishes — the Action commits straight to main, which
+// triggers the deploy. Nothing waits on review, pillars included.
 //
-//   npm run blog:generate -- --skip-pillars   (the daily auto-publish pass)
-//   npm run blog:generate -- --only-pillars   (the PR pass)
-//   npm run blog:generate -- --dry-run        (draft to stdout, write nothing)
+//   npm run blog:generate             (the daily pass)
+//   npm run blog:generate -- --dry-run (draft to stdout, write nothing)
 
 import { existsSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
@@ -15,10 +14,7 @@ import { supabase } from "./supabase.mjs";
 const BLOG_DIR = "src/content/blog";
 const RUNWAY_ALERT_DAYS = 14;
 
-const args = process.argv.slice(2);
-const onlyPillars = args.includes("--only-pillars");
-const skipPillars = args.includes("--skip-pillars");
-const dryRun = args.includes("--dry-run");
+const dryRun = process.argv.includes("--dry-run");
 
 const anthropic = new Anthropic();
 const today = new Date().toISOString().slice(0, 10);
@@ -139,6 +135,9 @@ const { data: due, error } = await supabase
   .select("*")
   .lte("scheduled_for", today)
   .is("published_at", null)
+  // Nothing waits on review any more. `pending_review` stays in this list only
+  // because rows seeded before that change still carry it — they publish like
+  // anything else rather than needing a manual status fix.
   .in("status", ["approved", "pending_review"])
   .order("scheduled_for");
 
@@ -155,21 +154,7 @@ if (alreadyOnDisk.length && !dryRun) {
   alreadyOnDisk.forEach((p) => note(`Published (already on main): ${p.slug}`));
 }
 
-const pending = due.filter((p) => !alreadyOnDisk.includes(p));
-const queue = pending.filter((p) => {
-  const isPillar = p.post_type === "pillar";
-  if (onlyPillars) return isPillar;
-  if (skipPillars) return !isPillar;
-  return true;
-});
-
-// Requirement 3: a pillar that missed its date is never auto-published — it
-// just sits in the queue until the PR is merged. Say so loudly.
-pending
-  .filter((p) => p.post_type === "pillar" && p.scheduled_for < today)
-  .forEach((p) =>
-    note(`Pillar past its date and still unmerged: "${p.title}" (was due ${p.scheduled_for}).`),
-  );
+const queue = due.filter((p) => !alreadyOnDisk.includes(p));
 
 if (!queue.length) {
   note("Nothing due.");
@@ -222,20 +207,14 @@ for (const post of queue) {
 
   writeFileSync(join(BLOG_DIR, `${post.slug}.md`), markdown);
 
-  // Pillars stay pending_review until their PR merges — the next run sees the
-  // file on main and flips them to published.
-  if (post.post_type !== "pillar") {
-    await supabase
-      .from("blog_posts")
-      .update({
-        status: "published",
-        published_at: new Date().toISOString(),
-        title: draft.title,
-      })
-      .eq("id", post.id);
-  } else {
-    await supabase.from("blog_posts").update({ title: draft.title }).eq("id", post.id);
-  }
+  await supabase
+    .from("blog_posts")
+    .update({
+      status: "published",
+      published_at: new Date().toISOString(),
+      title: draft.title,
+    })
+    .eq("id", post.id);
 
   note(`Wrote ${post.slug}.md — ${draft.title}`);
 }

@@ -1,8 +1,12 @@
-// Builds the 90-day publishing queue: round-robin across the 10 clusters,
-// Mon/Wed/Fri, ~39 slots. Pillars land as pending_review (Jordan approves via
-// PR); everything else lands approved and auto-publishes on its date.
+// Keeps a rolling 90-day publishing queue: round-robin across the 10 clusters,
+// Mon/Wed/Fri, ~39 slots. Everything lands approved and auto-publishes on its
+// date, pillars included — nothing waits on review.
 //
-//   npm run blog:seed              -- queue the next 90 days
+// The daily Action runs this before generating, so the queue tops itself up and
+// never runs dry. Safe to run repeatedly: dates that already have a post are
+// skipped, and the unique index blocks any keyword being queued twice.
+//
+//   npm run blog:seed              -- top the queue back up to 90 days
 //   npm run blog:seed -- --dry-run -- print the plan without writing
 //   npm run blog:calendar          -- show what's already queued
 
@@ -150,7 +154,7 @@ for (const [i, date] of dates.entries()) {
         cluster_id: cluster.id,
         keyword_targeted: topic.keyword,
         post_type: topic.post_type,
-        status: topic.post_type === "pillar" ? "pending_review" : "approved",
+        status: "approved",
         location_id: topic.location_id,
         scheduled_for: date,
       });

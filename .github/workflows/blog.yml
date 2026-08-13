@@ -9,18 +9,15 @@ concurrency:
   group: blog
   cancel-in-progress: false
 
-env:
-  SUPABASE_URL: https://kbsjugijwmjpattzfmgi.supabase.co
-  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-
 jobs:
-  # Supporting and location-variant posts publish themselves: commit to main,
-  # which triggers the existing Cloudflare deploy workflow.
   publish:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      SUPABASE_URL: https://kbsjugijwmjpattzfmgi.supabase.co
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,8 +25,14 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run blog:generate -- --skip-pillars
 
+      # Top the queue back up to a rolling 90 days before drafting, so it never
+      # runs dry and a newly-activated city is picked up within a day.
+      - run: npm run blog:seed
+
+      - run: npm run blog:generate
+
+      # Committing to main triggers the existing Cloudflare deploy workflow.
       - name: Commit new posts
         run: |
           git config user.name "sitestac-bot"
@@ -41,34 +44,3 @@ jobs:
           git add src/content/blog
           git commit -m "Blog: publish scheduled posts"
           git push
-
-  # Pillars carry the most SEO weight, so they never auto-publish — they land as
-  # a PR. Merging it is the approval; the next run reconciles the ledger.
-  pillars:
-    needs: publish
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run blog:generate -- --only-pillars
-
-      - name: Open review PR
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: blog/pillar-review
-          add-paths: src/content/blog
-          commit-message: "Blog: pillar draft for review"
-          title: "Pillar post ready for review"
-          body: |
-            A pillar post is queued and drafted. Pillars anchor a whole keyword
-            cluster, so this one waits on you.
-
-            Read it, edit anything that sounds off, then merge — merging is what
-            publishes it. It stays queued until you do.
