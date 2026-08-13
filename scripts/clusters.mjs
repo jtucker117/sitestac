@@ -1,6 +1,12 @@
 // The keyword map from sitestac-blog-keyword-strategy.md, as data.
-// The seeder walks these in round-robin order (1 -> 10 -> 1) so published
-// content stays varied and no two consecutive posts come from one cluster.
+// The seeder walks these round-robin so no two consecutive posts come from one
+// cluster — but in ROTATION order, not cluster-id order, so the clusters that
+// actually convert publish first.
+//
+// `pillarKeyword` is the head term the pillar owns. It is excluded from the
+// supporting pool: without it, the pillar and a supporting post chase the same
+// query and split their own authority. Omit it when the pillar is a broad hub
+// with no single head term (cluster 5), and the pillar targets its title.
 //
 // `localVariants: true` marks the high-intent clusters that get city variants.
 // Cluster 10 has no neutral keywords — it is templates only, so every cluster-10
@@ -11,8 +17,8 @@ export const CLUSTERS = [
     id: 1,
     name: "Do I even need a website?",
     pillar: "Does My Small Business Really Need a Website in 2026?",
+    pillarKeyword: "do i need a website for my small business",
     keywords: [
-      "do i need a website for my small business",
       "is a facebook page enough for my business",
       "website vs google business profile do i need both",
       "can i run a business without a website",
@@ -25,9 +31,9 @@ export const CLUSTERS = [
     id: 2,
     name: "Cost & pricing",
     pillar: "How Much Does a Small Business Website Cost? (Real Numbers)",
+    pillarKeyword: "how much does a website cost for a small business",
     localVariants: true,
     keywords: [
-      "how much does a website cost for a small business",
       "website design pricing small business",
       "monthly website cost vs one-time cost",
       "cheap website vs professional website what's the difference",
@@ -40,8 +46,8 @@ export const CLUSTERS = [
     id: 3,
     name: "DIY vs hiring a pro",
     pillar: "Wix vs Squarespace vs Hiring a Web Designer: What's Right for Your Business?",
+    pillarKeyword: "best website builder for small business",
     keywords: [
-      "best website builder for small business",
       "wix vs squarespace vs wordpress for small business",
       "should i build my own website or hire someone",
       "problems with diy website builders",
@@ -54,9 +60,9 @@ export const CLUSTERS = [
     id: 4,
     name: "Getting found on Google",
     pillar: "How to Get Your Business to Show Up on Google (Local SEO Basics)",
+    pillarKeyword: "how to get my business on google",
     localVariants: true,
     keywords: [
-      "how to get my business on google",
       "how to rank on google maps",
       "google business profile setup guide",
       "local seo for small business",
@@ -87,8 +93,8 @@ export const CLUSTERS = [
     id: 6,
     name: "Leads & conversion",
     pillar: "How a Website Actually Gets You Customers (Not Just Compliments)",
+    pillarKeyword: "how to get more customers online",
     keywords: [
-      "how to get more customers online",
       "does a website generate leads",
       "landing page vs website for small business",
       "best call to action for service businesses",
@@ -101,9 +107,9 @@ export const CLUSTERS = [
     id: 7,
     name: "Trust & credibility",
     pillar: "Why Customers Don't Call: The Trust Problem With Bad (or No) Websites",
+    pillarKeyword: "what makes a website look trustworthy",
     keywords: [
       "does a website make my business look more professional",
-      "what makes a website look trustworthy",
       "outdated website hurting business",
       "before and after website redesign examples",
       "do customers check your website before calling",
@@ -113,11 +119,11 @@ export const CLUSTERS = [
     id: 8,
     name: "AI & the future of search",
     pillar: "Will AI Replace Websites? What ChatGPT and Google AI Mean for Your Business",
+    pillarKeyword: "do websites still matter with ai search",
     keywords: [
       "how to get recommended by chatgpt",
       "google ai overviews small business impact",
       "seo vs ai search what changes",
-      "do websites still matter with ai search",
       "how to optimize your website for ai answers",
     ],
   },
@@ -125,8 +131,8 @@ export const CLUSTERS = [
     id: 9,
     name: "Basics & how-to",
     pillar: "Small Business Website 101: Everything You Need Before You Launch",
+    pillarKeyword: "what pages does a website need",
     keywords: [
-      "what pages does a website need",
       "how to choose a domain name for my business",
       "what is web hosting explained simply",
       "how to write website content for my business",
@@ -150,6 +156,13 @@ export const CLUSTERS = [
     ],
   },
 ];
+
+// Publish order, highest commercial intent first. Cost and local-SEO lead
+// because those are the searches that end in a phone call; "do I even need a
+// website" is real traffic but the slowest to convert, so it waits.
+export const ROTATION = [2, 4, 10, 5, 6, 3, 9, 1, 7, 8];
+
+export const ORDERED_CLUSTERS = ROTATION.map((id) => CLUSTERS.find((c) => c.id === id));
 
 export const CLUSTER_IDS = CLUSTERS.map((c) => c.id);
 

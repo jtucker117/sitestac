@@ -6,18 +6,21 @@
 //   npm run blog:seed -- --dry-run -- print the plan without writing
 //   npm run blog:calendar          -- show what's already queued
 
-import { CLUSTERS, fillTemplate, slugify } from "./clusters.mjs";
+import { ORDERED_CLUSTERS, fillTemplate, slugify } from "./clusters.mjs";
 import { supabase } from "./supabase.mjs";
 
 const POSTS_PER_WEEK = 3;
 const WEEKS = 13;
 const PUBLISH_DAYS = [1, 3, 5]; // Mon, Wed, Fri
 
-// Every cluster leads with its pillar, so a naive rotation puts all 10 pillars
-// in the first 10 slots — three weeks where nothing auto-publishes and ten PRs
-// pile up at once. Space them out instead; the cluster falls back to a
-// supporting keyword when a pillar is already awaiting review nearby.
-const PILLAR_SPACING_DAYS = 14;
+// Every cluster leads with its pillar, so activating all ten at once puts ten
+// pillars in the first ten slots — three weeks where nothing auto-publishes and
+// ten PRs arrive together. Instead the clusters phase in: two to start, one more
+// every ACTIVATION_INTERVAL slots. A cluster's pillar is still the first thing
+// it publishes, so supporting posts always have a pillar to link back to, but
+// the review load spreads to roughly one PR a week.
+const STARTING_CLUSTERS = 2;
+const ACTIVATION_INTERVAL = 4;
 
 const dryRun = process.argv.includes("--dry-run");
 
@@ -39,18 +42,21 @@ function publishDates() {
 }
 
 // Picks the next unwritten topic for a cluster: pillar first (it anchors the
-// cluster), then supporting keywords, then location variants once the neutral
-// keywords are exhausted. Cluster 10 has no neutral keywords, so it always
-// yields a variant.
-function nextTopic(cluster, taken, locations, pillarAllowed) {
-  if (cluster.pillar && pillarAllowed && !taken.has(`${cluster.pillar}|0`)) {
-    return {
-      keyword: cluster.pillar,
-      title: cluster.pillar,
-      slug: slugify(cluster.pillar),
-      post_type: "pillar",
-      location_id: null,
-    };
+// cluster and every supporting post links back to it), then supporting
+// keywords, then location variants once the neutral keywords are exhausted.
+// Cluster 10 has no neutral keywords, so it always yields a variant.
+function nextTopic(cluster, taken, locations) {
+  if (cluster.pillar) {
+    const keyword = cluster.pillarKeyword ?? cluster.pillar;
+    if (!taken.has(`${keyword}|0`)) {
+      return {
+        keyword,
+        title: cluster.pillar,
+        slug: slugify(cluster.pillar),
+        post_type: "pillar",
+        location_id: null,
+      };
+    }
   }
 
   for (const keyword of cluster.keywords ?? []) {
@@ -65,13 +71,15 @@ function nextTopic(cluster, taken, locations, pillarAllowed) {
     }
   }
 
-  if (!cluster.localVariants) return null;
+  // Only clusters with {city} templates can produce variants. Falling back to a
+  // cluster's plain keywords looks tempting but produces a duplicate of an
+  // existing post with a location_id attached — same query, same content, two
+  // pages competing. Cluster 10's templates already cover the high-intent local
+  // keywords for cost, local SEO, and the trades.
+  if (!cluster.templates?.length) return null;
 
-  // Cluster 10 uses its own templates; clusters 2/4/5 reuse their keywords as
-  // variant bases once every neutral post is queued.
-  const bases = cluster.templates ?? cluster.keywords ?? [];
   for (const location of locations) {
-    for (const base of bases) {
+    for (const base of cluster.templates) {
       const keyword = fillTemplate(base, location);
       if (!taken.has(`${keyword}|${location.id}`)) {
         return {
@@ -106,45 +114,50 @@ const taken = new Set(
   existing.map((p) => `${p.keyword_targeted}|${p.location_id ?? 0}`),
 );
 
-// Resume the rotation where the existing queue left off, so a re-run doesn't
-// restart at cluster 1 and publish two cluster-1 posts back to back.
-const scheduled = existing.filter((p) => p.scheduled_for);
+// Resume where the existing queue left off, so a re-run doesn't restart the
+// rotation and publish two posts from one cluster back to back.
+const alreadyScheduled = existing.filter((p) => p.scheduled_for).length;
 const dates = publishDates().filter(
-  (d) => !scheduled.some((p) => p.scheduled_for === d),
+  (d) => !existing.some((p) => p.scheduled_for === d),
 );
-let rotation = scheduled.length % CLUSTERS.length;
+let rotation = alreadyScheduled;
 
 const rows = [];
-const pillarDates = existing
-  .filter((p) => p.scheduled_for && p.post_type === "pillar")
-  .map((p) => p.scheduled_for);
 
-const spacedFromLastPillar = (date) =>
-  pillarDates.every(
-    (d) => Math.abs(new Date(date) - new Date(d)) / 86_400_000 >= PILLAR_SPACING_DAYS,
+for (const [i, date] of dates.entries()) {
+  const slot = alreadyScheduled + i;
+  const activeCount = Math.min(
+    ORDERED_CLUSTERS.length,
+    STARTING_CLUSTERS + Math.floor(slot / ACTIVATION_INTERVAL),
   );
 
-for (const date of dates) {
   let topic = null;
-  const pillarAllowed = spacedFromLastPillar(date);
-  // Walk the rotation until a cluster still has an unwritten topic.
-  for (let attempt = 0; attempt < CLUSTERS.length; attempt++) {
-    const cluster = CLUSTERS[rotation % CLUSTERS.length];
+  const previous = rows.at(-1)?.cluster_id;
+  // Walk the active clusters until one still has an unwritten topic.
+  for (let attempt = 0; attempt < activeCount; attempt++) {
+    const cluster = ORDERED_CLUSTERS[rotation % activeCount];
     rotation++;
-    topic = nextTopic(cluster, taken, locations, pillarAllowed);
+    // The pool grows as clusters activate, so the modulo can land on the same
+    // cluster twice running. Skip it while another option remains — never two
+    // posts from one cluster back to back.
+    if (cluster.id === previous && attempt < activeCount - 1) continue;
+    topic = nextTopic(cluster, taken, locations);
     if (topic) {
-      if (topic.post_type === "pillar") pillarDates.push(date);
       taken.add(`${topic.keyword}|${topic.location_id ?? 0}`);
       rows.push({
-        ...topic,
+        slug: topic.slug,
+        title: topic.title,
         cluster_id: cluster.id,
-        scheduled_for: date,
+        keyword_targeted: topic.keyword,
+        post_type: topic.post_type,
         status: topic.post_type === "pillar" ? "pending_review" : "approved",
+        location_id: topic.location_id,
+        scheduled_for: date,
       });
       break;
     }
   }
-  if (!topic) break; // every cluster exhausted
+  if (!topic) break; // every active cluster exhausted
 }
 
 if (!rows.length) {
@@ -152,31 +165,20 @@ if (!rows.length) {
   process.exit(0);
 }
 
-const insert = rows.map((r) => ({
-  slug: r.slug,
-  title: r.title,
-  cluster_id: r.cluster_id,
-  keyword_targeted: r.keyword,
-  post_type: r.post_type,
-  status: r.status,
-  location_id: r.location_id,
-  scheduled_for: r.scheduled_for,
-}));
-
-for (const r of insert) {
+for (const r of rows) {
   console.log(
     `${r.scheduled_for}  c${String(r.cluster_id).padStart(2)}  ${r.post_type.padEnd(14)}  ${r.keyword_targeted}`,
   );
 }
-console.log(`\n${insert.length} posts queued across ${WEEKS} weeks (${POSTS_PER_WEEK}/week).`);
-console.log(`  pillars needing review: ${insert.filter((r) => r.post_type === "pillar").length}`);
-console.log(`  location variants:      ${insert.filter((r) => r.post_type === "local_variant").length}`);
+console.log(`\n${rows.length} posts queued across ${WEEKS} weeks (${POSTS_PER_WEEK}/week).`);
+console.log(`  pillars needing review: ${rows.filter((r) => r.post_type === "pillar").length}`);
+console.log(`  location variants:      ${rows.filter((r) => r.post_type === "local_variant").length}`);
 
 if (dryRun) {
   console.log("\n--dry-run: nothing written.");
   process.exit(0);
 }
 
-const { error: insertError } = await supabase.from("blog_posts").insert(insert);
+const { error: insertError } = await supabase.from("blog_posts").insert(rows);
 if (insertError) throw insertError;
 console.log("\nQueue written to Supabase.");
