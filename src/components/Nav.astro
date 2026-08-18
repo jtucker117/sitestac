@@ -5,12 +5,15 @@
    the stagger as transition-delay, and the jitter baked per item.
    The overlay is a SIBLING of <header> on purpose: the header's backdrop-filter
    makes it a containing block, which would trap a position:fixed child. */
+/* Each pill wears the DARK brick variant at rest and brightens to the base on
+   hover. That order is deliberate: white on base --orange is 2.53:1, under the
+   3:1 floor for large bold text. Every -d variant clears it. */
 const items = [
-  { label: "the stack", href: "/#stak",    color: "var(--blue)",   rot: -8, jit: -30 },
-  { label: "build",     href: "/#build",   color: "var(--teal)",   rot: 8,  jit: 20, cart: true },
-  { label: "pricing",   href: "/#pricing", color: "var(--orange)", rot: 8,  jit: -10 },
-  { label: "blog",      href: "/blog",     color: "var(--pink)",   rot: 8,  jit: 35 },
-  { label: "faq",       href: "/#faq",     color: "var(--purple)", rot: -8, jit: -25 },
+  { label: "the stack", href: "/#stak",    bg: "--blue",   rot: -8, jit: -30 },
+  { label: "build",     href: "/#build",   bg: "--teal",   rot: 8,  jit: 20, cart: true },
+  { label: "pricing",   href: "/#pricing", bg: "--orange", rot: 8,  jit: -10 },
+  { label: "blog",      href: "/blog",     bg: "--pink",   rot: 8,  jit: 35 },
+  { label: "faq",       href: "/#faq",     bg: "--purple", rot: -8, jit: -25 },
 ];
 ---
 <header class="nav" data-bubblenav>
@@ -33,7 +36,7 @@ const items = [
         <a
           class={`pill-link${it.cart ? " cart-open" : ""}`}
           href={it.href}
-          style={`--i:${i};--jit:${it.jit}ms;--rot:${it.rot}deg;--hover-bg:${it.color}`}
+          style={`--i:${i};--jit:${it.jit}ms;--rot:${it.rot}deg;--pill-bg:var(${it.bg}-d);--pill-hover:var(${it.bg})`}
         >
           <span class="pill-label">{it.label}</span>
         </a>
