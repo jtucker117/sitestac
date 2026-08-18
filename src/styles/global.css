@@ -95,39 +95,59 @@ footer .logo-img{height:36px}
 .tier:hover::after,.step:hover::after,.prob-card:hover::after,.trust .t:hover::after{opacity:1}
 .step,.prob-card,.trust .t{position:relative}
 
-/* ---------- CARD NAV ---------- */
-/* Menu toggle expands the header into three brick-coloured panels. Height is
-   measured in JS (auto can't transition); the stagger is transition-delay. */
-.nav .nav-actions{gap:1.1rem}
-.nav-toggle{display:inline-flex;align-items:center;gap:.6em;cursor:pointer;border:0;background:none;
-  font-family:"Sora",sans-serif;font-weight:700;font-size:.96rem;color:var(--ink-soft);
-  padding:.5em .2em;transition:color .2s}
-.nav-toggle:hover{color:var(--blue)}
-.nav-toggle .bars{display:flex;flex-direction:column;justify-content:center;gap:5px;width:22px}
-.nav-toggle .bars i{display:block;height:2px;border-radius:2px;background:currentColor;
-  transition:transform .25s var(--ease)}
-.nav.open .nav-toggle{color:var(--blue)}
-.nav.open .nav-toggle .bars i:first-child{transform:translateY(3.5px) rotate(45deg)}
-.nav.open .nav-toggle .bars i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+/* ---------- BUBBLE MENU ---------- */
+/* Ported from react-bits `BubbleMenu`. GSAP eases mapped to cubic-beziers:
+   back.out(1.5) for the pop, power3.out for labels, power3.in to dismiss.
+   The 0.12s stagger is transition-delay; --jit is the baked-in random jitter. */
+.nav .nav-actions{gap:1rem}
+.bubble-toggle{width:52px;height:52px;flex:0 0 auto;border:0;border-radius:50%;cursor:pointer;
+  background:#fff;box-shadow:0 6px 18px -6px rgba(15,26,51,.28);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+.bubble-toggle:hover{transform:translateY(-2px);box-shadow:0 12px 24px -8px rgba(15,26,51,.34)}
+.bubble-toggle:active{transform:translateY(1px) scale(.95);transition-duration:.06s}
+.bubble-toggle .menu-line{display:block;width:24px;height:2px;border-radius:2px;background:var(--ink);
+  transition:transform .3s var(--ease)}
+body.bubble-open .bubble-toggle .menu-line:first-child{transform:translateY(4px) rotate(45deg)}
+body.bubble-open .bubble-toggle .menu-line:last-child{transform:translateY(-4px) rotate(-45deg)}
 
-.nav-panel{height:0;overflow:hidden;transition:height .4s var(--ease)}
-.nav-cards{width:min(1180px,92vw);margin-inline:auto;
-  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:22px}
-.nav-card{--bc:var(--blue);background:var(--bc);color:#fff;border-radius:18px;padding:20px 22px;
-  display:flex;flex-direction:column;gap:14px;min-height:158px;
-  box-shadow:0 22px 40px -28px rgba(15,26,51,.55);
-  opacity:0;transform:translateY(50px);
-  transition:opacity .4s var(--ease),transform .4s var(--ease)}
-.nav.open .nav-card{opacity:1;transform:none;transition-delay:calc(300ms + var(--i) * 80ms)}
-.nav-card.n-blue{--bc:var(--blue)}
-.nav-card.n-purple{--bc:var(--purple)}
-.nav-card.n-teal{--bc:var(--teal)}
-.nav-card-label{font-family:"Sora",sans-serif;font-weight:700;font-size:1.35rem;letter-spacing:-.018em}
-.nav-card-links{margin-top:auto;display:flex;flex-direction:column;gap:4px}
-.nav-card-link{display:inline-flex;align-items:center;gap:.5em;width:fit-content;
-  font-weight:600;font-size:.97rem;color:rgba(255,255,255,.88);transition:color .2s}
-.nav-card-link:hover{color:#fff}
-.nav-card-link svg{opacity:.7;flex:0 0 auto}
+.bubble-menu{position:fixed;inset:0;z-index:45;display:flex;align-items:center;justify-content:center;
+  padding:96px 24px 24px;
+  background:rgba(248,250,252,.86);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  opacity:0;visibility:hidden;transition:opacity .25s ease,visibility 0s linear .25s}
+body.bubble-open .bubble-menu{opacity:1;visibility:visible;transition:opacity .2s ease,visibility 0s}
+body.bubble-open{overflow:hidden}
+/* The floating CTAs would punch through the scrim — z-60 and z-70 beat z-45. */
+body.bubble-open .cart-fab,body.bubble-open .mobile-cta{opacity:0;pointer-events:none}
+
+.pill-list{list-style:none;display:flex;flex-wrap:wrap;row-gap:10px;
+  width:100%;max-width:1180px;margin-inline:auto}
+.pill-col{flex:0 0 calc(100% / 3);display:flex;justify-content:center;padding:0 6px}
+.pill-col:nth-child(4){margin-left:calc(100% / 6)}
+.pill-link{--hover-bg:var(--blue);--tilt:0deg;
+  width:100%;min-height:132px;border-radius:999px;background:var(--panel);color:var(--ink);
+  font-family:"Sora",sans-serif;font-weight:700;letter-spacing:-.018em;
+  font-size:clamp(1.3rem,2.6vw,2.4rem);
+  display:flex;align-items:center;justify-content:center;white-space:nowrap;
+  box-shadow:0 18px 40px -22px rgba(15,26,51,.5);
+  transform:scale(0) rotate(var(--tilt));
+  transition:transform .2s cubic-bezier(.55,.055,.675,.19),background .3s ease,color .3s ease}
+/* Tilt only where there's room — narrow screens would push a rotated pill
+   past the viewport edge. --rot is inline, so a media query can't unset it. */
+@media(min-width:900px){ .pill-link{--tilt:var(--rot)} }
+body.bubble-open .pill-link{transform:scale(1) rotate(var(--tilt));
+  transition:transform .5s cubic-bezier(.175,.885,.32,1.24),background .3s ease,color .3s ease;
+  transition-delay:calc(var(--i) * 120ms + var(--jit))}
+.pill-link:hover{background:var(--hover-bg);color:#fff}
+.pill-label{display:inline-block;opacity:0;transform:translateY(24px);
+  transition:opacity .2s cubic-bezier(.55,.055,.675,.19),transform .2s cubic-bezier(.55,.055,.675,.19)}
+body.bubble-open .pill-label{opacity:1;transform:none;
+  transition:opacity .5s cubic-bezier(.215,.61,.355,1),transform .5s cubic-bezier(.215,.61,.355,1);
+  transition-delay:calc(var(--i) * 120ms + var(--jit) + 50ms)}
+@media(hover:hover){
+  body.bubble-open .pill-link:hover{transform:scale(1.06) rotate(var(--tilt))}
+  body.bubble-open .pill-link:active{transform:scale(.94) rotate(var(--tilt));transition-duration:.08s}
+}
 /* ── Buttons — one clean standard for the whole site ── */
 .btn{cursor:pointer;border:0;font-family:"Sora";font-weight:700;font-size:1rem;color:#fff;line-height:1.1;
   padding:.85em 1.6em;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:.5em;
@@ -147,12 +167,6 @@ footer .logo-img{height:36px}
 /* animated hero backdrop — floating gradient orbs over a faint blueprint grid,
    masked so it fades out toward the edges. Subtle, 60fps, GPU-only transforms. */
 .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.hero-bg .grid{position:absolute;inset:-2px;
-  background-image:linear-gradient(rgba(37,99,235,.06) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(37,99,235,.06) 1px,transparent 1px);
-  background-size:46px 46px;
-  -webkit-mask-image:radial-gradient(120% 90% at 70% 0%,#000 30%,transparent 72%);
-          mask-image:radial-gradient(120% 90% at 70% 0%,#000 30%,transparent 72%)}
 .hero-bg .orb{position:absolute;border-radius:50%;filter:blur(64px);opacity:.55;will-change:transform}
 .hero-bg .o1{width:520px;height:520px;top:-160px;right:-120px;
   background:radial-gradient(circle at 30% 30%,var(--blue-l),transparent 65%);animation:orb1 20s ease-in-out infinite}
@@ -514,11 +528,20 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   .vs{grid-template-columns:1fr;max-width:520px}
   .audit-wrap{grid-template-columns:1fr;gap:26px;padding:28px}
   .mobile-cta{display:flex}
-  .cart-fab{bottom:82px}
-  .nav-cards{grid-template-columns:1fr;gap:10px}
-  .nav-card{min-height:0;padding:16px 18px;gap:10px}
+  /* Wherever .mobile-cta is on screen it already offers both CTAs, so the FAB
+     and the header button are duplicates — and both misbehave at this width:
+     the FAB collides with the bar, the header button wraps to three lines.
+     Dropping them leaves the reference's logo + toggle pairing. */
+  .cart-fab{display:none}
+  .nav .nav-actions .btn{display:none}
+  .pill-col,.pill-col:nth-child(4){flex:0 0 100%;margin-left:0}
+  .pill-link{min-height:88px}
+  .bubble-menu{align-items:flex-start;padding-top:112px}
 }
-@media(max-width:560px){ .tiers{grid-template-columns:1fr} .addon-grid{grid-template-columns:1fr} .nav nav{gap:.8rem} .nav-toggle-text{display:none} }
+/* Phones read ~15% too large: type and em-derived padding are scaled from the
+   root. NOT `zoom` -- that shrinks the containing block for position:fixed,
+   so the dot-field backdrop and bubble overlay stop covering the screen. */
+@media(max-width:560px){ html{font-size:85%} .tiers{grid-template-columns:1fr} .addon-grid{grid-template-columns:1fr} .nav nav{gap:.8rem} }
 /* Reduced motion means no vestibular travel — NOT no feedback. Kill looping and
    positional animation, keep the opacity/color/shadow cues that carry state. */
 @media(prefers-reduced-motion:reduce){
@@ -533,7 +556,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   .stak-reset:active,.cart-close:active,.card:hover .thumb .shot,
   .faq details[open] summary .ic{transform:none!important}
   /* Animation-driven entrances must land in their finished state, not stay hidden. */
-  .stack .brick,.chip,.reveal,.nav.open .nav-card{opacity:1!important;transform:none!important}
+  .stack .brick,.chip,.reveal,body.bubble-open .pill-link,body.bubble-open .pill-label{opacity:1!important;transform:none!important}
   .hero-bg .orb{will-change:auto}
   html{scroll-behavior:auto}
 }

@@ -14,14 +14,14 @@ interface Props {
   glowColor?: string;
 }
 const {
-  dotRadius = 1.5,
+  dotRadius = 1.9,
   dotSpacing = 16,
   cursorRadius = 420,
   bulgeStrength = 60,
   glowRadius = 180,
-  gradientFrom = "rgba(37,99,235,.30)",
-  gradientTo = "rgba(232,58,144,.20)",
-  glowColor = "rgba(37,99,235,.14)",
+  gradientFrom = "rgba(37,99,235,.55)",
+  gradientTo = "rgba(232,58,144,.38)",
+  glowColor = "rgba(37,99,235,.18)",
 } = Astro.props;
 
 const opts = JSON.stringify({ dotRadius, dotSpacing, cursorRadius, bulgeStrength });
