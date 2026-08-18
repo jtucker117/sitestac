@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import DotField from "../components/DotField.astro";
 
 interface Props {
   title?: string;
@@ -68,6 +69,7 @@ const ogImage = new URL("/logo.png", Astro.site).href;
     )}
   </head>
   <body>
+    <DotField />
     <Nav />
     <main id="top">
       <slot />
@@ -75,6 +77,11 @@ const ogImage = new URL("/logo.png", Astro.site).href;
     <Footer />
 
     <script is:inline>
+      // iOS Safari only applies :active while a touch listener exists on the
+      // element or an ancestor. Without this no-op, every press state below is
+      // desktop-only — which is backwards for a site that's mostly phone traffic.
+      document.addEventListener("touchstart", function () {}, { passive: true });
+
       // Scroll reveal
       const io = new IntersectionObserver((entries) => {
         entries.forEach((e) => {
@@ -95,6 +102,16 @@ const ogImage = new URL("/logo.png", Astro.site).href;
           btn.addEventListener("mouseleave", () => (btn.style.transform = ""));
         });
       }
+
+      // Card spotlight — one delegated listener feeds the gradient origin to
+      // whichever card is under the cursor. CSS in global.css does the rest.
+      document.addEventListener("pointermove", (e) => {
+        const card = e.target.closest?.(".tier,.step,.prob-card,.trust .t");
+        if (!card) return;
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        card.style.setProperty("--my", `${e.clientY - r.top}px`);
+      }, { passive: true });
     </script>
   </body>
 </html>
