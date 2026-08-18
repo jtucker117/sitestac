@@ -1,110 +1,79 @@
 ---
-/* Expanding card nav — ported from react-bits `CardNav` to vanilla Astro.
-   The original drives height + card stagger with GSAP; here it's a CSS height
-   transition on the house curve plus per-card transition-delay, with JS only
-   measuring the open height. */
-const menu = [
-  {
-    label: "The Stack",
-    color: "n-blue",
-    links: [
-      { label: "What we build", href: "/#stak" },
-      { label: "How it works", href: "/#start" },
-      { label: "Recent work", href: "/#work" },
-    ],
-  },
-  {
-    label: "Pricing",
-    color: "n-purple",
-    links: [
-      { label: "Plans", href: "/#pricing" },
-      { label: "Add-ons", href: "/#pricing" },
-      { label: "Build your stack", href: "/#build", cart: true },
-    ],
-  },
-  {
-    label: "Resources",
-    color: "n-teal",
-    links: [
-      { label: "Blog", href: "/blog" },
-      { label: "FAQ", href: "/#faq" },
-      { label: "Free website audit", href: "/#audit" },
-    ],
-  },
+/* Bubble menu — ported from react-bits `BubbleMenu` to vanilla Astro.
+   The original drives the pop-in with GSAP (back.out(1.5), 0.12s stagger and a
+   small random jitter); here it's CSS transforms with matching cubic-beziers,
+   the stagger as transition-delay, and the jitter baked per item.
+   The overlay is a SIBLING of <header> on purpose: the header's backdrop-filter
+   makes it a containing block, which would trap a position:fixed child. */
+/* Each pill wears the DARK brick variant at rest and brightens to the base on
+   hover. That order is deliberate: white on base --orange is 2.53:1, under the
+   3:1 floor for large bold text. Every -d variant clears it. */
+const items = [
+  { label: "the stack", href: "/#stak",    bg: "--blue",   rot: -8, jit: -30 },
+  { label: "build",     href: "/#build",   bg: "--teal",   rot: 8,  jit: 20, cart: true },
+  { label: "pricing",   href: "/#pricing", bg: "--orange", rot: 8,  jit: -10 },
+  { label: "blog",      href: "/blog",     bg: "--pink",   rot: 8,  jit: 35 },
+  { label: "faq",       href: "/#faq",     bg: "--purple", rot: -8, jit: -25 },
 ];
 ---
-<header class="nav" data-cardnav>
+<header class="nav" data-bubblenav>
   <div class="wrap">
     <a class="logo" href="/#top" aria-label="SiteStac home"><img src="/logo.png" alt="SiteStac" class="logo-img" width="200" height="100" /></a>
     <nav class="nav-actions">
-      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-panel">
-        <span class="bars" aria-hidden="true"><i></i><i></i></span>
-        <span class="nav-toggle-text">Menu</span>
-      </button>
       <a class="btn" href="/#audit" data-magnetic>Get a free audit</a>
+      <button type="button" class="bubble-toggle" aria-expanded="false" aria-controls="bubble-menu" aria-label="Toggle navigation">
+        <span class="menu-line" aria-hidden="true"></span>
+        <span class="menu-line" aria-hidden="true"></span>
+      </button>
     </nav>
-  </div>
-
-  <div class="nav-panel" id="nav-panel">
-    <div class="nav-cards">
-      {menu.map((col, i) => (
-        <div class={`nav-card ${col.color}`} style={`--i:${i}`}>
-          <span class="nav-card-label">{col.label}</span>
-          <div class="nav-card-links">
-            {col.links.map((l) => (
-              <a class={`nav-card-link${l.cart ? " cart-open" : ""}`} href={l.href}>
-                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="8 7 17 7 17 16"/></svg>
-                {l.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
   </div>
 </header>
 
+<div class="bubble-menu" id="bubble-menu" aria-hidden="true">
+  <ul class="pill-list">
+    {items.map((it, i) => (
+      <li class="pill-col">
+        <a
+          class={`pill-link${it.cart ? " cart-open" : ""}`}
+          href={it.href}
+          style={`--i:${i};--jit:${it.jit}ms;--rot:${it.rot}deg;--pill-bg:var(${it.bg}-d);--pill-hover:var(${it.bg})`}
+        >
+          <span class="pill-label">{it.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
 <script>
-  const header = document.querySelector<HTMLElement>("[data-cardnav]");
-  const toggle = header?.querySelector<HTMLButtonElement>(".nav-toggle");
-  const panel = header?.querySelector<HTMLElement>(".nav-panel");
+  const toggle = document.querySelector<HTMLButtonElement>(".bubble-toggle");
+  const menu = document.querySelector<HTMLElement>(".bubble-menu");
 
-  if (header && toggle && panel) {
-    const isOpen = () => header.classList.contains("open");
-
-    const setHeight = () => {
-      // height:auto can't be transitioned, so measure the laid-out content.
-      panel.style.height = `${panel.scrollHeight}px`;
-    };
+  if (toggle && menu) {
+    const isOpen = () => document.body.classList.contains("bubble-open");
 
     const open = () => {
-      header.classList.add("open");
+      document.body.classList.add("bubble-open");
       toggle.setAttribute("aria-expanded", "true");
-      setHeight();
+      menu.setAttribute("aria-hidden", "false");
     };
 
     const close = () => {
-      header.classList.remove("open");
+      document.body.classList.remove("bubble-open");
       toggle.setAttribute("aria-expanded", "false");
-      panel.style.height = "";
+      menu.setAttribute("aria-hidden", "true");
     };
 
     toggle.addEventListener("click", () => (isOpen() ? close() : open()));
 
-    // Any link inside the panel dismisses it — including .cart-open, whose own
-    // handler on the home page opens the cart modal over the top.
-    panel.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement).closest("a")) close();
+    // A pill dismisses the menu; .cart-open's own handler on the home page
+    // opens the cart modal over the top. Clicking the backdrop just closes.
+    menu.addEventListener("click", (e) => {
+      if (e.target === menu || (e.target as HTMLElement).closest("a")) close();
     });
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && isOpen()) { close(); toggle.focus(); }
     });
-
-    document.addEventListener("click", (e) => {
-      if (isOpen() && !header.contains(e.target as Node)) close();
-    });
-
-    window.addEventListener("resize", () => { if (isOpen()) setHeight(); });
   }
 </script>
