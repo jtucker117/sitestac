@@ -82,8 +82,52 @@ header.nav{position:sticky;top:0;z-index:50;-webkit-backdrop-filter:blur(10px);b
 .logo-img{display:block;height:66px;width:auto}
 footer .logo-img{height:36px}
 .nav nav{display:flex;align-items:center;gap:2rem}
-.nav nav a.link{font-weight:600;color:var(--ink-soft);font-size:.96rem;transition:color .2s}
-.nav nav a.link:hover{color:var(--blue)}
+
+/* ---------- CARD SPOTLIGHT ---------- */
+/* Ported from react-bits `SpotlightCard`: a radial wash follows the cursor,
+   positioned by two custom properties set in Base.astro. border-radius:inherit
+   keeps it inside the corners without adding overflow:hidden to these cards. */
+.tier,.step,.prob-card,.trust .t{--mx:50%;--my:50%}
+.tier::after,.step::after,.prob-card::after,.trust .t::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(340px circle at var(--mx) var(--my),rgba(37,99,235,.10),transparent 72%);
+  opacity:0;transition:opacity .4s ease}
+.tier:hover::after,.step:hover::after,.prob-card:hover::after,.trust .t:hover::after{opacity:1}
+.step,.prob-card,.trust .t{position:relative}
+
+/* ---------- CARD NAV ---------- */
+/* Menu toggle expands the header into three brick-coloured panels. Height is
+   measured in JS (auto can't transition); the stagger is transition-delay. */
+.nav .nav-actions{gap:1.1rem}
+.nav-toggle{display:inline-flex;align-items:center;gap:.6em;cursor:pointer;border:0;background:none;
+  font-family:"Sora",sans-serif;font-weight:700;font-size:.96rem;color:var(--ink-soft);
+  padding:.5em .2em;transition:color .2s}
+.nav-toggle:hover{color:var(--blue)}
+.nav-toggle .bars{display:flex;flex-direction:column;justify-content:center;gap:5px;width:22px}
+.nav-toggle .bars i{display:block;height:2px;border-radius:2px;background:currentColor;
+  transition:transform .25s var(--ease)}
+.nav.open .nav-toggle{color:var(--blue)}
+.nav.open .nav-toggle .bars i:first-child{transform:translateY(3.5px) rotate(45deg)}
+.nav.open .nav-toggle .bars i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+
+.nav-panel{height:0;overflow:hidden;transition:height .4s var(--ease)}
+.nav-cards{width:min(1180px,92vw);margin-inline:auto;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:22px}
+.nav-card{--bc:var(--blue);background:var(--bc);color:#fff;border-radius:18px;padding:20px 22px;
+  display:flex;flex-direction:column;gap:14px;min-height:158px;
+  box-shadow:0 22px 40px -28px rgba(15,26,51,.55);
+  opacity:0;transform:translateY(50px);
+  transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.nav.open .nav-card{opacity:1;transform:none;transition-delay:calc(300ms + var(--i) * 80ms)}
+.nav-card.n-blue{--bc:var(--blue)}
+.nav-card.n-purple{--bc:var(--purple)}
+.nav-card.n-teal{--bc:var(--teal)}
+.nav-card-label{font-family:"Sora",sans-serif;font-weight:700;font-size:1.35rem;letter-spacing:-.018em}
+.nav-card-links{margin-top:auto;display:flex;flex-direction:column;gap:4px}
+.nav-card-link{display:inline-flex;align-items:center;gap:.5em;width:fit-content;
+  font-weight:600;font-size:.97rem;color:rgba(255,255,255,.88);transition:color .2s}
+.nav-card-link:hover{color:#fff}
+.nav-card-link svg{opacity:.7;flex:0 0 auto}
 /* ── Buttons — one clean standard for the whole site ── */
 .btn{cursor:pointer;border:0;font-family:"Sora";font-weight:700;font-size:1rem;color:#fff;line-height:1.1;
   padding:.85em 1.6em;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:.5em;
@@ -465,15 +509,16 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   .work-grid{grid-template-columns:1fr}
   .trust{grid-template-columns:1fr}
   .post-list{grid-template-columns:1fr}
-  .nav nav .link{display:none}
   .prob-grid{grid-template-columns:1fr}
   .tstm-grid{grid-template-columns:1fr}
   .vs{grid-template-columns:1fr;max-width:520px}
   .audit-wrap{grid-template-columns:1fr;gap:26px;padding:28px}
   .mobile-cta{display:flex}
   .cart-fab{bottom:82px}
+  .nav-cards{grid-template-columns:1fr;gap:10px}
+  .nav-card{min-height:0;padding:16px 18px;gap:10px}
 }
-@media(max-width:560px){ .tiers{grid-template-columns:1fr} .addon-grid{grid-template-columns:1fr} .nav nav{gap:.8rem} }
+@media(max-width:560px){ .tiers{grid-template-columns:1fr} .addon-grid{grid-template-columns:1fr} .nav nav{gap:.8rem} .nav-toggle-text{display:none} }
 /* Reduced motion means no vestibular travel — NOT no feedback. Kill looping and
    positional animation, keep the opacity/color/shadow cues that carry state. */
 @media(prefers-reduced-motion:reduce){
@@ -488,7 +533,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   .stak-reset:active,.cart-close:active,.card:hover .thumb .shot,
   .faq details[open] summary .ic{transform:none!important}
   /* Animation-driven entrances must land in their finished state, not stay hidden. */
-  .stack .brick,.chip,.reveal{opacity:1!important;transform:none!important}
+  .stack .brick,.chip,.reveal,.nav.open .nav-card{opacity:1!important;transform:none!important}
   .hero-bg .orb{will-change:auto}
   html{scroll-behavior:auto}
 }

@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import DotField from "../components/DotField.astro";
 
 interface Props {
   title?: string;
@@ -68,6 +69,7 @@ const ogImage = new URL("/logo.png", Astro.site).href;
     )}
   </head>
   <body>
+    <DotField />
     <Nav />
     <main id="top">
       <slot />
@@ -100,6 +102,16 @@ const ogImage = new URL("/logo.png", Astro.site).href;
           btn.addEventListener("mouseleave", () => (btn.style.transform = ""));
         });
       }
+
+      // Card spotlight — one delegated listener feeds the gradient origin to
+      // whichever card is under the cursor. CSS in global.css does the rest.
+      document.addEventListener("pointermove", (e) => {
+        const card = e.target.closest?.(".tier,.step,.prob-card,.trust .t");
+        if (!card) return;
+        const r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        card.style.setProperty("--my", `${e.clientY - r.top}px`);
+      }, { passive: true });
     </script>
   </body>
 </html>

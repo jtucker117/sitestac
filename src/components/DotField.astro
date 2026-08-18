@@ -1,0 +1,195 @@
+---
+/* DotField — interactive dot grid with cursor bulge + glow.
+   Ported from react-bits `DotField-JS-CSS` to vanilla Astro (the site has no
+   React, and the original component has no dependencies of its own).
+   Sits behind all page content as a fixed full-viewport backdrop. */
+interface Props {
+  dotRadius?: number;
+  dotSpacing?: number;
+  cursorRadius?: number;
+  bulgeStrength?: number;
+  glowRadius?: number;
+  gradientFrom?: string;
+  gradientTo?: string;
+  glowColor?: string;
+}
+const {
+  dotRadius = 1.5,
+  dotSpacing = 16,
+  cursorRadius = 420,
+  bulgeStrength = 60,
+  glowRadius = 180,
+  gradientFrom = "rgba(37,99,235,.30)",
+  gradientTo = "rgba(232,58,144,.20)",
+  glowColor = "rgba(37,99,235,.14)",
+} = Astro.props;
+
+const opts = JSON.stringify({ dotRadius, dotSpacing, cursorRadius, bulgeStrength });
+const glowId = "dot-field-glow";
+---
+
+<div class="dot-field" aria-hidden="true" data-dot-field={opts}>
+  <canvas data-grad-from={gradientFrom} data-grad-to={gradientTo}></canvas>
+  <svg>
+    <defs>
+      <radialGradient id={glowId}>
+        <stop offset="0%" stop-color={glowColor} />
+        <stop offset="100%" stop-color="transparent" />
+      </radialGradient>
+    </defs>
+    <circle cx="-9999" cy="-9999" r={glowRadius} fill={`url(#${glowId})`} />
+  </svg>
+</div>
+
+<style>
+  .dot-field {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .dot-field canvas,
+  .dot-field svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .dot-field circle {
+    opacity: 0;
+    will-change: opacity;
+  }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>("[data-dot-field]");
+  if (el) {
+    const p = JSON.parse(el.dataset.dotField!);
+    const canvas = el.querySelector("canvas")!;
+    const glowEl = el.querySelector("circle")!;
+    const ctx = canvas.getContext("2d", { alpha: true })!;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const gradFrom = canvas.dataset.gradFrom!;
+    const gradTo = canvas.dataset.gradTo!;
+
+    // No cursor to react to (touch) or motion opted out -> paint the grid once
+    // and skip the animation loop entirely.
+    const still =
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      !window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    const m = { x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 };
+    let dots: { ax: number; ay: number; sx: number; sy: number }[] = [];
+    let w = 0, h = 0, engagement = 0, glowOpacity = 0, raf = 0, resizeTimer = 0;
+
+    function buildDots() {
+      const step = p.dotRadius + p.dotSpacing;
+      const cols = Math.floor(w / step);
+      const rows = Math.floor(h / step);
+      const padX = (w % step) / 2;
+      const padY = (h % step) / 2;
+      dots = new Array(rows * cols);
+      let i = 0;
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const ax = padX + col * step + step / 2;
+          const ay = padY + row * step + step / 2;
+          dots[i++] = { ax, ay, sx: ax, sy: ay };
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, gradFrom);
+      grad.addColorStop(1, gradTo);
+      ctx.fillStyle = grad;
+
+      const cr = p.cursorRadius;
+      const crSq = cr * cr;
+      const rad = p.dotRadius / 2;
+      const eng = engagement;
+
+      ctx.beginPath();
+      for (let i = 0; i < dots.length; i++) {
+        const d = dots[i];
+        const dx = m.x - d.ax;
+        const dy = m.y - d.ay;
+        const distSq = dx * dx + dy * dy;
+
+        if (distSq < crSq && eng > 0.01) {
+          const dist = Math.sqrt(distSq);
+          const t = 1 - dist / cr;
+          const push = t * t * p.bulgeStrength * eng;
+          const angle = Math.atan2(dy, dx);
+          d.sx += (d.ax - Math.cos(angle) * push - d.sx) * 0.15;
+          d.sy += (d.ay - Math.sin(angle) * push - d.sy) * 0.15;
+        } else {
+          d.sx += (d.ax - d.sx) * 0.1;
+          d.sy += (d.ay - d.sy) * 0.1;
+        }
+
+        ctx.moveTo(d.sx + rad, d.sy);
+        ctx.arc(d.sx, d.sy, rad, 0, Math.PI * 2);
+      }
+      ctx.fill();
+    }
+
+    function resize() {
+      const rect = el!.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildDots();
+      if (still) draw();
+    }
+
+    resize();
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resize, 100);
+    });
+
+    if (!still) {
+      // Element is position:fixed, so viewport coords are already local.
+      window.addEventListener(
+        "mousemove",
+        (e) => {
+          m.x = e.clientX;
+          m.y = e.clientY;
+        },
+        { passive: true }
+      );
+
+      setInterval(() => {
+        const dx = m.prevX - m.x;
+        const dy = m.prevY - m.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        m.speed += (dist - m.speed) * 0.5;
+        if (m.speed < 0.001) m.speed = 0;
+        m.prevX = m.x;
+        m.prevY = m.y;
+      }, 20);
+
+      const tick = () => {
+        const target = Math.min(m.speed / 5, 1);
+        engagement += (target - engagement) * 0.06;
+        if (engagement < 0.001) engagement = 0;
+        glowOpacity += (engagement - glowOpacity) * 0.08;
+
+        glowEl.setAttribute("cx", String(m.x));
+        glowEl.setAttribute("cy", String(m.y));
+        glowEl.style.opacity = String(glowOpacity);
+
+        draw();
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }
+  }
+</script>
