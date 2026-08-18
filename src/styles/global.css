@@ -125,9 +125,9 @@ body.bubble-open .cart-fab,body.bubble-open .mobile-cta{opacity:0;pointer-events
 .pill-col{flex:0 0 calc(100% / 3);display:flex;justify-content:center;padding:0 6px}
 .pill-col:nth-child(4){margin-left:calc(100% / 6)}
 .pill-link{--pill-bg:var(--blue-d);--pill-hover:var(--blue);--tilt:0deg;
-  width:100%;min-height:119px;border-radius:999px;background:var(--pill-bg);color:#fff;
+  width:100%;min-height:107px;border-radius:999px;background:var(--pill-bg);color:#fff;
   font-family:"Sora",sans-serif;font-weight:700;letter-spacing:-.018em;
-  font-size:clamp(1.17rem,2.34vw,2.16rem);
+  font-size:clamp(1.05rem,2.1vw,1.94rem);
   display:flex;align-items:center;justify-content:center;white-space:nowrap;
   box-shadow:0 16px 34px -20px rgba(15,26,51,.55);
   transform:scale(0) rotate(var(--tilt));
@@ -535,8 +535,9 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   .cart-fab{display:none}
   .nav .nav-actions .btn{display:none}
   .pill-col,.pill-col:nth-child(4){flex:0 0 100%;margin-left:0}
-  .pill-link{min-height:79px}
-  .bubble-menu{align-items:flex-start;padding-top:112px}
+  .pill-link{min-height:71px}
+  .bubble-menu{align-items:flex-start;padding-top:88px}
+  .pill-list{row-gap:8px;max-width:320px}
 }
 /* Phones read ~15% too large: type and em-derived padding are scaled from the
    root. NOT `zoom` -- that shrinks the containing block for position:fixed,
