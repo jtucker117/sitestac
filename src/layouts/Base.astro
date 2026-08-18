@@ -75,6 +75,11 @@ const ogImage = new URL("/logo.png", Astro.site).href;
     <Footer />
 
     <script is:inline>
+      // iOS Safari only applies :active while a touch listener exists on the
+      // element or an ancestor. Without this no-op, every press state below is
+      // desktop-only — which is backwards for a site that's mostly phone traffic.
+      document.addEventListener("touchstart", function () {}, { passive: true });
+
       // Scroll reveal
       const io = new IntersectionObserver((entries) => {
         entries.forEach((e) => {

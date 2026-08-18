@@ -41,6 +41,11 @@ body{
 }
 .wrap{width:min(1180px,92vw);margin-inline:auto}
 h1,h2,h3,.display{font-family:"Sora",sans-serif;line-height:1.04;letter-spacing:-.01em}
+/* Tracking is size-specific — one fixed value is wrong somewhere. Letters read
+   too far apart as type grows, too tight as it shrinks: tighten display, relax h3. */
+.hero h1,.cta h2,.display,.prose h1{letter-spacing:-.026em}
+.section-head h2,.addons-title,.audit-lead h2{letter-spacing:-.018em}
+h3{letter-spacing:-.004em}
 a{color:inherit;text-decoration:none}
 
 /* ---------- BRICK COMPONENT ---------- */
@@ -68,7 +73,7 @@ a{color:inherit;text-decoration:none}
 .brick.b-yellow{--bc:var(--yellow);--bl:#ffd25a;--bd:var(--yellow-d);color:#3a2a00}
 
 /* ---------- NAV ---------- */
-header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);
+header.nav{position:sticky;top:0;z-index:50;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   background:linear-gradient(180deg,rgba(248,250,252,.92),rgba(248,250,252,.55));
   border-bottom:1px solid rgba(226,232,240,.8)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:96px}
@@ -213,7 +218,7 @@ section.block{padding:84px 0}
   box-shadow:0 14px 30px -10px rgba(37,99,235,.6);transition:transform .16s var(--ease),box-shadow .16s var(--ease)}
 .cart-fab:hover{transform:translateY(-3px);box-shadow:0 18px 36px -12px rgba(37,99,235,.65)}
 .cart-overlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;
-  background:rgba(11,18,32,.55);backdrop-filter:blur(4px)}
+  background:rgba(11,18,32,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .cart-overlay.open{display:flex}
 .cart-modal{position:relative;width:100%;max-width:940px;max-height:90vh;overflow:auto;background:#fff;border-radius:22px;
   box-shadow:0 40px 80px -30px rgba(15,26,51,.6);padding:26px 26px 24px}
@@ -274,7 +279,7 @@ section.block{padding:84px 0}
 .card .thumb{aspect-ratio:16/11;position:relative;display:grid;place-items:center;color:#fff;font-family:"Sora";font-weight:800;font-size:1.5rem;overflow:hidden}
 .card .thumb .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center}
 .card:hover .thumb .shot{transform:scale(1.03);transition:transform .3s ease}
-.card .thumb span.meta{position:absolute;top:12px;left:12px;z-index:1;font-family:"Sora";font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#fff;background:rgba(15,26,51,.55);padding:4px 9px;border-radius:7px;backdrop-filter:blur(3px)}
+.card .thumb span.meta{position:absolute;top:12px;left:12px;z-index:1;font-family:"Sora";font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#fff;background:rgba(15,26,51,.55);padding:4px 9px;border-radius:7px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .card .body{padding:18px 20px}
 .card .body h3{font-size:1.15rem;font-weight:700;margin-bottom:.15em}
 .card .body p{color:var(--ink-soft);font-size:.92rem}
@@ -337,7 +342,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 .trust-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
 .chip{display:inline-flex;align-items:center;gap:.45em;font-weight:600;font-size:.86rem;color:var(--ink);
   background:rgba(255,255,255,.75);border:1px solid var(--line);border-radius:999px;padding:.5em .9em;
-  backdrop-filter:blur(6px);box-shadow:0 8px 18px -14px rgba(15,26,51,.5);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 8px 18px -14px rgba(15,26,51,.5);
   opacity:0;transform:translateY(10px);animation:chipin .5s var(--ease) forwards}
 .chip .tick{display:grid;place-items:center;width:16px;height:16px;border-radius:5px;background:var(--green);color:#fff;flex:0 0 auto}
 .chip .tick svg{display:block}
@@ -377,7 +382,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 /* ---------- TESTIMONIALS ---------- */
 .tstm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .tstm{background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.7);border-radius:20px;padding:26px;
-  backdrop-filter:blur(10px);box-shadow:0 22px 50px -30px rgba(15,26,51,.5);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 22px 50px -30px rgba(15,26,51,.5);
   transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
 .tstm:hover{transform:translateY(-5px);box-shadow:0 30px 60px -30px rgba(15,26,51,.55)}
 .tstm .stars{display:flex;gap:2px;color:var(--yellow);margin-bottom:12px}
@@ -422,11 +427,27 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 
 /* ---------- STICKY MOBILE CTA ---------- */
 .mobile-cta{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
-  background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.96) 40%);backdrop-filter:blur(10px);
+  background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,.96) 40%);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   border-top:1px solid var(--line)}
 .mobile-cta .btn{flex:1;text-align:center}
 
 /* ---------- MICRO-INTERACTIONS ---------- */
+/* Press feedback fires on pointer-DOWN, not on release. A brick you push should
+   depress like a brick — sink it into the page and pull the shadow in tight.
+   Fast + critically damped: no overshoot, because no momentum preceded it. */
+.stak-col .brick:active,.opt-brick:active{
+  transform:translateY(2px) scale(.985);
+  box-shadow:inset 0 2px 7px rgba(0,0,0,.24),0 5px 12px -9px rgba(15,26,51,.5);
+  transition-duration:.06s}
+.cart-fab:active{transform:translateY(2px) scale(.985);
+  box-shadow:0 6px 16px -10px rgba(37,99,235,.5);transition-duration:.06s}
+.card:active,.post-card:active{transform:translateY(-2px) scale(.994);transition-duration:.07s}
+.stak-reset:active,.cart-close:active{transform:scale(.955)}
+.addon:active{transform:translateY(-1px) scale(.99);transition-duration:.07s}
+/* Bricks are objects, not text — never flash the blue text-selection tint on tap. */
+.brick,.opt-brick,.cart-fab,.addon,.card,.post-card{-webkit-tap-highlight-color:transparent}
+
 .nav nav a.link{position:relative}
 .nav nav a.link::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:2px;border-radius:2px;
   background:var(--blue);transition:right .25s var(--ease)}
@@ -453,9 +474,30 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   .cart-fab{bottom:82px}
 }
 @media(max-width:560px){ .tiers{grid-template-columns:1fr} .addon-grid{grid-template-columns:1fr} .nav nav{gap:.8rem} }
+/* Reduced motion means no vestibular travel — NOT no feedback. Kill looping and
+   positional animation, keep the opacity/color/shadow cues that carry state. */
 @media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-  .stack .brick{opacity:1!important}
-  .chip{opacity:1!important;transform:none!important}
+  *{animation:none!important;
+    transition-property:opacity,color,background-color,border-color,box-shadow,outline-color!important;
+    transition-duration:.15s!important}
+  /* No lift, no press-sink, no zoom — swap travel for the shadow cue that rides along. */
+  .btn:hover,.btn:active,.btn.ghost:hover,.btn.ghost:active,.cta .btn:hover,.cta .btn:active,
+  .card:hover,.card:active,.post-card:hover,.post-card:active,.prob-card:hover,.tstm:hover,
+  .addon:hover,.addon:active,.stak-col .brick:hover,.stak-col .brick:active,
+  .opt-brick:hover,.opt-brick:active,.cart-fab:hover,.cart-fab:active,
+  .stak-reset:active,.cart-close:active,.card:hover .thumb .shot,
+  .faq details[open] summary .ic{transform:none!important}
+  /* Animation-driven entrances must land in their finished state, not stay hidden. */
+  .stack .brick,.chip,.reveal{opacity:1!important;transform:none!important}
+  .hero-bg .orb{will-change:auto}
   html{scroll-behavior:auto}
+}
+/* Frostier, not glassier — raise opacity and drop the blur so text stays legible. */
+@media(prefers-reduced-transparency:reduce){
+  header.nav{background:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .mobile-cta{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .chip{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .tstm{background:#fff;border-color:var(--line);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .cart-overlay{background:rgba(11,18,32,.92);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .card .thumb span.meta{background:rgba(15,26,51,.94);-webkit-backdrop-filter:none;backdrop-filter:none}
 }
