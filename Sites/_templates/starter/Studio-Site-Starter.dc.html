@@ -8,6 +8,8 @@
 <body>
 <x-dc>
 <helmet data-dc-atomics="">
+<title>[Studio Name] — [Tagline] | [City]</title>
+<meta name="description" content="[One-sentence description of the studio and what it shoots.]">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Mulish:wght@300;400;500;600;700&amp;family=Parisienne&amp;display=swap" rel="stylesheet">
@@ -21,6 +23,9 @@
   @keyframes eoUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
   @keyframes eoFade{from{opacity:0}to{opacity:1}}
   .eo-anim{animation:eoUp .9s cubic-bezier(.2,.7,.2,1) both}
+  /* slow Ken Burns drift behind the headline; alternates so it eases in and back out */
+  @keyframes eoKen{from{transform:scale(1)}to{transform:scale(1.10)}}
+  @media (prefers-reduced-motion:reduce){.eo-ken{animation:none !important}}
 </style>
 </helmet>
 
@@ -99,6 +104,7 @@
         </div>
       </section>
 
+      <sc-if value="{{ hasTestimonials }}" hint-placeholder-val="{{ false }}">
       <section style="background:#f1ebdf;margin-top:60px;padding:80px 28px">
         <div style="max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:34px">
           <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="2">
@@ -110,6 +116,7 @@
           </sc-for>
         </div>
       </section>
+      </sc-if>
 
       <section style="background:linear-gradient(150deg,#9e5423,#7d3f18);color:#fdf8f0;padding:78px 28px;text-align:center">
         <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(30px,4.5vw,46px);margin:0 0 14px">Let's tell your story.</h2>
@@ -217,7 +224,7 @@
         <div style="display:flex;flex-direction:column;gap:16px;font-size:15px;color:#5a4d43">
           <div><span style="display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9e5423;font-weight:700;margin-bottom:3px">Email</span><a href="mailto:hello@yourstudio.com">hello@yourstudio.com</a></div>
           <div><span style="display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9e5423;font-weight:700;margin-bottom:3px">Instagram</span><a href="https://instagram.com/yourstudio" target="_blank">@yourstudio</a></div>
-          <div><span style="display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9e5423;font-weight:700;margin-bottom:3px">Facebook</span><a href="https://www.facebook.com/yourstudio/" target="_blank">/emberandoakmedia</a></div>
+          <div><span style="display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9e5423;font-weight:700;margin-bottom:3px">Facebook</span><a href="https://www.facebook.com/yourstudio/" target="_blank">[/yourstudio]</a></div>
           <div><span style="display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9e5423;font-weight:700;margin-bottom:3px">Service Area</span>[City · City · City]</div>
         </div>
       </div>
@@ -275,8 +282,6 @@
         {{ loginEl }}
       </sc-if>
       <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#f1ebdf;border-radius:12px;padding:14px 20px;margin-top:8px">
-          <div style="font-size:15px;color:#5a4d43">Signed in as <strong>{{ clientName }}</strong></div>
           <a href="#" onClick="{{ doLogout }}" style="font-size:13px;font-weight:700;letter-spacing:.04em">Sign out</a>
         </div>
         {{ managerEl }}
@@ -323,7 +328,7 @@
       </div>
       <div style="margin-top:26px;background:#f1ebdf;border:1px solid rgba(154,173,139,.4);border-radius:14px;padding:22px 26px">
         <h3 style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;margin:0 0 6px">Deleting photos &amp; videos</h3>
-        <p style="font-size:14px;line-height:1.7;color:#5a4d43;margin:0 0 12px">To remove something, open your Cloudinary <strong>Media Library</strong>, find the file (they're in folders by category, e.g. <em>emberoak/video</em>), select it and hit delete. It disappears from the site on the next page load.</p>
+        <p style="font-size:14px;line-height:1.7;color:#5a4d43;margin:0 0 12px">To remove something, open your Cloudinary <strong>Media Library</strong>, find the file (they're in folders by category, e.g. <em>[your-slug]/video</em>), select it and hit delete. It disappears from the site on the next page load.</p>
         <a href="https://console.cloudinary.com/console/media_library" target="_blank" style="display:inline-block;padding:11px 22px;background:#9e5423;color:#fff;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:.04em" style-hover="background:#7d3f18">Open Cloudinary Media Library →</a>
       </div>
       <p style="text-align:center;margin-top:24px"><a href="#" onClick="{{ goPortfolio }}" style="font-weight:600">View the live portfolio →</a></p>
@@ -392,7 +397,9 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:900}}">
 class Component extends DCLogic {
-  state = { page: 'home', cat: 'all', lb: null, contactSent: false, cloud: {}, token: null, clientName: '', loginErr: '', busy: '', gallery: null, galleryErr: '', galleryBusy: false, deliveryCode: '' };
+  state = { page: 'home', cat: 'all', lb: null, contactSent: false, cloud: {}, covers: {}, coverIds: {}, token: null, clientName: '', loginErr: '', busy: '', gallery: null, galleryErr: '', galleryBusy: false, deliveryCode: '',
+            profile: null, adminTab: 'work', pwBusy: false, pwErr: '', pwOk: '', deliveries: [],
+            upTotal: 0, upDone: 0, gv: null, slideshow: false, openDeliv: '', delivItems: {}, delivSettings: {}, saveMsg: '', videos: [], vidBusy: false, openSec: {}, heroIdx: 0, cats: null, catBusy: false };
 
   // ── CLOUDINARY CONFIG ── replace these two with your account values ──
   CLOUD_NAME = '';           // <-- your Cloudinary cloud name
@@ -404,9 +411,14 @@ class Component extends DCLogic {
   USE_BACKEND = false;
   API_BASE = '';
   // Which client folder this deployed site displays. Leave '' for single-account.
-  SITE_SLUG = '';
+  SITE_SLUG = 'studio';      // <-- MUST match the studio's slug in CLIENTS_JSON.
+                             //     Tags are <SITE_SLUG>__<category>; if this is wrong
+                             //     or blank, featured covers silently never appear.
   // ── COVER PHOTO ── paste a full image URL here to hard-set it, or leave ''
   //    and upload one from Studio Admin → "Cover Photo".
+  // Monogram on the sign-in card and profile header (2-3 characters).
+  STUDIO_INITIALS = '';
+
   HERO_IMAGE = '';
   // ── ABOUT PHOTO ── paste a full image URL here, or leave '' and upload
   //    one from Studio Admin → "About Photo".
@@ -418,8 +430,11 @@ class Component extends DCLogic {
   tagFor(k) { return this.SITE_SLUG ? this.SITE_SLUG + '__' + k : k; }
 
   componentDidMount() {
-    if (this.backendMode()) { try { const t = localStorage.getItem('eo_token'); const n = localStorage.getItem('eo_client'); if (t) this.setState({ token: t, clientName: n || '' }); } catch (_) {} }
-    if (this.cloudReady()) this.loadCloud();
+    let tok = null;
+    if (this.backendMode()) { try { tok = localStorage.getItem('eo_token'); const n = localStorage.getItem('eo_client'); if (tok) { this.setState({ token: tok, clientName: n || '' }); this.loadProfile(tok); this.loadDeliveries(); } } catch (_) {} }
+    if (this.cloudReady()) this.loadCloud(tok);
+    this.loadVideos();
+    this.loadCategories();
     try {
       const q = new URLSearchParams(location.search).get('gallery');
       if (q && this.backendMode()) { this.setState({ page: 'client', deliveryCode: q }); this.openGallery(q, ''); }
@@ -434,9 +449,108 @@ class Component extends DCLogic {
       if (!r.ok) { this.setState({ loginErr: d.error || 'Invalid login', busy: '' }); return; }
       try { localStorage.setItem('eo_token', d.token); localStorage.setItem('eo_client', d.client.name); } catch (_) {}
       this.setState({ token: d.token, clientName: d.client.name, busy: '' });
+      this.loadProfile();
+      this.loadDeliveries();
+      this.loadCloud(d.token);
     } catch (e) { this.setState({ loginErr: 'Could not reach the server', busy: '' }); }
   }
-  logout() { try { localStorage.removeItem('eo_token'); localStorage.removeItem('eo_client'); } catch (_) {} this.setState({ token: null, clientName: '' }); }
+  // Any authenticated call can come back 401 once the token expires. Without this
+  // the page still looks signed in and every action fails with its own vague
+  // message, which reads like a broken feature rather than an ended session.
+  sessionExpired() {
+    if (this._expiredNotified) return true;
+    this._expiredNotified = true;
+    this.logout();
+    alert('Your sign-in has expired. Please sign in again.');
+    setTimeout(() => { this._expiredNotified = false; }, 3000);
+    return true;
+  }
+
+  logout() { try { localStorage.removeItem('eo_token'); localStorage.removeItem('eo_client'); } catch (_) {} this.setState({ token: null, clientName: '', profile: null, adminTab: 'work', pwErr: '', pwOk: '' }); }
+
+  // profile header + whether this deployment can persist a password change
+  async loadProfile(tok) {
+    const token = tok || this.state.token;
+    if (!this.backendMode() || !token) return;
+    try {
+      const r = await fetch(this.apiBase() + '/api/me', { headers: { Authorization: 'Bearer ' + token } });
+      if (r.status === 401) { this.logout(); return; }   // expired 12h token — don't strand the user
+      const d = await r.json();
+      if (r.ok) this.setState({ profile: d, clientName: d.name || this.state.clientName });
+    } catch (e) {}
+  }
+
+  async changePassword(currentPassword, newPassword, confirmPassword) {
+    this.setState({ pwErr: '', pwOk: '' });
+    if (newPassword !== confirmPassword) { this.setState({ pwErr: 'The two new passwords do not match.' }); return false; }
+    if ((newPassword || '').length < 10) { this.setState({ pwErr: 'Use at least 10 characters.' }); return false; }
+    this.setState({ pwBusy: true });
+    try {
+      const r = await fetch(this.apiBase() + '/api/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token },
+        body: JSON.stringify({ currentPassword, newPassword }) });
+      const d = await r.json();
+      if (!r.ok) { this.setState({ pwErr: d.error || 'Could not change the password', pwBusy: false }); return false; }
+      this.setState({ pwOk: 'Password updated. Use it the next time you sign in.', pwBusy: false });
+      this.loadProfile();
+      return true;
+    } catch (e) { this.setState({ pwErr: 'Could not reach the server', pwBusy: false }); return false; }
+  }
+
+  // One place that actually CHECKS each upload. The old loop ignored the response
+  // and aborted the whole batch on the first thrown error, so rejected files (e.g.
+  // over Cloudinary's size cap) vanished with no message at all.
+  async uploadFiles(sig, files) {
+    const errors = [];
+    this.setState({ upTotal: files.length, upDone: 0 });
+    // Pre-flight the size. Oversized files die at the network layer with a bare
+    // 'Failed to fetch' and no status, so checking here gives a real reason instead.
+    const MAX_IMAGE = 10 * 1024 * 1024;
+    const MAX_VIDEO = 100 * 1024 * 1024;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const isVid = /^video\//.test(file.type || '');
+      const cap = isVid ? MAX_VIDEO : MAX_IMAGE;
+      if (file.size > cap) {
+        errors.push((file.name || 'file ' + (i + 1)) + ' \u2014 '
+          + (file.size / 1048576).toFixed(1) + ' MB is over the '
+          + (cap / 1048576) + ' MB ' + (isVid ? 'video' : 'image')
+          + ' limit on the current Cloudinary plan');
+        this.setState({ upDone: i + 1 });
+        continue;
+      }
+      const fd = new FormData();
+      fd.append('file', file); fd.append('api_key', sig.apiKey); fd.append('timestamp', sig.timestamp);
+      fd.append('signature', sig.signature); fd.append('folder', sig.folder); fd.append('tags', sig.tags);
+      if (sig.context) fd.append('context', sig.context);
+      if (sig.useFilename) fd.append('use_filename', sig.useFilename);
+      if (sig.uniqueFilename) fd.append('unique_filename', sig.uniqueFilename);
+      try {
+        const r = await fetch('https://api.cloudinary.com/v1_1/' + sig.cloudName + '/auto/upload', { method: 'POST', body: fd });
+        if (!r.ok) {
+          let msg = 'HTTP ' + r.status;
+          try { const j = await r.json(); if (j && j.error && j.error.message) msg = j.error.message; } catch (_) {}
+          errors.push((file.name || 'file ' + (i + 1)) + ' \u2014 ' + msg);
+        }
+      } catch (e) {
+        errors.push((file.name || 'file ' + (i + 1)) + ' \u2014 ' + (e.message || 'network error'));
+      }
+      this.setState({ upDone: i + 1 });
+    }
+    this.setState({ upTotal: 0, upDone: 0 });
+    return errors;
+  }
+
+  uploadSummary(total, errors, extra) {
+    const ok = total - errors.length;
+    if (!errors.length) { alert(ok + ' file' + (ok === 1 ? '' : 's') + ' uploaded.' + (extra || '')); return; }
+    const tooBig = errors.some(e => /larger|too large|maximum|size|is over the|Failed to fetch/i.test(e));
+    alert(ok + ' of ' + total + ' uploaded \u2014 ' + errors.length + ' failed:\n\n'
+      + errors.slice(0, 8).join('\n') + (errors.length > 8 ? '\n\u2026and ' + (errors.length - 8) + ' more' : '')
+      + (tooBig ? '\n\nThe current Cloudinary plan allows images up to 10 MB and video up to 100 MB. Larger files need a paid plan, or compress/downsize them first.' : '')
+      + (extra || ''));
+  }
 
   async backendUpload(category, files) {
     if (!files || !files.length) return;
@@ -444,26 +558,268 @@ class Component extends DCLogic {
     try {
       const s = await fetch(this.apiBase() + '/api/sign-upload', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ category }) });
       const sig = await s.json();
-      if (!s.ok) { alert(sig.error || 'Upload not authorized — try logging in again.'); this.setState({ busy: '' }); return; }
-      for (const file of files) {
-        const fd = new FormData();
-        fd.append('file', file); fd.append('api_key', sig.apiKey); fd.append('timestamp', sig.timestamp);
-        fd.append('signature', sig.signature); fd.append('folder', sig.folder); fd.append('tags', sig.tags);
-        await fetch('https://api.cloudinary.com/v1_1/' + sig.cloudName + '/auto/upload', { method: 'POST', body: fd });
-      }
+      if (s.status === 401) { this.sessionExpired(); this.setState({ busy: '' }); return; }
+      if (!s.ok) { alert(sig.error || 'Upload not authorized.'); this.setState({ busy: '' }); return; }
+      const errors = await this.uploadFiles(sig, files);
+      this.uploadSummary(files.length, errors);
     } catch (e) { alert('Upload failed: ' + e.message); }
     this.setState({ busy: '' });
     this.loadCloud();
   }
 
+  // ★ toggles: tapping the current cover clears it, tapping another one moves it.
   async backendFeature(category, publicId, resourceType) {
     if (!this.backendMode() || !this.state.token) { alert('Featuring a photo is saved for everyone through your backend — sign in on this page (with your API set up) to choose covers. Until then the newest upload shows.'); return; }
+    const clear = !!(this.state.coverIds && this.state.coverIds[category] === publicId);
     try {
-      const r = await fetch(this.apiBase() + '/api/feature', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ category, publicId, resourceType }) });
-      const d = await r.json();
-      if (!r.ok) { alert(d.error || 'Could not set featured'); return; }
+      const r = await fetch(this.apiBase() + '/api/feature', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ category, publicId, resourceType, clear }) });
+      if (r.status === 401) return this.sessionExpired();
+      const text = await r.text();
+      let d = {}; try { d = JSON.parse(text); } catch (_) {}
+      // surface the real reason instead of a generic message — a bare "could not"
+      // tells you nothing when it fails
+      if (!r.ok) { alert((d.error || 'Could not set featured') + ' (HTTP ' + r.status + ')' + (d.detail ? '\n' + d.detail : (text && !d.error ? '\n' + text.slice(0, 200) : ''))); return; }
+      // optimistic: reflect it immediately, since Cloudinary's list CDN lags a minute
+      const next = Object.assign({}, this.state.coverIds);
+      if (clear) delete next[category]; else next[category] = publicId;
+      this.setState({ coverIds: next });
       this.loadCloud();
     } catch (e) { alert('Failed: ' + e.message); }
+  }
+
+  // Re-tag legacy assets so the gallery can see them (uploads made before the
+  // slug-qualified tag existed carry only the bare category tag).
+  async retagAll() {
+    this.setState({ busy: 'retag' });
+    try {
+      const r = await fetch(this.apiBase() + '/api/retag', { method: 'POST', headers: { Authorization: 'Bearer ' + this.state.token } });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Repair failed'); this.setState({ busy: '' }); return; }
+      const n = Object.values(d.tagged || {}).reduce((a, b) => a + b, 0);
+      alert(n ? ('Repaired ' + n + ' file(s). They may take a minute to appear.') : 'Nothing needed repairing.');
+    } catch (e) { alert('Failed: ' + e.message); }
+    this.setState({ busy: '' });
+    this.loadCloud();
+  }
+
+  // Cover photos cross-fade when there is more than one. Slow on purpose: this sits
+  // behind the headline, so it should read as ambient, not as a carousel.
+  startHeroShow() {
+    if (this._heroTimer || !this.heroImages || this.heroImages.length < 2) return;
+    this._heroTimer = setInterval(() => {
+      const n = (this.heroImages || []).length;
+      if (n < 2) return;
+      this.setState(st => ({ heroIdx: ((st.heroIdx || 0) + 1) % n }));
+    }, 6000);
+  }
+
+  // Categories are data now, not code. Falls back to the built-in list so the
+  // site still renders if the API is unreachable.
+  catList() {
+    return (this.state.cats && this.state.cats.length) ? this.state.cats : [
+      { key: 'newborn', label: 'Newborn' }, { key: 'family', label: 'Family' },
+      { key: 'events', label: 'Events' }, { key: 'cinematic', label: 'Cinematic' },
+      { key: 'drone', label: 'Drone' },
+      { key: 'video', label: 'Video / Reels' }, { key: 'social', label: 'Social Reels' },
+    ];
+  }
+  catKeys() { return this.catList().map(c => c.key); }
+  catLabels() { const m = {}; this.catList().forEach(c => { m[c.key] = c.label; }); return m; }
+
+  async loadCategories() {
+    if (!this.backendMode()) return;
+    try {
+      const r = await fetch(this.apiBase() + '/api/categories');
+      const d = await r.json();
+      if (r.ok && d.items && d.items.length) { this.setState({ cats: d.items }); this.loadCloud(); }
+    } catch (e) {}
+  }
+
+  async addCategory(label) {
+    if (!label) { alert('Name the category first.'); return; }
+    this.setState({ catBusy: true });
+    try {
+      const r = await fetch(this.apiBase() + '/api/categories', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ label }) });
+      if (r.status === 401) { this.sessionExpired(); this.setState({ catBusy: false }); return; }
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not add that category'); this.setState({ catBusy: false }); return; }
+      this.setState({ cats: d.items, catBusy: false });
+      this.loadCloud();
+    } catch (e) { alert('Failed: ' + e.message); this.setState({ catBusy: false }); }
+  }
+
+  async renameCategory(key, label) {
+    try {
+      const r = await fetch(this.apiBase() + '/api/categories/rename', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ key, label }) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not rename'); return; }
+      this.setState({ cats: d.items });
+    } catch (e) { alert('Failed: ' + e.message); }
+  }
+
+  async deleteCategory(key, label) {
+    if (!confirm('Remove the \u201c' + label + '\u201d category?\n\nIt must be empty first. Photos and video links are never deleted by this.')) return;
+    try {
+      const r = await fetch(this.apiBase() + '/api/categories/delete', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ key }) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not remove that category'); return; }
+      this.setState({ cats: d.items });
+      this.loadCloud();
+    } catch (e) { alert('Failed: ' + e.message); }
+  }
+
+  async loadVideos() {
+    if (!this.backendMode()) return;
+    try {
+      const r = await fetch(this.apiBase() + '/api/videos');
+      const d = await r.json();
+      if (r.ok) this.setState({ videos: d.items || [] });
+    } catch (e) {}
+  }
+
+  async addVideo(url, category) {
+    if (!url) { alert('Paste a YouTube or Vimeo link first.'); return; }
+    this.setState({ vidBusy: true });
+    try {
+      const r = await fetch(this.apiBase() + '/api/videos', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ url, category }) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not add that video'); this.setState({ vidBusy: false }); return; }
+      this.setState({ vidBusy: false });
+      this.loadVideos();
+    } catch (e) { alert('Failed: ' + e.message); this.setState({ vidBusy: false }); }
+  }
+
+  async updateVideo(id, patch) {
+    try {
+      const r = await fetch(this.apiBase() + '/api/videos/update', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify(Object.assign({ id }, patch)) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not save'); return; }
+      this.loadVideos();
+    } catch (e) { alert('Failed: ' + e.message); }
+  }
+
+  toggleSec(key) {
+    this.setState(st => ({ openSec: Object.assign({}, st.openSec, { [key]: !st.openSec[key] }) }));
+  }
+
+  async removeVideo(id, title) {
+    if (!confirm('Remove ' + (title || 'this video') + ' from the portfolio?\n\nThe video itself stays on YouTube/Vimeo — this only removes the link.')) return;
+    try {
+      const r = await fetch(this.apiBase() + '/api/videos/delete', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ id }) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not remove it'); return; }
+      this.loadVideos();
+    } catch (e) { alert('Failed: ' + e.message); }
+  }
+
+  async loadDeliveries() {
+    if (!this.backendMode() || !this.state.token) return;
+    try {
+      const r = await fetch(this.apiBase() + '/api/deliveries', { headers: { Authorization: 'Bearer ' + this.state.token } });
+      const d = await r.json();
+      if (r.ok) this.setState({ deliveries: d.items || [] });
+    } catch (e) {}
+  }
+
+  deliveryLink(code) {
+    var origin = '';
+    try { origin = location.origin; } catch (_) {}
+    return origin + '/?gallery=' + code;
+  }
+
+  // expand one gallery to curate its contents
+  toggleDelivItems(code) {
+    if (this.state.openDeliv === code) { this.setState({ openDeliv: '' }); return; }
+    this.setState({ openDeliv: code });
+    this.loadDelivItems(code);
+    this.loadDelivSettings(code);
+  }
+
+  async loadDelivItems(code) {
+    try {
+      const r = await fetch(this.apiBase() + '/api/delivery/items?code=' + encodeURIComponent(code), { headers: { Authorization: 'Bearer ' + this.state.token } });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not open that gallery'); return; }
+      this.setState(st => ({ delivItems: Object.assign({}, st.delivItems, { [code]: d.items || [] }) }));
+    } catch (e) { alert('Failed: ' + e.message); }
+  }
+
+  async loadDelivSettings(code) {
+    try {
+      const r = await fetch(this.apiBase() + '/api/delivery/settings?code=' + encodeURIComponent(code), { headers: { Authorization: 'Bearer ' + this.state.token } });
+      const d = await r.json();
+      if (r.ok) this.setState(st => ({ delivSettings: Object.assign({}, st.delivSettings, { [code]: d }) }));
+    } catch (e) {}
+  }
+
+  async saveDelivSettings(code, pin) {
+    try {
+      const r = await fetch(this.apiBase() + '/api/delivery/settings', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ code, pin }) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not save the access code'); return; }
+      alert(pin ? ('Access code set. Your client will need to enter “' + pin + '” to open this gallery.') : 'Access code removed — the link now opens without a code.');
+      this.loadDelivSettings(code);
+      this.loadDeliveries();
+    } catch (e) { alert('Failed: ' + e.message); }
+  }
+
+  // ---- iPhone/iPad: hand files to the OS share sheet so they can go to Photos ----
+  canSharePhotos() {
+    try { return !!(navigator && navigator.share && navigator.canShare); } catch (_) { return false; }
+  }
+
+  async saveToPhotos(items) {
+    if (!this.canSharePhotos()) { alert('This browser can\u2019t save straight to Photos. Use the download button instead \u2014 on iPhone, tap the photo, then Share \u2192 Save Image.'); return; }
+    this.setState({ saveMsg: 'Preparing 0 of ' + items.length + '\u2026' });
+    const files = [];
+    try {
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        const r = await fetch(it.download);
+        if (r.ok) {
+          const b = await r.blob();
+          files.push(new File([b], it.filename || ('photo-' + (i + 1) + '.jpg'), { type: b.type || 'image/jpeg' }));
+        }
+        this.setState({ saveMsg: 'Preparing ' + (i + 1) + ' of ' + items.length + '\u2026' });
+      }
+      this.setState({ saveMsg: '' });
+      if (!files.length) { alert('Could not fetch those photos.'); return; }
+      if (!navigator.canShare({ files })) { alert('This device won\u2019t accept that many files at once. Try a few at a time, or use Download all (ZIP).'); return; }
+      await navigator.share({ files });
+    } catch (e) {
+      this.setState({ saveMsg: '' });
+      if (e && (e.name === 'AbortError' || e.name === 'NotAllowedError')) return;  // user cancelled the sheet
+      alert('Could not open the share sheet: ' + (e.message || e) + '\n\nUse Download all (ZIP) instead.');
+    }
+  }
+
+  async deleteDelivItem(code, it) {
+    if (!confirm('Remove ' + (it.filename || 'this file') + ' from “' + code + '”?\n\nThis deletes the original permanently.')) return;
+    try {
+      const r = await fetch(this.apiBase() + '/api/delivery/item/delete', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ code, publicId: it.publicId, resourceType: it.resourceType }) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Could not remove that file'); return; }
+    } catch (e) { alert('Failed: ' + e.message); return; }
+    await this.loadDelivItems(code);
+    this.loadDeliveries();
+  }
+
+  async addToDelivery(code, files) {
+    await this.deliveryUpload(code, files, '');
+    await this.loadDelivItems(code);
+    this.loadDeliveries();
+  }
+
+  async deleteDelivery(code, count) {
+    if (!confirm('Delete the gallery “' + code + '” and all ' + count + ' file(s) in it?\n\nThis cannot be undone, and the client’s link will stop working.')) return;
+    this.setState({ busy: 'deliv-' + code });
+    try {
+      const r = await fetch(this.apiBase() + '/api/delivery/delete', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ code }) });
+      const d = await r.json();
+      if (!r.ok) alert(d.error || 'Could not delete that gallery');
+    } catch (e) { alert('Failed: ' + e.message); }
+    this.setState({ busy: '' });
+    this.loadDeliveries();
   }
 
   // Owner: upload full-res originals into a delivery gallery (deliveries/<code>)
@@ -475,15 +831,12 @@ class Component extends DCLogic {
     try {
       const s = await fetch(this.apiBase() + '/api/sign-delivery', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ code, expires: expires || '' }) });
       const sig = await s.json();
+      if (s.status === 401) { this.sessionExpired(); this.setState({ busy: '' }); return; }
       if (!s.ok) { alert(sig.error || 'Not authorized'); this.setState({ busy: '' }); return; }
-      for (const file of files) {
-        const fd = new FormData();
-        fd.append('file', file); fd.append('api_key', sig.apiKey); fd.append('timestamp', sig.timestamp);
-        fd.append('signature', sig.signature); fd.append('folder', sig.folder); fd.append('tags', sig.tags);
-        if (sig.context) fd.append('context', sig.context);
-        await fetch('https://api.cloudinary.com/v1_1/' + sig.cloudName + '/auto/upload', { method: 'POST', body: fd });
-      }
-      alert('Uploaded to gallery “' + code + '”.' + (expires ? '\nAuto-deletes on ' + expires + '.' : '') + '\nShare this link with your client:\n' + location.origin + location.pathname + '?gallery=' + encodeURIComponent(code));
+      const errors = await this.uploadFiles(sig, files);
+      this.uploadSummary(files.length, errors,
+        '\n\nGallery: ' + code + (expires ? ' \u00b7 auto-deletes ' + expires : '')
+        + '\nShare link: ' + this.deliveryLink(code));
     } catch (e) { alert('Upload failed: ' + e.message); }
     this.setState({ busy: '' });
   }
@@ -500,6 +853,29 @@ class Component extends DCLogic {
     } catch (e) { this.setState({ galleryErr: 'Could not reach the server', galleryBusy: false }); }
   }
 
+  // full-screen viewer for a delivery gallery, with optional auto-advance
+  openViewer(i) { this.setState({ gv: i }); }
+  closeViewer() { this.stopSlideshow(); this.setState({ gv: null }); }
+  stepViewer(d) {
+    const g = this.state.gallery; if (!g || !g.items.length) return;
+    this.setState(st => ({ gv: ((st.gv + d) % g.items.length + g.items.length) % g.items.length }));
+  }
+  stopSlideshow() {
+    if (this._slideTimer) { clearInterval(this._slideTimer); this._slideTimer = null; }
+    if (this.state.slideshow) this.setState({ slideshow: false });
+  }
+  toggleSlideshow() {
+    if (this._slideTimer) { this.stopSlideshow(); return; }
+    const g = this.state.gallery; if (!g || !g.items.length) return;
+    if (this.state.gv === null) this.setState({ gv: 0 });
+    this._slideTimer = setInterval(() => {
+      // guard: if the viewer got closed another way, stop cleanly
+      if (this.state.gv === null || !this.state.gallery) { this.stopSlideshow(); return; }
+      this.stepViewer(1);
+    }, 4000);
+    this.setState({ slideshow: true });
+  }
+
   async downloadAllZip() {
     const g = this.state.gallery; if (!g) return;
     this.setState({ galleryBusy: true });
@@ -513,11 +889,16 @@ class Component extends DCLogic {
   }
 
   async backendDelete(publicId, resourceType) {
-    if (!publicId || !confirm('Delete this permanently?')) return;
+    if (!publicId) { alert('That tile has no file id — reload the page and try again.'); return; }
+    if (!confirm('Delete this permanently?')) return;
     try {
       const r = await fetch(this.apiBase() + '/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + this.state.token }, body: JSON.stringify({ publicId, resourceType }) });
+      if (r.status === 401) return this.sessionExpired();
       const d = await r.json();
       if (!r.ok) { alert(d.error || 'Delete failed'); return; }
+      const next = {};
+      Object.keys(this.state.cloud || {}).forEach(k => { next[k] = (this.state.cloud[k] || []).filter(x => x.publicId !== publicId); });
+      this.setState({ cloud: next });
       this.loadCloud();
     } catch (e) { alert('Delete failed: ' + e.message); }
   }
@@ -536,13 +917,24 @@ class Component extends DCLogic {
             style: { padding: '13px 24px', background: '#9e5423', color: '#fff', border: 'none', borderRadius: 999, fontSize: 14, fontWeight: 700, letterSpacing: '.04em', cursor: 'pointer' } },
             this.state.galleryBusy ? 'Preparing ZIP…' : '⬇ Download all (ZIP)')),
         h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))', gap: 12 } },
-          g.items.map((it, i) => h('a', { key: i, href: it.download, download: it.filename, title: 'Download ' + it.filename,
-            style: { position: 'relative', display: 'block', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', background: '#eee6d8' } },
-            h('img', { src: it.thumb, style: { width: '100%', height: '100%', objectFit: 'cover' } }),
+          g.items.map((it, i) => h('div', { key: i,
+            style: { position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', background: '#eee6d8' } },
+            h('button', { onClick: () => this.openViewer(i), title: 'View larger',
+              style: { position: 'absolute', inset: 0, padding: 0, border: 'none', background: 'none', cursor: 'zoom-in', width: '100%', height: '100%' } },
+              h('img', { src: it.thumb, alt: it.filename, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } })),
             it.isVideo ? h('div', { style: { position: 'absolute', top: 6, left: 6, background: 'rgba(30,22,17,.6)', color: '#fff', fontSize: 10, padding: '1px 6px', borderRadius: 4 } }, 'video') : null,
-            h('div', { style: { position: 'absolute', bottom: 6, right: 6, width: 30, height: 30, borderRadius: '50%', background: 'rgba(30,22,17,.62)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 } }, '⬇')))),
-        h('p', { style: { marginTop: 20, fontSize: 13, color: '#9c9084' } }, 'Tap any photo to download the full-resolution file, or use “Download all”. '),
-        h('button', { onClick: () => this.setState({ gallery: null, deliveryCode: '' }), style: { marginTop: 6, background: 'none', border: 'none', color: '#9e5423', fontWeight: 700, cursor: 'pointer', fontSize: 13 } }, '← Open a different gallery'));
+            h('a', { href: it.download, download: it.filename, title: 'Download ' + it.filename,
+              style: { position: 'absolute', bottom: 6, right: 6, width: 32, height: 32, borderRadius: '50%', background: 'rgba(30,22,17,.68)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, textDecoration: 'none' } }, '\u2b07')))),
+        h('div', { style: { marginTop: 18, display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' } },
+          h('button', { onClick: () => this.toggleSlideshow(),
+            style: { padding: '11px 20px', background: 'none', border: '1px solid rgba(154,173,139,.6)', borderRadius: 999, color: '#5a4d43', fontSize: 13, fontWeight: 700, letterSpacing: '.04em', cursor: 'pointer', fontFamily: 'inherit' } },
+            this.state.slideshow ? '\u23f8 Pause slideshow' : '\u25b6 Play slideshow'),
+          this.canSharePhotos() ? h('button', { onClick: () => this.saveToPhotos(g.items), disabled: !!this.state.saveMsg,
+            style: { padding: '11px 20px', background: '#9aad8b', color: '#fff', border: 'none', borderRadius: 999, fontSize: 13, fontWeight: 700, letterSpacing: '.04em', cursor: 'pointer', fontFamily: 'inherit' } },
+            this.state.saveMsg || '\u2b07 Save all to Photos') : null,
+          h('span', { style: { fontSize: 13, color: '#9c9084' } }, 'Tap a photo to view it large, or \u2b07 to download the full-resolution file.')),
+        h('button', { onClick: () => this.setState({ gallery: null, deliveryCode: '' }), style: { marginTop: 6, background: 'none', border: 'none', color: '#9e5423', fontWeight: 700, cursor: 'pointer', fontSize: 13 } }, '← Open a different gallery'),
+        this.renderViewer(g));
     }
     return h('form', { onSubmit: (e) => { e.preventDefault(); this.openGallery(e.target.code.value, e.target.pin.value); },
       style: { background: '#fff', border: '1px solid rgba(154,173,139,.3)', borderRadius: 16, padding: 32, boxShadow: '0 8px 30px rgba(60,47,39,.06)', display: 'flex', flexDirection: 'column', gap: 16, textAlign: 'left' } },
@@ -552,43 +944,126 @@ class Component extends DCLogic {
       h('button', { type: 'submit', disabled: this.state.galleryBusy, style: { marginTop: 4, padding: 14, background: '#9e5423', color: '#fff', border: 'none', borderRadius: 999, fontSize: 14, fontWeight: 700, letterSpacing: '.05em', cursor: 'pointer' } }, this.state.galleryBusy ? 'Opening…' : 'View My Gallery'));
   }
 
+  renderViewer(g) {
+    const h = React.createElement;
+    const i = this.state.gv;
+    if (i === null || !g || !g.items[i]) return null;
+    const it = g.items[i];
+    const nav = (label, d) => h('button', { onClick: (e) => { e.stopPropagation(); this.stepViewer(d); }, 'aria-label': label,
+      style: { background: 'rgba(255,255,255,.14)', border: 'none', color: '#fff', fontSize: 26, width: 50, height: 50, borderRadius: '50%', cursor: 'pointer', flexShrink: 0 } }, label);
+    return h('div', { onClick: () => this.closeViewer(),
+      style: { position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(24,18,14,.94)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, padding: 18 } },
+      h('div', { style: { position: 'absolute', top: 16, right: 18, display: 'flex', gap: 10, alignItems: 'center' } },
+        h('button', { onClick: (e) => { e.stopPropagation(); this.toggleSlideshow(); },
+          style: { background: 'rgba(255,255,255,.14)', border: 'none', color: '#fff', fontSize: 13, fontWeight: 700, padding: '9px 16px', borderRadius: 999, cursor: 'pointer', fontFamily: 'inherit' } },
+          this.state.slideshow ? '\u23f8 Pause' : '\u25b6 Slideshow'),
+        h('button', { onClick: (e) => { e.stopPropagation(); this.closeViewer(); }, 'aria-label': 'Close',
+          style: { background: 'none', border: 'none', color: '#fff', fontSize: 34, lineHeight: 1, cursor: 'pointer' } }, '\u00d7')),
+      h('div', { onClick: (e) => e.stopPropagation(), style: { display: 'flex', alignItems: 'center', gap: 14, width: '100%', maxWidth: 1200, justifyContent: 'center' } },
+        nav('\u2039', -1),
+        it.isVideo
+          ? h('video', { src: it.preview || it.download, controls: true, autoPlay: true, playsInline: true, style: { maxWidth: '100%', maxHeight: '76vh', borderRadius: 10, background: '#000' } })
+          : h('img', { src: it.preview || it.thumb, alt: it.filename, style: { maxWidth: '100%', maxHeight: '76vh', objectFit: 'contain', borderRadius: 10 } }),
+        nav('\u203a', 1)),
+      h('div', { onClick: (e) => e.stopPropagation(), style: { color: '#f4ece2', fontSize: 13, display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' } },
+        h('span', null, (i + 1) + ' of ' + g.items.length),
+        h('span', { style: { opacity: .7, wordBreak: 'break-all' } }, it.filename),
+        h('a', { href: it.download, download: it.filename,
+          style: { background: '#9e5423', color: '#fff', padding: '9px 18px', borderRadius: 999, fontWeight: 700, textDecoration: 'none' } }, '\u2b07 Download full-res'),
+        this.canSharePhotos() ? h('button', { onClick: (e) => { e.stopPropagation(); this.saveToPhotos([it]); },
+          style: { background: '#9aad8b', color: '#fff', padding: '9px 18px', borderRadius: 999, fontWeight: 700, border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 13 } }, 'Save to Photos') : null));
+  }
+
   renderLogin() {
     const h = React.createElement;
-    const inp = { padding: '11px 13px', border: '1px solid rgba(154,173,139,.5)', borderRadius: 8, fontSize: 15, fontFamily: 'inherit', background: '#faf7f0' };
+    const inp = { padding: '12px 14px', border: '1px solid rgba(154,173,139,.5)', borderRadius: 10, fontSize: 15, fontFamily: 'inherit', background: '#faf7f0', width: '100%' };
     return h('form', { onSubmit: (e) => { e.preventDefault(); this.doLogin(e.target.slug.value.trim(), e.target.password.value); },
-      style: { maxWidth: 420, margin: '26px auto 0', background: '#fff', border: '1px solid rgba(154,173,139,.3)', borderRadius: 16, padding: 32, boxShadow: '0 8px 30px rgba(60,47,39,.06)', display: 'flex', flexDirection: 'column', gap: 14, textAlign: 'left' } },
-      h('label', { style: { fontSize: 13, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 6 } }, 'Login name', h('input', { name: 'slug', required: true, style: inp })),
-      h('label', { style: { fontSize: 13, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 6 } }, 'Password', h('input', { name: 'password', type: 'password', required: true, style: inp })),
-      this.state.loginErr ? h('div', { style: { color: '#b23b2e', fontSize: 13 } }, this.state.loginErr) : null,
+      style: { maxWidth: 420, margin: '26px auto 0', background: '#fff', border: '1px solid rgba(154,173,139,.3)', borderRadius: 18, padding: '36px 32px', boxShadow: '0 10px 34px rgba(60,47,39,.07)', display: 'flex', flexDirection: 'column', gap: 15, textAlign: 'left' } },
+      h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 6 } },
+        h('div', { style: { width: 62, height: 62, borderRadius: '50%', background: 'linear-gradient(145deg,#9e5423,#c07a3e)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontWeight: 600, letterSpacing: '.04em', boxShadow: '0 6px 18px rgba(158,84,35,.28)' } }, this.STUDIO_INITIALS || 'ST'),
+        h('div', { style: { fontFamily: "'Cormorant Garamond',serif", fontSize: 25, fontWeight: 600 } }, 'Studio Sign In'),
+        h('div', { style: { fontSize: 12.5, color: '#9c9084', textAlign: 'center', lineHeight: 1.5 } }, 'Manage your portfolio, covers, and client deliveries.')),
+      h('label', { style: { fontSize: 13, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 6 } }, 'Login name',
+        h('input', { name: 'slug', required: true, autoComplete: 'username', autoCapitalize: 'none', autoCorrect: 'off', spellCheck: false, style: inp })),
+      h('label', { style: { fontSize: 13, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 6 } }, 'Password',
+        h('input', { name: 'password', type: 'password', required: true, autoComplete: 'current-password', style: inp })),
+      this.state.loginErr ? h('div', { style: { color: '#b23b2e', fontSize: 13, background: 'rgba(178,59,46,.07)', border: '1px solid rgba(178,59,46,.2)', borderRadius: 9, padding: '9px 12px' } }, this.state.loginErr) : null,
       h('button', { type: 'submit', disabled: this.state.busy === 'login', style: { marginTop: 4, padding: 14, background: '#9e5423', color: '#fff', border: 'none', borderRadius: 999, fontSize: 14, fontWeight: 700, letterSpacing: '.05em', cursor: 'pointer' } }, this.state.busy === 'login' ? 'Signing in…' : 'Sign In'));
   }
 
   renderManager(cats, cloud) {
     const h = React.createElement;
+    const st = this.state;
     const card = { background: '#fff', border: '1px solid rgba(154,173,139,.3)', borderRadius: 14, padding: 22, boxShadow: '0 6px 24px rgba(60,47,39,.05)' };
     const specials = [{ key: 'hero', label: 'Cover Photo' }, { key: 'about', label: 'About Photo' }];
+
+    // ---- profile header -----------------------------------------------------
+    const name = st.clientName || (st.profile && st.profile.name) || 'Studio';
+    const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'E&O';
+    let photos = 0, videos = 0;
+    cats.forEach(c => (cloud[c.key] || []).forEach(it => { if (it.isVideo) videos++; else photos++; }));
+    const featuredCount = cats.filter(c => st.coverIds && st.coverIds[c.key]).length;
+    const stat = (n, l) => h('div', { key: l, style: { textAlign: 'center', minWidth: 74 } },
+      h('div', { style: { fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontWeight: 600, lineHeight: 1 } }, String(n)),
+      h('div', { style: { fontSize: 11, color: '#9c9084', letterSpacing: '.06em', textTransform: 'uppercase', marginTop: 4 } }, l));
+
+    const header = h('div', { style: { ...card, display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' } },
+      h('div', { style: { width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(145deg,#9e5423,#c07a3e)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Cormorant Garamond',serif", fontSize: 24, fontWeight: 600, flexShrink: 0, boxShadow: '0 6px 18px rgba(158,84,35,.25)' } }, initials),
+      h('div', { style: { flex: '1 1 180px', minWidth: 0 } },
+        h('div', { style: { fontFamily: "'Cormorant Garamond',serif", fontSize: 26, fontWeight: 600, lineHeight: 1.15 } }, name),
+        h('div', { style: { fontSize: 12.5, color: '#9c9084', marginTop: 3 } }, st.profile ? 'Signed in as ' + st.profile.slug : 'Signed in')),
+      h('div', { style: { display: 'flex', gap: 10, flexWrap: 'wrap' } }, stat(photos, 'Photos'), stat(videos, 'Videos'), stat(featuredCount, 'Covers')),
+      h('button', { onClick: () => this.logout(), style: { padding: '9px 18px', background: 'none', border: '1px solid rgba(154,173,139,.6)', borderRadius: 999, color: '#5a4d43', fontSize: 12.5, fontWeight: 700, letterSpacing: '.04em', cursor: 'pointer', fontFamily: 'inherit' } }, 'Sign out'));
+
+    // ---- tabs ---------------------------------------------------------------
+    const tab = (id, label) => h('button', { key: id, onClick: () => { this.setState({ adminTab: id }); if (id === 'deliveries') this.loadDeliveries(); },
+      style: { padding: '10px 20px', borderRadius: 999, border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 13, fontWeight: 700, letterSpacing: '.04em',
+        background: st.adminTab === id ? '#9e5423' : 'transparent', color: st.adminTab === id ? '#fff' : '#6f6357' } }, label);
+    const tabs = h('div', { style: { display: 'flex', gap: 6, background: '#fff', border: '1px solid rgba(154,173,139,.3)', borderRadius: 999, padding: 6, alignSelf: 'flex-start', flexWrap: 'wrap' } },
+      tab('work', 'My Work'), tab('videos', 'Videos'), tab('deliveries', 'Client Deliveries'), tab('account', 'Account'));
+
+    const progressEl = (active) => (active && st.upTotal) ? h('div', { style: { margin: '12px 0 2px' } },
+      h('div', { style: { fontSize: 12.5, color: '#6f6357', marginBottom: 5, fontWeight: 600 } },
+        'Uploading ' + st.upDone + ' of ' + st.upTotal + '\u2026 (keep this tab open)'),
+      h('div', { style: { height: 7, background: 'rgba(154,173,139,.25)', borderRadius: 999, overflow: 'hidden' } },
+        h('div', { style: { height: '100%', width: Math.round((st.upDone / st.upTotal) * 100) + '%', background: '#9e5423', transition: 'width .2s' } }))) : null;
+
     const sectionOf = (key, label) => {
       const items = cloud[key] || [];
       const busy = this.state.busy === key;
+      const openS = !!st.openSec[key];
       return h('div', { key, style: card },
         h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: items.length ? 14 : 0, flexWrap: 'wrap' } },
-          h('div', null,
-            h('h3', { style: { fontFamily: "'Cormorant Garamond',serif", fontWeight: 600, fontSize: 22, margin: 0 } }, label),
-            h('div', { style: { fontSize: 12, color: '#9c9084' } }, items.length + ' live')),
+          h('button', { onClick: () => this.toggleSec(key), title: openS ? 'Collapse' : 'Expand',
+            style: { background: 'none', border: 'none', padding: 0, textAlign: 'left', cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 10 } },
+            h('span', { style: { color: '#9e5423', fontSize: 13, transform: openS ? 'rotate(90deg)' : 'none', transition: 'transform .15s', display: 'inline-block' } }, '\u25b6'),
+            h('span', null,
+              h('h3', { style: { fontFamily: "'Cormorant Garamond',serif", fontWeight: 600, fontSize: 22, margin: 0 } }, label),
+              h('div', { style: { fontSize: 12, color: '#9c9084' } }, items.length + ' live'))),
           this.backendMode()
             ? h('label', { style: { padding: '10px 18px', background: busy ? '#c89b78' : '#9e5423', color: '#fff', borderRadius: 999, fontSize: 13, fontWeight: 700, letterSpacing: '.04em', cursor: busy ? 'default' : 'pointer', whiteSpace: 'nowrap' } },
                 busy ? 'Uploading…' : '+ Upload',
                 h('input', { type: 'file', multiple: true, accept: 'image/*,video/*', disabled: busy, style: { display: 'none' },
                   onChange: (e) => { const fs = Array.from(e.target.files || []); e.target.value = ''; this.backendUpload(key, fs); } }))
             : h('button', { onClick: () => this.openUploader(key), style: { padding: '10px 18px', background: '#9e5423', color: '#fff', border: 'none', borderRadius: 999, fontSize: 13, fontWeight: 700, letterSpacing: '.04em', cursor: 'pointer', whiteSpace: 'nowrap' } }, '+ Upload')),
-        items.length ? h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(96px,1fr))', gap: 10 } },
-          items.map((it, i) => h('div', { key: i, style: { position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden', background: '#eee6d8' } },
-            h('img', { src: it.thumb, style: { width: '100%', height: '100%', objectFit: 'cover' } }),
-            it.isVideo ? h('div', { style: { position: 'absolute', top: 4, left: 4, background: 'rgba(30,22,17,.6)', color: '#fff', fontSize: 10, padding: '1px 6px', borderRadius: 4 } }, 'video') : null,
-            h('button', { title: 'Delete', onClick: () => this.backendMode() ? this.backendDelete(it.publicId, it.resourceType) : alert('Delete activates once your backend is deployed. In this preview, remove photos from your Cloudinary Media Library.'),
-              style: { position: 'absolute', top: 4, right: 4, width: 24, height: 24, borderRadius: '50%', border: 'none', background: 'rgba(178,59,46,.92)', color: '#fff', fontSize: 15, lineHeight: '24px', cursor: 'pointer', padding: 0 } }, '×'),
-            (key !== 'hero' && key !== 'about') ? h('button', { title: 'Set as featured cover', onClick: () => this.backendFeature(key, it.publicId, it.resourceType),
-              style: { position: 'absolute', bottom: 4, right: 4, width: 24, height: 24, borderRadius: '50%', border: 'none', background: 'rgba(30,22,17,.6)', color: '#f6c667', fontSize: 13, lineHeight: '24px', cursor: 'pointer', padding: 0 } }, '★') : null))) : null);
+        progressEl(busy),
+        !openS ? null : items.length ? h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(104px,1fr))', gap: 10 } },
+          items.map((it, i) => {
+            const isCover = !!(st.coverIds && st.coverIds[key] && st.coverIds[key] === it.publicId);
+            return h('div', { key: i, style: { position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', background: '#eee6d8', boxShadow: isCover ? '0 0 0 3px #f0b429' : 'none' } },
+              h('img', { src: it.thumb, alt: '', style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }),
+              it.isVideo ? h('div', { style: { position: 'absolute', top: 5, left: 5, background: 'rgba(30,22,17,.65)', color: '#fff', fontSize: 10, padding: '1px 6px', borderRadius: 4 } }, 'video') : null,
+              isCover ? h('div', { style: { position: 'absolute', bottom: 0, left: 0, right: 0, background: 'linear-gradient(to top,rgba(30,22,17,.8),transparent)', color: '#f6c667', fontSize: 10, fontWeight: 700, letterSpacing: '.07em', textAlign: 'center', padding: '10px 2px 4px' } }, 'FEATURED') : null,
+              h('button', { title: 'Delete this file', 'aria-label': 'Delete', onClick: () => this.backendMode() ? this.backendDelete(it.publicId, it.resourceType) : alert('Delete activates once your backend is deployed. In this preview, remove photos from your Cloudinary Media Library.'),
+                style: { position: 'absolute', top: 5, right: 5, width: 26, height: 26, borderRadius: '50%', border: 'none', background: 'rgba(178,59,46,.92)', color: '#fff', fontSize: 16, lineHeight: '26px', cursor: 'pointer', padding: 0 } }, '×'),
+              (key !== 'hero' && key !== 'about') ? h('button', { title: isCover ? 'This is the featured cover' : 'Set as featured cover', 'aria-label': 'Set as featured cover',
+                onClick: () => this.backendFeature(key, it.publicId, it.resourceType),
+                style: { position: 'absolute', top: 5, left: it.isVideo ? 'auto' : 5, right: it.isVideo ? 36 : 'auto', width: 26, height: 26, borderRadius: '50%', border: 'none', background: isCover ? '#f0b429' : 'rgba(30,22,17,.6)', color: isCover ? '#3c2f27' : '#f6c667', fontSize: 14, lineHeight: '26px', cursor: 'pointer', padding: 0 } }, '★') : null);
+          }))
+          : h('div', { style: { fontSize: 13, color: '#9c9084', padding: '14px 0 2px', lineHeight: 1.6 } },
+              key === 'hero' ? 'No cover photo yet — upload one and it becomes the homepage banner.'
+              : key === 'about' ? 'No About photo yet — upload one for the About section.'
+              : 'Nothing here yet. Upload a few files, then tap ★ on the one you want as this category’s cover.'));
     };
     const busyD = this.state.busy === 'delivery';
     const deliveries = h('div', { style: { ...card, background: '#f1ebdf' } },
@@ -606,19 +1081,215 @@ class Component extends DCLogic {
         h('label', { style: { padding: '11px 20px', background: busyD ? '#c89b78' : '#9e5423', color: '#fff', borderRadius: 999, fontSize: 13, fontWeight: 700, letterSpacing: '.04em', cursor: busyD ? 'default' : 'pointer', whiteSpace: 'nowrap' } },
           busyD ? 'Uploading…' : '+ Upload full-res',
           h('input', { type: 'file', multiple: true, accept: 'image/*,video/*', disabled: busyD, style: { display: 'none' },
-            onChange: (e) => { const fs = Array.from(e.target.files || []); e.target.value = ''; this.deliveryUpload(this.state.deliveryCode, fs, this.state.deliveryExpires); } }))),
-      this.state.deliveryCode ? h('div', { style: { fontSize: 12, color: '#8a7a68', marginTop: 10, wordBreak: 'break-all' } }, 'Share link: ', h('code', null, '?gallery=' + this.state.deliveryCode), this.state.deliveryExpires ? ' · auto-deletes ' + this.state.deliveryExpires : '') : null);
-    return h('div', { style: { display: 'flex', flexDirection: 'column', gap: 16, marginTop: 26 } },
-      deliveries,
+            onChange: (e) => { const fs = Array.from(e.target.files || []); e.target.value = ''; this.deliveryUpload(this.state.deliveryCode, fs, this.state.deliveryExpires).then(() => this.loadDeliveries()); } }))),
+      progressEl(busyD),
+      this.state.deliveryCode ? h('div', { style: { fontSize: 12, color: '#8a7a68', marginTop: 10, wordBreak: 'break-all' } }, 'Share link: ', h('code', null, this.deliveryLink(this.state.deliveryCode)), this.state.deliveryExpires ? ' · auto-deletes ' + this.state.deliveryExpires : '') : null);
+    // ---- account tab --------------------------------------------------------
+    const inp = { padding: '11px 13px', border: '1px solid rgba(154,173,139,.5)', borderRadius: 9, fontSize: 15, fontFamily: 'inherit', background: '#faf7f0', width: '100%' };
+    const field = (label, nm, auto) => h('label', { key: nm, style: { fontSize: 13, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 6 } }, label,
+      h('input', { name: nm, type: 'password', required: true, autoComplete: auto, style: inp }));
+    const noStore = !!(st.profile && st.profile.canChangePassword === false);
+    const account = h('div', { style: { display: 'flex', flexDirection: 'column', gap: 16 } },
+      h('div', { style: card },
+        h('h3', { style: { fontFamily: "'Cormorant Garamond',serif", fontWeight: 600, fontSize: 22, margin: '0 0 12px' } }, 'Account'),
+        h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 12, fontSize: 13.5 } },
+          h('div', null, h('div', { style: { fontSize: 11, color: '#9c9084', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Studio'), h('div', { style: { marginTop: 3 } }, name)),
+          h('div', null, h('div', { style: { fontSize: 11, color: '#9c9084', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Login name'), h('div', { style: { marginTop: 3 } }, (st.profile && st.profile.slug) || '—')),
+          h('div', null, h('div', { style: { fontSize: 11, color: '#9c9084', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Media folder'), h('div', { style: { marginTop: 3 } }, (st.profile && st.profile.folder) || '—')),
+          h('div', null, h('div', { style: { fontSize: 11, color: '#9c9084', letterSpacing: '.06em', textTransform: 'uppercase' } }, 'Password changed'),
+            h('div', { style: { marginTop: 3 } }, (st.profile && st.profile.passwordUpdatedAt) ? new Date(st.profile.passwordUpdatedAt).toLocaleDateString() : 'Never')))),
+      h('form', { onSubmit: (e) => { e.preventDefault(); const f = e.target; this.changePassword(f.currentPassword.value, f.newPassword.value, f.confirmPassword.value).then(ok => { if (ok) f.reset(); }); },
+        style: { ...card, display: 'flex', flexDirection: 'column', gap: 13, maxWidth: 460 } },
+        h('h3', { style: { fontFamily: "'Cormorant Garamond',serif", fontWeight: 600, fontSize: 22, margin: 0 } }, 'Change password'),
+        noStore
+          ? h('div', { style: { fontSize: 13, color: '#8a6d3b', background: 'rgba(240,180,41,.12)', border: '1px solid rgba(240,180,41,.4)', borderRadius: 9, padding: '10px 12px', lineHeight: 1.6 } },
+              'Password changes can’t be saved yet — this deployment has no persistent volume, so a new password would be lost on the next deploy. Add a Railway Volume mounted at /data to switch this on.')
+          : h('div', { style: { fontSize: 12.5, color: '#9c9084', lineHeight: 1.6 } }, 'At least 10 characters. You’ll use the new password the next time you sign in.'),
+        field('Current password', 'currentPassword', 'current-password'),
+        field('New password', 'newPassword', 'new-password'),
+        field('Confirm new password', 'confirmPassword', 'new-password'),
+        st.pwErr ? h('div', { style: { color: '#b23b2e', fontSize: 13, background: 'rgba(178,59,46,.07)', border: '1px solid rgba(178,59,46,.2)', borderRadius: 9, padding: '9px 12px' } }, st.pwErr) : null,
+        st.pwOk ? h('div', { style: { color: '#4b6b3a', fontSize: 13, background: 'rgba(154,173,139,.16)', border: '1px solid rgba(154,173,139,.5)', borderRadius: 9, padding: '9px 12px' } }, st.pwOk) : null,
+        h('button', { type: 'submit', disabled: st.pwBusy || noStore,
+          style: { padding: 13, background: (st.pwBusy || noStore) ? '#c9b9a8' : '#9e5423', color: '#fff', border: 'none', borderRadius: 999, fontSize: 13.5, fontWeight: 700, letterSpacing: '.05em', cursor: (st.pwBusy || noStore) ? 'default' : 'pointer', fontFamily: 'inherit' } },
+          st.pwBusy ? 'Saving…' : 'Update password')));
+
+    const retagBusy = st.busy === 'retag';
+    const vidCats = cats.map(c => ({ key: c.key, label: c.label }));
+    const videoCard = h('div', { style: card },
+      h('h3', { style: { fontFamily: "'Cormorant Garamond',serif", fontWeight: 600, fontSize: 22, margin: '0 0 4px' } }, 'Video links (YouTube / Vimeo)'),
+      h('p', { style: { fontSize: 12.5, color: '#6f6357', margin: '0 0 12px', lineHeight: 1.6 } },
+        'For films too big to upload. Paste the link to a single video \u2014 it appears in the portfolio and plays inline, with no storage or bandwidth cost to this site.'),
+      h('form', { onSubmit: (e) => { e.preventDefault(); const f = e.target; this.addVideo(f.vurl.value.trim(), f.vcat.value); f.vurl.value = ''; },
+        style: { display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end' } },
+        h('label', { style: { flex: '1 1 260px', fontSize: 12, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 5 } }, 'Video link',
+          h('input', { name: 'vurl', placeholder: 'https://youtu.be/\u2026', style: { padding: '11px 13px', border: '1px solid rgba(154,173,139,.5)', borderRadius: 8, fontSize: 15, fontFamily: 'inherit', background: '#fff', width: '100%' } })),
+        h('label', { style: { flex: '0 1 170px', fontSize: 12, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 5 } }, 'Category',
+          h('select', { name: 'vcat', defaultValue: 'video', style: { padding: '11px 13px', border: '1px solid rgba(154,173,139,.5)', borderRadius: 8, fontSize: 15, fontFamily: 'inherit', background: '#fff', width: '100%' } },
+            vidCats.map(c => h('option', { key: c.key, value: c.key }, c.label)))),
+        h('button', { type: 'submit', disabled: st.vidBusy,
+          style: { padding: '11px 20px', background: st.vidBusy ? '#c89b78' : '#9e5423', color: '#fff', border: 'none', borderRadius: 999, fontSize: 13, fontWeight: 700, letterSpacing: '.04em', cursor: st.vidBusy ? 'default' : 'pointer', fontFamily: 'inherit' } },
+          st.vidBusy ? 'Adding\u2026' : '+ Add video')),
+      (st.videos && st.videos.length) ? h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))', gap: 10, marginTop: 14 } },
+        st.videos.map(v => h('div', { key: v.id, style: { position: 'relative', borderRadius: 10, overflow: 'hidden', background: '#eee6d8', border: '1px solid rgba(154,173,139,.3)' } },
+          h('div', { style: { position: 'relative', aspectRatio: '16/9', background: '#1e1611' } },
+            v.thumb ? h('img', { src: v.thumb, alt: v.title || '', style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }) : null,
+            h('button', { title: 'Remove', onClick: () => this.removeVideo(v.id, v.title),
+              style: { position: 'absolute', top: 4, right: 4, width: 24, height: 24, borderRadius: '50%', border: 'none', background: 'rgba(178,59,46,.92)', color: '#fff', fontSize: 15, lineHeight: '24px', cursor: 'pointer', padding: 0 } }, '\u00d7')),
+          h('div', { style: { padding: '7px 9px', fontSize: 11.5, color: '#5a4d43' } },
+            h('div', { style: { fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, v.title || v.videoId),
+            h('div', { style: { color: '#9c9084' } }, v.provider + ' \u00b7 ' + v.category)))))
+        : h('div', { style: { fontSize: 12.5, color: '#9c9084', marginTop: 10 } }, 'No videos linked yet.'));
+
+    const catMgr = h('div', { style: { ...card, background: '#f1ebdf' } },
+      h('button', { onClick: () => this.toggleSec('__cats'),
+        style: { background: 'none', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left' } },
+        h('span', { style: { color: '#9e5423', fontSize: 13, transform: st.openSec['__cats'] ? 'rotate(90deg)' : 'none', transition: 'transform .15s', display: 'inline-block' } }, '\u25b6'),
+        h('span', null,
+          h('h3', { style: { fontFamily: "'Cormorant Garamond',serif", fontWeight: 600, fontSize: 20, margin: 0 } }, 'Manage categories'),
+          h('div', { style: { fontSize: 12, color: '#9c9084' } }, cats.length + ' categories'))),
+      !st.openSec['__cats'] ? null : h('div', { style: { marginTop: 12 } },
+        h('form', { onSubmit: (e) => { e.preventDefault(); const f = e.target; this.addCategory(f.cname.value.trim()); f.cname.value = ''; },
+          style: { display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end', paddingBottom: 12, borderBottom: '1px dashed rgba(154,173,139,.45)' } },
+          h('label', { style: { flex: '1 1 220px', fontSize: 12, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 5 } }, 'New category',
+            h('input', { name: 'cname', placeholder: 'e.g. Concerts', style: { padding: '10px 12px', border: '1px solid rgba(154,173,139,.5)', borderRadius: 8, fontSize: 15, fontFamily: 'inherit', background: '#fff', width: '100%' } })),
+          h('button', { type: 'submit', disabled: st.catBusy,
+            style: { padding: '10px 18px', background: st.catBusy ? '#c89b78' : '#9e5423', color: '#fff', border: 'none', borderRadius: 999, fontSize: 12.5, fontWeight: 700, letterSpacing: '.04em', cursor: st.catBusy ? 'default' : 'pointer', fontFamily: 'inherit' } },
+            st.catBusy ? 'Adding\u2026' : '+ Add category')),
+        h('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 } },
+          cats.map(c => {
+            const n = (cloud[c.key] || []).length + (st.videos || []).filter(v => v.category === c.key).length;
+            return h('div', { key: c.key, style: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', background: '#fff', border: '1px solid rgba(154,173,139,.3)', borderRadius: 10, padding: '8px 10px' } },
+              h('input', { defaultValue: c.label, key: 'cl-' + c.key + '-' + c.label,
+                onBlur: (e) => { const l = e.target.value.trim(); if (l && l !== c.label) this.renameCategory(c.key, l); },
+                style: { flex: '1 1 160px', minWidth: 0, padding: '8px 10px', border: '1px solid rgba(154,173,139,.45)', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', background: '#faf7f0' } }),
+              h('span', { style: { fontSize: 11.5, color: '#9c9084', whiteSpace: 'nowrap' } }, n + (n === 1 ? ' item' : ' items')),
+              h('button', { onClick: () => this.deleteCategory(c.key, c.label), disabled: n > 0,
+                title: n > 0 ? 'Empty this category first' : 'Remove this category',
+                style: { padding: '7px 12px', background: 'none', border: '1px solid rgba(178,59,46,.45)', borderRadius: 999, color: n > 0 ? '#c9b9a8' : '#b23b2e', fontSize: 12, fontWeight: 700, cursor: n > 0 ? 'not-allowed' : 'pointer', fontFamily: 'inherit' } }, 'Remove'));
+          })),
+        h('p', { style: { fontSize: 11.5, color: '#8a7a68', lineHeight: 1.6, marginTop: 10 } },
+          'Renaming only changes the label shown on the site \u2014 existing photos stay put. A category must be empty before it can be removed, so nothing is ever orphaned in storage.')));
+
+    const work = h('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } },
+      catMgr,
+      h('div', { style: { fontSize: 12.5, color: '#9c9084', lineHeight: 1.6 } }, 'Tap a category to open it.'),
       specials.map(s => sectionOf(s.key, s.label)),
-      cats.map(c => sectionOf(c.key, c.label)));
+      cats.map(c => sectionOf(c.key, c.label)),
+      h('div', { style: { textAlign: 'right', marginTop: 2 } },
+        h('button', { onClick: () => this.retagAll(), disabled: retagBusy,
+          title: 'Re-tags files uploaded before this account was tagged, so the gallery can see them. Never deletes anything.',
+          style: { padding: '8px 14px', background: 'none', border: '1px solid rgba(154,173,139,.6)', borderRadius: 999, color: '#6f6357', fontSize: 12, fontWeight: 700, cursor: retagBusy ? 'default' : 'pointer', fontFamily: 'inherit' } },
+          retagBusy ? 'Repairing\u2026' : 'Photos missing? Repair')));
+
+    const btnSm = { padding: '8px 14px', background: 'none', border: '1px solid rgba(154,173,139,.6)', borderRadius: 999, color: '#5a4d43', fontSize: 12, fontWeight: 700, letterSpacing: '.03em', cursor: 'pointer', fontFamily: 'inherit' };
+    const btnDanger = { ...btnSm, border: '1px solid rgba(178,59,46,.45)', color: '#b23b2e' };
+    const list = st.deliveries || [];
+    const delivList = h('div', { style: card },
+      h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: list.length ? 13 : 0 } },
+        h('div', null,
+          h('h3', { style: { fontFamily: "'Cormorant Garamond',serif", fontWeight: 600, fontSize: 22, margin: 0 } }, 'Posted galleries'),
+          h('div', { style: { fontSize: 12, color: '#9c9084' } }, list.length + (list.length === 1 ? ' gallery' : ' galleries'))),
+        h('button', { onClick: () => this.loadDeliveries(), style: btnSm }, 'Refresh')),
+      list.length ? h('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+        list.map(g => {
+          const link = this.deliveryLink(g.code);
+          const dbusy = st.busy === ('deliv-' + g.code);
+          const open_ = st.openDeliv === g.code;
+          const items_ = st.delivItems[g.code];
+          const addBusy = open_ && st.busy === 'delivery';
+          const set_ = st.delivSettings[g.code];
+          return h('div', { key: g.code, style: { border: '1px solid rgba(154,173,139,.35)', borderRadius: 12, padding: '12px 14px', background: '#fff', display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' } },
+            h('div', { style: { flex: '1 1 250px', minWidth: 0 } },
+              h('div', { style: { fontWeight: 700, fontSize: 14.5 } }, g.title,
+                g.hasPin ? h('span', { style: { marginLeft: 8, fontSize: 10, letterSpacing: '.06em', color: '#8a6d3b', background: 'rgba(240,180,41,.16)', borderRadius: 999, padding: '2px 8px' } }, 'PIN') : null),
+              h('div', { style: { fontSize: 12, color: '#9c9084', margin: '3px 0 4px' } },
+                g.count + (g.count === 1 ? ' file' : ' files') + (g.expires ? ' · auto-deletes ' + new Date(g.expires).toLocaleDateString() : '')),
+              h('a', { href: link, target: '_blank', rel: 'noopener', style: { fontSize: 12, wordBreak: 'break-all' } }, link)),
+            h('div', { style: { display: 'flex', gap: 8, flexWrap: 'wrap' } },
+              h('button', { onClick: () => this.toggleDelivItems(g.code), style: open_ ? { ...btnSm, background: '#5a4d43', color: '#fff', border: '1px solid #5a4d43' } : btnSm },
+                open_ ? 'Hide photos' : 'Manage photos'),
+              h('button', { onClick: () => { try { navigator.clipboard.writeText(link); alert('Link copied to your clipboard.'); } catch (_) { prompt('Copy this link:', link); } }, style: btnSm }, 'Copy link'),
+              h('button', { onClick: () => this.deleteDelivery(g.code, g.count), disabled: dbusy, style: btnDanger }, dbusy ? 'Deleting…' : 'Delete')),
+            open_ ? h('div', { style: { flexBasis: '100%', borderTop: '1px solid rgba(154,173,139,.3)', marginTop: 4, paddingTop: 12 } },
+              h('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', marginBottom: 10 } },
+                h('div', { style: { fontSize: 12.5, color: '#6f6357' } }, items_ === undefined ? 'Loading…' : (items_.length + (items_.length === 1 ? ' file' : ' files') + ' in this gallery')),
+                h('label', { style: { padding: '9px 16px', background: addBusy ? '#c89b78' : '#9e5423', color: '#fff', borderRadius: 999, fontSize: 12.5, fontWeight: 700, letterSpacing: '.04em', cursor: addBusy ? 'default' : 'pointer', whiteSpace: 'nowrap' } },
+                  addBusy ? 'Uploading…' : '+ Add photos',
+                  h('input', { type: 'file', multiple: true, accept: 'image/*,video/*', disabled: addBusy, style: { display: 'none' },
+                    onChange: (e) => { const fs = Array.from(e.target.files || []); e.target.value = ''; this.addToDelivery(g.code, fs); } }))),
+              h('div', { style: { display: 'flex', gap: 8, alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: 12, paddingBottom: 12, borderBottom: '1px dashed rgba(154,173,139,.4)' } },
+                h('label', { style: { flex: '0 1 220px', fontSize: 12, fontWeight: 600, color: '#5a4d43', display: 'flex', flexDirection: 'column', gap: 5 } }, 'Access code (optional)',
+                  h('input', { defaultValue: (set_ && set_.pin) || '', placeholder: 'e.g. 4821 \u2014 blank = no code', key: 'pin-' + g.code + '-' + ((set_ && set_.pin) || ''),
+                    onChange: (e) => { this._pinDraft = this._pinDraft || {}; this._pinDraft[g.code] = e.target.value.trim(); },
+                    style: { padding: '10px 12px', border: '1px solid rgba(154,173,139,.5)', borderRadius: 8, fontSize: 14, fontFamily: 'inherit', background: '#fff', width: '100%' } })),
+                h('button', { onClick: () => this.saveDelivSettings(g.code, (this._pinDraft && this._pinDraft[g.code] !== undefined) ? this._pinDraft[g.code] : ((set_ && set_.pin) || '')),
+                  disabled: !!(set_ && set_.canSave === false), style: btnSm }, 'Save code'),
+                h('div', { style: { fontSize: 11.5, color: '#9c9084', flex: '1 1 200px', lineHeight: 1.5 } },
+                  (set_ && set_.canSave === false)
+                    ? 'Needs a Railway Volume at /data before codes can be saved.'
+                    : ((set_ && set_.pin) ? 'Clients must enter this code to open the gallery.' : 'Anyone with the link can open this gallery.'))),
+              progressEl(addBusy),
+              (items_ && items_.length) ? h('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(92px,1fr))', gap: 8 } },
+                items_.map((it, k) => h('div', { key: k, style: { position: 'relative', aspectRatio: '1', borderRadius: 8, overflow: 'hidden', background: '#eee6d8' } },
+                  h('img', { src: it.thumb, alt: it.filename, title: it.filename, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }),
+                  it.isVideo ? h('div', { style: { position: 'absolute', top: 4, left: 4, background: 'rgba(30,22,17,.6)', color: '#fff', fontSize: 9, padding: '1px 5px', borderRadius: 4 } }, 'video') : null,
+                  h('button', { title: 'Remove ' + it.filename, onClick: () => this.deleteDelivItem(g.code, it),
+                    style: { position: 'absolute', top: 4, right: 4, width: 24, height: 24, borderRadius: '50%', border: 'none', background: 'rgba(178,59,46,.92)', color: '#fff', fontSize: 15, lineHeight: '24px', cursor: 'pointer', padding: 0 } }, '×'))))
+                : (items_ !== undefined ? h('div', { style: { fontSize: 12.5, color: '#9c9084' } }, 'This gallery is empty — add photos above.') : null)) : null);
+        }))
+        : h('div', { style: { fontSize: 13, color: '#9c9084', lineHeight: 1.6 } }, 'No client galleries yet. Enter a code above, upload the full-res originals, then share the link that appears here.'));
+
+    const deliveriesPanel = h('div', { style: { display: 'flex', flexDirection: 'column', gap: 16 } }, deliveries, delivList);
+
+    return h('div', { style: { display: 'flex', flexDirection: 'column', gap: 16, marginTop: 26, textAlign: 'left' } },
+      header,
+      tabs,
+      st.adminTab === 'account' ? account : (st.adminTab === 'videos' ? videoCard : (st.adminTab === 'deliveries' ? deliveriesPanel : work)));
   }
 
-  async loadCloud() {
-    const keys = ['newborn', 'family', 'cinematic', 'drone', 'video', 'social', 'hero', 'about'];
-    const labels = { newborn: 'Newborn', family: 'Family', cinematic: 'Cinematic', drone: 'Drone', video: 'Video / Reels', social: 'Social Reels' };
+  // Signed-in admin reads the authenticated API: it is the live Cloudinary state.
+  // The public /list/<tag>.json endpoint is CDN-cached, so after a delete or an
+  // upload the admin would keep showing stale tiles for minutes.
+  async loadCloudFromApi(tok) {
+    const token = tok || this.state.token;
+    if (!token) return;
+    const keys = this.catKeys().concat(['hero', 'about']);
+    const labels = this.catLabels();
+    const out = {}, covers = {}, coverIds = {};
+    await Promise.all(keys.map(async k => {
+      out[k] = [];
+      try {
+        const r = await fetch(this.apiBase() + '/api/list?category=' + encodeURIComponent(k), { headers: { Authorization: 'Bearer ' + token } });
+        if (r.status === 401) { this.sessionExpired(); return; }
+        if (!r.ok) return;
+        const d = await r.json();
+        const items = (d.items || []).map(it => Object.assign({}, it, { label: labels[k] }));
+        out[k] = items;
+        const coverTag = this.tagFor(k) + '_cover';
+        const cov = items.find(it => (it.tags || []).indexOf(coverTag) !== -1);
+        if (cov) { covers[k] = cov.thumb; coverIds[k] = cov.publicId; }
+        if (items.length) {
+          if (k === 'hero') {
+            this.heroImages = items.map(it => it.full).filter(Boolean);
+            this.heroFromCloud = this.heroImages[this.heroImages.length - 1] || '';
+            this.startHeroShow();
+          }
+          if (k === 'about') this.aboutFromCloud = items[items.length - 1].full;
+        }
+      } catch (e) {}
+    }));
+    this.setState({ cloud: out, covers, coverIds, listBlocked: false });
+  }
+
+  async loadCloud(tok) {
+    const token = tok || this.state.token;
+    if (this.backendMode() && token) { await this.loadCloudFromApi(token); return; }
+    const keys = this.catKeys().concat(['hero', 'about']);
+    const labels = this.catLabels();
     const out = {};
     const covers = {};
+    const coverIds = {};   // category -> publicId of the featured asset (drives the ★ state)
     let blocked = false;
     await Promise.all(keys.map(async k => {
       out[k] = [];
@@ -631,9 +1302,14 @@ class Component extends DCLogic {
           if (k === 'hero' || k === 'about') {
             const list = (data.resources || []);
             if (list.length) {
-              const last = list[list.length - 1];
-              const url = 'https://res.cloudinary.com/' + this.CLOUD_NAME + '/image/upload/w_' + (k === 'hero' ? 2000 : 1200) + ',c_fill,q_auto,f_auto/' + last.public_id + '.' + last.format;
-              if (k === 'hero') this.heroFromCloud = url; else this.aboutFromCloud = url;
+              const urlOf = (r) => 'https://res.cloudinary.com/' + this.CLOUD_NAME + '/image/upload/w_' + (k === 'hero' ? 2000 : 1200) + ',c_fill,q_auto,f_auto/' + r.public_id + '.' + r.format;
+              if (k === 'hero') {
+                this.heroImages = list.map(urlOf);
+                this.heroFromCloud = this.heroImages[this.heroImages.length - 1] || '';
+                this.startHeroShow();
+              } else {
+                this.aboutFromCloud = urlOf(list[list.length - 1]);
+              }
             }
             out[k] = list; return;
           }
@@ -668,14 +1344,14 @@ class Component extends DCLogic {
       // FEATURED cover for this category (asset tagged <tag>_cover), image or video
       try {
         const rc = await fetch('https://res.cloudinary.com/' + this.CLOUD_NAME + '/image/list/' + tag + '_cover.json', { cache: 'no-store' });
-        if (rc.ok) { const cd = await rc.json(); const c = (cd.resources || [])[0]; if (c) covers[k] = 'https://res.cloudinary.com/' + this.CLOUD_NAME + '/image/upload/w_800,c_fill,q_auto,f_auto/' + c.public_id + '.' + c.format; }
+        if (rc.ok) { const cd = await rc.json(); const c = (cd.resources || [])[0]; if (c) { covers[k] = 'https://res.cloudinary.com/' + this.CLOUD_NAME + '/image/upload/w_800,c_fill,q_auto,f_auto/' + c.public_id + '.' + c.format; coverIds[k] = c.public_id; } }
       } catch (e) {}
       if (!covers[k]) { try {
         const rcv = await fetch('https://res.cloudinary.com/' + this.CLOUD_NAME + '/video/list/' + tag + '_cover.json', { cache: 'no-store' });
-        if (rcv.ok) { const cvd = await rcv.json(); const cv = (cvd.resources || [])[0]; if (cv) covers[k] = 'https://res.cloudinary.com/' + this.CLOUD_NAME + '/video/upload/w_800,c_fill,q_auto,so_0/' + cv.public_id + '.jpg'; }
+        if (rcv.ok) { const cvd = await rcv.json(); const cv = (cvd.resources || [])[0]; if (cv) { covers[k] = 'https://res.cloudinary.com/' + this.CLOUD_NAME + '/video/upload/w_800,c_fill,q_auto,so_0/' + cv.public_id + '.jpg'; coverIds[k] = cv.public_id; } }
       } catch (e) {} }
     }));
-    this.setState({ cloud: out, covers, listBlocked: blocked });
+    this.setState({ cloud: out, covers, coverIds, listBlocked: blocked });
   }
 
   openUploader(cat) {
@@ -684,7 +1360,7 @@ class Component extends DCLogic {
     const w = window.cloudinary.createUploadWidget({
       cloudName: this.CLOUD_NAME, uploadPreset: this.UPLOAD_PRESET,
       sources: ['local', 'url', 'camera'], multiple: true,
-      tags: [cat, 'emberoak'], folder: 'emberoak/' + cat,
+      tags: [cat, this.SITE_SLUG, this.tagFor(cat)], folder: this.SITE_SLUG + '/' + cat,
     }, (err, res) => {
       if (res && res.event === 'close') this.loadCloud();
     });
@@ -705,6 +1381,7 @@ class Component extends DCLogic {
     const base = [
       ['newborn', 'Sleeping Newborn', 340, ''], ['newborn', 'First Days at Home', 260, ''], ['newborn', 'Tiny Details', 400, ''],
       ['family', 'Golden Hour Family', 300, ''], ['family', 'In the Backyard', 360, ''], ['family', 'Generations', 280, ''],
+      ['events', 'Concert Night', 360, ''], ['events', 'Live on Stage', 300, ''], ['events', 'Crowd & Lights', 400, ''],
       ['cinematic', 'Cinematic Portrait', 420, ''], ['cinematic', 'Editorial Light', 320, ''], ['cinematic', 'Moody & Warm', 300, ''],
       ['drone', 'Aerial Estate', 380, ''], ['drone', 'Coastline from Above', 260, ''], ['drone', 'Sweeping Landscape', 340, ''],
       ['video', 'Highlight Film', 340, ''], ['video', 'Wedding Trailer', 260, ''], ['video', 'Brand Story', 400, ''],
@@ -722,11 +1399,7 @@ class Component extends DCLogic {
   renderVals() {
     const p = this.state.page;
     const cat = this.state.cat;
-    const cats = [
-      { key: 'newborn', label: 'Newborn' }, { key: 'family', label: 'Family' },
-      { key: 'cinematic', label: 'Cinematic' }, { key: 'drone', label: 'Drone' },
-      { key: 'video', label: 'Video / Reels' }, { key: 'social', label: 'Social Reels' },
-    ];
+    const cats = this.catList();
 
     const navLink = (page, label) => ({
       label, go: this.go(page),
@@ -741,7 +1414,11 @@ class Component extends DCLogic {
     const coversM = this.state.covers || {};
     const catCards = cats.map(c => {
       const list = cloud[c.key] || [];
-      const cover = coversM[c.key] || (list[0] && list[0].thumb) || '';
+      // A category can be entirely embedded video (YouTube/Vimeo), which has no
+      // Cloudinary asset and therefore no cover tag — fall back to the first
+      // embedded thumbnail so the card isn't an empty placeholder.
+      const embedThumb = (this.state.videos || []).filter(v => v.category === c.key && v.thumb).map(v => v.thumb)[0] || '';
+      const cover = coversM[c.key] || (list[0] && list[0].thumb) || embedThumb || '';
       return {
         label: c.label,
         coverEl: cover ? React.createElement('img', { src: cover, alt: c.label, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } }) : null,
@@ -760,11 +1437,15 @@ class Component extends DCLogic {
     const aboutSrc = this.ABOUT_IMAGE || this.aboutFromCloud || '';
     const cloudFlat = [];
     cats.forEach(c => (cloud[c.key] || []).forEach(im => cloudFlat.push({ cat: c.key, label: im.label, src: im.thumb, full: im.full, isVideo: !!im.isVideo })));
+    // embedded YouTube/Vimeo films sit alongside uploaded media in the same grid
+    (this.state.videos || []).forEach(v => cloudFlat.push({
+      cat: v.category, label: v.title || 'Film', src: v.thumb, full: v.embedUrl, isVideo: true, isEmbed: true,
+    }));
     const useCloud = cloudFlat.length > 0;
     const items = useCloud ? cloudFlat.map((it, i) => ({ ...it, h: heightsC[i % heightsC.length] })) : this.allItems();
     const filteredRaw = cat === 'all' ? items : items.filter(i => i.cat === cat);
     const filtered = filteredRaw.map((it, idx) => ({
-      label: it.label, src: it.src, hasImg: !!it.src, full: it.full, isVideo: !!it.isVideo,
+      label: it.label, src: it.src, hasImg: !!it.src, full: it.full, isVideo: !!it.isVideo, isEmbed: !!it.isEmbed,
       imgEl: it.src ? React.createElement('div', { style: { position: 'absolute', inset: 0 } },
         React.createElement('img', { src: it.src, alt: it.label, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } }),
         it.isVideo ? React.createElement('div', { style: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 56, height: 56, borderRadius: '50%', background: 'rgba(30,22,17,.55)', display: 'flex', alignItems: 'center', justifyContent: 'center' } },
@@ -782,10 +1463,10 @@ class Component extends DCLogic {
         icon: React.createElement('svg', { width: 26, height: 26, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('rect', { x: 4, y: 2, width: 16, height: 20, rx: 3 }), React.createElement('path', { d: 'm10 8 5 3-5 3V8Z' })) },
     ];
 
-    const testimonials = [
-      { quote: '[Client testimonial goes here.]', name: '[Client name]' },
-      { quote: '[Client testimonial goes here.]', name: '[Client name]' },
-    ];
+    // Real client quotes only. Add entries here as they come in — the section
+    // hides itself entirely while this is empty, so the page never shows
+    // invented praise.
+    const testimonials = [];
 
     const values = [
       { title: 'Warm & Unhurried', desc: 'No rushing, no stiff poses — just space for real moments to happen naturally.' },
@@ -825,12 +1506,29 @@ class Component extends DCLogic {
       clientName: this.state.clientName, loginErr: this.state.loginErr,
       loginEl: this.renderLogin(), managerEl: this.renderManager(cats, cloud),
       doLogout: (e) => { if (e) e.preventDefault(); this.logout(); },
-      heroImgEl: heroSrc ? React.createElement('img', { src: heroSrc, alt: 'Ember & Oak cover', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } }) : null,
+      heroImgEl: (() => {
+        // an explicit HERO_IMAGE always wins; otherwise fade through the uploads
+        const imgs = this.HERO_IMAGE ? [this.HERO_IMAGE] : ((this.heroImages && this.heroImages.length) ? this.heroImages : (heroSrc ? [heroSrc] : []));
+        if (!imgs.length) return null;
+        const cur = (this.state.heroIdx || 0) % imgs.length;
+        return React.createElement('div', { style: { position: 'absolute', inset: 0 } },
+          imgs.map((src, i) => React.createElement('img', {
+            key: i, src, alt: i === cur ? 'Studio cover' : '', 'aria-hidden': i === cur ? null : 'true',
+            className: 'eo-ken',
+            style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
+                     opacity: i === cur ? 1 : 0, transition: 'opacity 1.8s ease-in-out',
+                     transformOrigin: i % 2 ? 'center 35%' : 'center 65%',
+                     // long and alternating, so it eases in and back out instead of
+                     // snapping; negative delays desync the frames from each other
+                     animation: 'eoKen 18s ease-in-out infinite alternate',
+                     animationDelay: (-(i % 3) * 6) + 's',
+                     willChange: 'opacity, transform' } })));
+      })(),
       uploadHero: (e) => { if (e) e.preventDefault(); this.openUploader('hero'); },
-      aboutImgEl: aboutSrc ? React.createElement('img', { src: aboutSrc, alt: 'About Ember & Oak', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } }) : null,
+      aboutImgEl: aboutSrc ? React.createElement('img', { src: aboutSrc, alt: 'About the studio', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' } }) : null,
       uploadAbout: (e) => { if (e) e.preventDefault(); this.openUploader('about'); },
       uploadCats: cats.map(c => ({ label: c.label, count: (cloud[c.key] || []).length, upload: (e) => { if (e) e.preventDefault(); this.openUploader(c.key); } })),
-      cats: catCards, filterTabs, filtered, services, testimonials, values, packages,
+      cats: catCards, filterTabs, filtered, services, testimonials, hasTestimonials: testimonials.length > 0, values, packages,
       camIcon: this.cam(44),
       contactSent: this.state.contactSent, showForm: !this.state.contactSent,
       submitContact: (e) => { if (e) e.preventDefault(); this.setState({ contactSent: true }); },
@@ -838,7 +1536,9 @@ class Component extends DCLogic {
       clientEl: this.renderClientAccess(),
       lightboxOpen, currentLabel, currentSrc,
       currentImgEl: currentSrc ? (
-        (lightboxOpen && filteredRaw[lb] && filteredRaw[lb].isVideo)
+        (lightboxOpen && filteredRaw[lb] && filteredRaw[lb].isEmbed)
+          ? React.createElement('iframe', { src: currentSrc + '?autoplay=1&rel=0', title: currentLabel, allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share', allowFullScreen: true, frameBorder: '0', style: { position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0, background: '#1e1611' } })
+        : (lightboxOpen && filteredRaw[lb] && filteredRaw[lb].isVideo)
           ? React.createElement('video', { src: currentSrc, controls: true, autoPlay: true, playsInline: true, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', background: '#1e1611' } })
           : React.createElement('img', { src: currentSrc, alt: currentLabel, style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', background: '#1e1611' } })
       ) : null,

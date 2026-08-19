@@ -1,21 +1,44 @@
-# Studio Site — Starter Kit
+# Studio Site — Starter
 
-A rebrandable version of the Ember & Oak photography site: public portfolio, filterable
-galleries with lightbox + video, About, Services & Pricing, Contact, Studio Admin
-(upload / delete / featured covers), and Client Access (full-resolution client
-deliveries with one-click ZIP download and optional auto-expiry).
+A rebrandable photography/film studio site with a self-service admin, client
+delivery galleries, and embedded video. This is the template Ember & Oak is built
+on; Ember & Oak is the live demo.
 
-## What's here
-- `Studio-Site-Starter.dc.html` — the site source with branding stripped to
-  `[placeholders]`.
-- `ONBOARDING_QUESTIONNAIRE.md` — everything to collect from a new photographer.
-- `CUSTOMIZE.md` — exactly what to change to make the site theirs.
+## What a studio gets
+- **Public site** — home, filterable portfolio with lightbox, about, services,
+  contact, client access.
+- **Studio Admin** (footer link) — profile dashboard with four tabs:
+  - *My Work* — collapsible category sections, upload with live progress, delete,
+    ★ featured cover per category
+  - *Videos* — paste a YouTube/Vimeo link; titles resolve automatically and are
+    editable. For films too big or too costly to host.
+  - *Client Deliveries* — post a full-res gallery, get a share link, curate the
+    photos in it, set an access code
+  - *Account* — change password (persisted, bcrypt)
+- **Client Access** — opens by share code (+ optional access code), full-screen
+  viewer with slideshow, per-file or ZIP download, and "Save to Photos" on iPhone.
 
-## How to use it
-1. Have the photographer fill out `ONBOARDING_QUESTIONNAIRE.md`.
-2. Follow `CUSTOMIZE.md` to drop in their brand, copy, categories, colors, and accounts.
-3. Reuse the same `backend/` from the main project (it's generic) — deploy it to their
-   own Railway + Cloudinary. See the project root `README.md` and `CLAUDE.md`.
+## Layout
+```
+Studio-Site-Starter.dc.html   site SOURCE (branding as [placeholders])
+support.js                    DC runtime used by the source
+backend/                      Express API + serves backend/public/
+tools/rebuild-compiled.py     rebuild backend/public/index.html from the source
+CUSTOMIZE.md                  exactly what to change per studio
+ONBOARDING_QUESTIONNAIRE.md   what to collect from the photographer
+```
 
-Each photographer ends up with their own repo, Railway service, and Cloudinary account,
-so their media and clients are fully isolated from everyone else's.
+`backend/public/index.html` is a **compiled artifact** built from the `.dc.html`
+source. It is not committed here — the first build for a new studio produces it.
+See `CUSTOMIZE.md` step 6.
+
+## New studio, start to finish
+1. **Use this template** on GitHub → a new private repo for the studio.
+2. Work through `CUSTOMIZE.md` (branding, categories, copy, `SITE_SLUG`).
+3. Their own Cloudinary account → cloud name, API key/secret.
+4. Railway → deploy from the repo, **Root Directory = `backend`**, add a
+   **Volume at `/data`**, set variables from `backend/.env.example`.
+5. Point their domain at Railway; tighten `ALLOWED_ORIGINS` to it.
+
+Each studio ends up with its own repo, Railway service and Cloudinary account, so
+media and clients are fully isolated.
