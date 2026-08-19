@@ -11,3 +11,6 @@ RELAY/
 
 # Nested client repo accidentally swept in — keep local, not tracked
 Sites/Ember&Oak Media/
+
+# Screen recordings — 26MB+ each, and git history is a one-way door
+*.mov
