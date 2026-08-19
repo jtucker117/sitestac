@@ -1,0 +1,19 @@
+{
+  "name": "studio-site-backend",
+  "version": "1.0.0",
+  "description": "Per-studio media backend — auth, folder-scoped Cloudinary media, client delivery galleries, embedded video links.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "hash": "node hash-password.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.5.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

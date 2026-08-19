@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+!.env.example
+clients.json
+.DS_Store
+npm-debug.log*
+# compiled artifact — built per studio from the .dc.html source
+backend/public/index.html

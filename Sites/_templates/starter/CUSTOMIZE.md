@@ -1,50 +1,64 @@
-# Customizing the Starter for a New Photographer
+# Customising the starter for a studio
 
-The starter site is `Studio-Site-Starter.dc.html`. It's the same site as the Ember &
-Oak build with the branding stripped to `[bracketed placeholders]`. Fill it in with the
-answers from `ONBOARDING_QUESTIONNAIRE.md`.
+Everything below lives in `Studio-Site-Starter.dc.html` unless noted. Search for
+`[` to find the placeholders.
 
-## 1. Drop in their brand assets
-- Add their icon as `assets/studio-icon.png` (square monogram — used in the nav,
-  footer-adjacent client login).
-- Add their logo if you want it larger anywhere.
+## 1. Identity
+- `<title>` and `<meta name="description">` in the `<helmet>` block.
+- Studio name, tagline, city and all `[bracketed]` copy in the template.
+- `STUDIO_INITIALS` — monogram on the sign-in card and profile header.
+- Logo/wordmark markup in the header and footer.
+- Social links in the footer and on the Contact page.
 
-## 2. Replace the placeholder copy
-Search the file for these and replace with real content:
-- `Studio & Name` → the studio name (keep the colored `&` if you like).
-- `[Your tagline headline goes here]`, `your tagline` → hero headline + script tagline.
-- `[Your Name]` → the photographer's name (About).
-- All `[bracketed]` lines → real intro, about, service-area, footer copy.
-- `hello@yourstudio.com`, `@yourstudio`, Facebook URL → real contact + socials.
-- Testimonials `[Client testimonial…]` / `[Client name]` → real quotes.
+## 2. The one setting that silently breaks things
+```js
+SITE_SLUG = 'studio';   // MUST equal "slug" in CLIENTS_JSON
+```
+Media is tagged `<SITE_SLUG>__<category>`, and the server writes cover tags from
+the login slug. If the two differ, uploads still appear but the ★ featured cover
+never shows and nothing reports an error. Set both to the same value.
 
-## 3. Set the photo categories
-In the logic class find the `cats` array (in `renderVals`) and the matching `labels`
-in `loadCloud`. Add/remove/rename categories to match what they shoot. Keep the `key`
-lowercase (it's the Cloudinary tag) and give a friendly `label`. Also update the
-`packages` array (Services & Pricing) and the contact form's session-type `<option>`s.
+## 3. Cloudinary
+- `CLOUD_NAME` and `UPLOAD_PRESET` in the source.
+- Settings → Security → leave **Resource list** unchecked, or public galleries
+  cannot enumerate images.
 
-## 4. Video on or off
-If they don't do video, the video/social categories can simply be left out of the
-`cats` array — the galleries and reel copy drop automatically. If they do, keep them
-and adjust the "Video & Social Reels" blurb on the Services page.
+## 4. Categories
+**Categories are managed from Studio Admin now, not from code** — My Work → *Manage
+categories* → add, rename, remove. They persist to `/data/categories.json`.
 
-## 5. Colors
-The palette is a small set of hex values (terracotta `#9e5423`, sage `#9aad8b`, cream
-`#f8f4ec`, brown `#3c2f27`). Do a find-and-replace to their brand colors, or ask and
-we'll set a harmonious palette.
+The list in `catList()` is only the fallback used before the API responds (and if it
+is unreachable), so set it to whatever the studio should start with. Notes:
+- Renaming changes only the label. The key is baked into every asset's Cloudinary
+  tags, so renaming never moves or hides existing photos.
+- A category cannot be deleted while it holds photos or video links — otherwise
+  those files stay in Cloudinary, billable and invisible.
+- `hero` and `about` are reserved (cover photo and About photo).
 
-## 6. Connect their accounts
-- In the logic config near the top: set `CLOUD_NAME` and `UPLOAD_PRESET` to their
-  Cloudinary values. For the live build, set `USE_BACKEND = true` (see below).
-- Backend: create their `CLIENTS_JSON`, `SESSION_SECRET`, and Cloudinary keys as
-  Railway env vars (`backend/.env.example`).
+## 5. Content honesty
+- `testimonials` starts empty and the section hides itself. **Only add real client
+  quotes.** Shipping invented reviews on a live commercial site is a trust and
+  advertising problem, not placeholder text.
+- Pricing: keep it qualitative unless the studio has confirmed numbers.
 
-## 7. Build & deploy
-Same as the main project:
-1. Recompile the site into `backend/public/index.html` (with `USE_BACKEND = true`,
-   `API_BASE = ''`).
-2. Push to GitHub → Railway (root dir `backend`) → add env vars → deploy.
+## 6. Build and deploy
+```bash
+python3 tools/rebuild-compiled.py --old HEAD     # writes backend/public/index.html
+osascript -l JavaScript /tmp/component.js        # optional syntax check, no Node needed
+```
+The compiled file is a bundler shell whose one long line holds the entire inner
+document as a JSON string. The tool refuses to run unless it can reproduce the
+current build byte-for-byte from the previous source, so a stale divergence list
+fails loudly instead of corrupting the artifact.
 
-That's a fully branded, isolated site for the new photographer on their own Cloudinary
-account.
+Then Railway: Root Directory `backend`, Volume at `/data`, variables from
+`backend/.env.example`.
+
+## 7. Before handing over
+- Change the studio password in Account (the seeded one is temporary).
+- Set `ALLOWED_ORIGINS` to the real domain.
+- Add access codes to sensitive delivery galleries.
+- Upload two or more Cover Photos if they want the hero to cross-fade (6s per
+  image with a slow Ken Burns drift; one image renders statically as before).
+- Confirm the studio understands the media limits: **10 MB per image, 100 MB per
+  video** on Cloudinary's free plan, and video belongs in the Videos tab.
