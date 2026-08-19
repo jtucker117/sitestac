@@ -63,11 +63,13 @@ a{color:inherit;text-decoration:none}
 .brick .studs{position:absolute;top:-.82em;left:5%;right:5%;display:flex;justify-content:space-between;pointer-events:none}
 .brick .studs i{display:block;width:1.85em;height:1.1em;border-radius:.5em .5em .18em .18em;
   background:var(--bc);box-shadow:inset 0 .14em 0 rgba(255,255,255,.16)}
+/* b-orange rests on --orange-d: white on base --orange is 2.53:1, under the
+   3:1 floor for large bold text. Same swap in .addon and .tier. */
 .brick.b-blue{--bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d)}
 .brick.b-pink{--bc:var(--pink);--bl:#f06bac;--bd:var(--pink-d)}
 .brick.b-purple{--bc:var(--purple);--bl:#9d68e6;--bd:var(--purple-d)}
 .brick.b-teal{--bc:var(--teal);--bl:#3ec5c5;--bd:var(--teal-d)}
-.brick.b-orange{--bc:var(--orange);--bl:#ffa642;--bd:var(--orange-d)}
+.brick.b-orange{--bc:var(--orange-d);--bl:#ffa642;--bd:#a35400}
 .brick.b-green{--bc:var(--green);--bl:#4fc96e;--bd:var(--green-d)}
 .brick.b-red{--bc:var(--red);--bl:#f0685d;--bd:var(--red-d)}
 .brick.b-yellow{--bc:var(--yellow);--bl:#ffd25a;--bd:var(--yellow-d);color:#3a2a00}
@@ -263,7 +265,7 @@ section.block{padding:84px 0}
 .addon-body span{display:block;color:rgba(255,255,255,.92);font-size:.95rem;line-height:1.45}
 .addon.b-pink{--bc:var(--pink);--bl:#f06bac;--bd:var(--pink-d)}
 .addon.b-purple{--bc:var(--purple);--bl:#9d68e6;--bd:var(--purple-d)}
-.addon.b-orange{--bc:var(--orange);--bl:#ffa642;--bd:var(--orange-d)}
+.addon.b-orange{--bc:var(--orange-d);--bl:#ffa642;--bd:#a35400}
 .addon.b-green{--bc:var(--green);--bl:#4fc96e;--bd:var(--green-d)}
 .addon.b-teal{--bc:var(--teal);--bl:#3ec5c5;--bd:var(--teal-d)}
 .addon.b-blue{--bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d)}
@@ -314,14 +316,14 @@ section.block{padding:84px 0}
 .tier.t-orange .cap{background:var(--orange)} .tier.t-green .cap{background:var(--green)}
 .tier .pill{align-self:flex-start;font-family:"Sora";font-weight:700;font-size:.82rem;letter-spacing:.04em;color:#fff;padding:.3em .8em;border-radius:999px;margin-bottom:14px}
 .tier.t-blue .pill{background:var(--blue)} .tier.t-pink .pill{background:var(--pink)}
-.tier.t-orange .pill{background:var(--orange)} .tier.t-green .pill{background:var(--green)}
+.tier.t-orange .pill{background:var(--orange-d)} .tier.t-green .pill{background:var(--green)}
 .tier h3{font-size:1.45rem;font-weight:800;margin-bottom:.15em}
 .tier .price{font-family:"Sora";font-weight:800;font-size:2rem;margin:.1em 0;display:flex;flex-direction:column;gap:.05em}
 .tier .price small{font-size:.82rem;color:var(--ink-soft);font-weight:600}
 .price-scale{display:inline-flex;gap:.05em;line-height:1;font-size:2rem}
 .price-scale b{color:var(--blue)}
 .price-scale i{color:var(--line);font-style:normal}
-.tier.t-pink .price-scale b{color:var(--pink)} .tier.t-orange .price-scale b{color:var(--orange)}
+.tier.t-pink .price-scale b{color:var(--pink)} .tier.t-orange .price-scale b{color:var(--orange-d)}
 .tier .desc{color:var(--ink-soft);font-size:.96rem;margin-bottom:14px;min-height:42px}
 .tier ul{list-style:none;display:flex;flex-direction:column;gap:.55em;margin-bottom:20px}
 .tier li{display:flex;gap:.5em;font-size:.95rem;color:var(--ink-soft)}

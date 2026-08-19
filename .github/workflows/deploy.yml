@@ -20,7 +20,9 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 22, matching blog.yml. GitHub force-runs Node 20 actions on 24 and
+          # logs a deprecation warning on every deploy.
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
