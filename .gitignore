@@ -14,3 +14,6 @@ Sites/Ember&Oak Media/
 
 # Screen recordings — 26MB+ each, and git history is a one-way door
 *.mov
+
+# Supabase CLI local state — records which project this checkout is linked to
+supabase/.temp/
