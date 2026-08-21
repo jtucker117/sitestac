@@ -39,10 +39,12 @@ jobs:
         run: |
           git config user.name "sitestac-bot"
           git config user.email "bot@sitestac.com"
-          if git diff --quiet -- src/content/blog; then
+          # Stage first, then check: new posts are untracked files, which
+          # `git diff` on its own never sees.
+          git add src/content/blog
+          if git diff --cached --quiet -- src/content/blog; then
             echo "No new posts."
             exit 0
           fi
-          git add src/content/blog
           git commit -m "Blog: publish scheduled posts"
           git push
