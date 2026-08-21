@@ -5,16 +5,22 @@
    the stagger as transition-delay, and the jitter baked per item.
    The overlay is a SIBLING of <header> on purpose: the header's backdrop-filter
    makes it a containing block, which would trap a position:fixed child. */
-/* Each pill wears the DARK brick variant at rest and brightens to the base on
-   hover. That order is deliberate: white on base --orange is 2.53:1, under the
-   3:1 floor for large bold text. Every -d variant clears it. */
+/* Each pill wears exactly the colour its matching BRICK wears, so the open menu
+   reads as the same set of blocks as the page behind it. That means the base
+   token everywhere except orange, which rests on --orange-d because white on
+   base --orange is 2.53:1 — under the 3:1 floor for large bold text. (This is
+   the same swap .brick.b-orange makes.) Resting on the dark variant across the
+   board was the old rule; it made teal read olive and orange read brown.
+   Hover DARKENS rather than brightens — brightening orange would have landed
+   back on the 2.53:1 failure mid-interaction. */
 const items = [
-  { label: "the stack", href: "/#stak",    bg: "--blue",   rot: -8, jit: -30 },
-  { label: "build",     href: "/#build",   bg: "--teal",   rot: 8,  jit: 20, cart: true },
-  { label: "pricing",   href: "/#pricing", bg: "--orange", rot: 8,  jit: -10 },
-  { label: "blog",      href: "/blog",     bg: "--pink",   rot: 8,  jit: 35 },
-  { label: "faq",       href: "/#faq",     bg: "--purple", rot: -8, jit: -25 },
+  { label: "the stack", href: "/#stak",    bg: "--blue",     hover: "--blue-d",   rot: -8, jit: -30 },
+  { label: "build",     href: "/#build",   bg: "--teal",     hover: "--teal-d",   rot: 8,  jit: 20, cart: true },
+  { label: "pricing",   href: "/#pricing", bg: "--orange-d", hover: "#a35400",    rot: 8,  jit: -10 },
+  { label: "blog",      href: "/blog",     bg: "--pink",     hover: "--pink-d",   rot: 8,  jit: 35 },
+  { label: "faq",       href: "/#faq",     bg: "--purple",   hover: "--purple-d", rot: -8, jit: -25 },
 ];
+const paint = (c: string) => (c.startsWith("--") ? `var(${c})` : c);
 ---
 <header class="nav" data-bubblenav>
   <div class="wrap">
@@ -36,7 +42,7 @@ const items = [
         <a
           class={`pill-link${it.cart ? " cart-open" : ""}`}
           href={it.href}
-          style={`--i:${i};--jit:${it.jit}ms;--rot:${it.rot}deg;--pill-bg:var(${it.bg}-d);--pill-hover:var(${it.bg})`}
+          style={`--i:${i};--jit:${it.jit}ms;--rot:${it.rot}deg;--pill-bg:${paint(it.bg)};--pill-hover:${paint(it.hover)}`}
         >
           <span class="pill-label">{it.label}</span>
         </a>

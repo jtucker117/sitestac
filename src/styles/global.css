@@ -12,7 +12,11 @@
   --ink-soft:#52617a;
   --line:#e2e8f0;
 
-  --blue:#2563eb;  --blue-l:#3b82f6;  --blue-d:#1d4ed8;
+  /* Brand blue sampled from the logo artwork — every asset in _logos/ is
+     #034AD1. The site had been on Tailwind blue-600 (#2563eb), which is
+     lighter and greyer than the mark. public/logo.svg + favicon.svg are
+     placeholder redraws and still carry the old hex. */
+  --blue:#034AD1;  --blue-l:#0A5BE8;  --blue-d:#023A9E;
   --sky:#60a5fa;
   --pink:#e83a90;  --pink-d:#c41f72;
   --purple:#7a39d4; --purple-d:#5b22a8;
@@ -50,8 +54,12 @@ a{color:inherit;text-decoration:none}
 
 /* ---------- BRICK COMPONENT ---------- */
 /* Lego brick — flat solid color body with discrete rounded-rectangle studs
-   poking up from the top, same color as the body (matches _logos/Block.png). */
+   poking up from the top, same color as the body (matches _logos/Block.png).
+   Stud geometry is traced off that asset, in units of the body height (2.9em):
+   stud width ≈ half of it, height ≈ a quarter, gap just under a stud wide.
+   The vars live here so .addon shares one stud look — see the brick standard. */
 .brick{
+  --stud-w:1.45em;--stud-h:.66em;--stud-gap:1.24em;
   position:relative;
   display:inline-flex;align-items:center;justify-content:center;gap:.4em;
   padding:.9em 1.35em;border-radius:9px;color:#fff;min-height:2.9em;
@@ -60,9 +68,15 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 10px 18px -11px rgba(15,26,51,.4);
   --bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d);
 }
-.brick .studs{position:absolute;top:-.82em;left:5%;right:5%;display:flex;justify-content:space-between;pointer-events:none}
-.brick .studs i{display:block;width:1.85em;height:1.1em;border-radius:.5em .5em .18em .18em;
-  background:var(--bc);box-shadow:inset 0 .14em 0 rgba(255,255,255,.16)}
+/* Centred with a fixed gap, not space-between across an inset track: with
+   space-between a short label ("404") gave four fixed-width studs less room
+   than they needed and they overlapped into one blob. `flex:0 1` lets them
+   shrink as a last resort on a too-narrow body instead of colliding.
+   bottom:100% sits them flush on the top edge, so only the top corners round. */
+.brick .studs,.addon .studs{position:absolute;bottom:100%;left:0;right:0;
+  display:flex;justify-content:center;gap:var(--stud-gap);pointer-events:none}
+.brick .studs i,.addon .studs i{display:block;flex:0 1 var(--stud-w);height:var(--stud-h);
+  border-radius:.32em .32em 0 0;background:var(--bc)}
 /* b-orange rests on --orange-d: white on base --orange is 2.53:1, under the
    3:1 floor for large bold text. Same swap in .addon and .tier. */
 .brick.b-blue{--bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d)}
@@ -92,7 +106,7 @@ footer .logo-img{height:36px}
 .tier,.step,.prob-card,.trust .t{--mx:50%;--my:50%}
 .tier::after,.step::after,.prob-card::after,.trust .t::after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:radial-gradient(340px circle at var(--mx) var(--my),rgba(37,99,235,.10),transparent 72%);
+  background:radial-gradient(340px circle at var(--mx) var(--my),rgba(3,74,209,.10),transparent 72%);
   opacity:0;transition:opacity .4s ease}
 .tier:hover::after,.step:hover::after,.prob-card:hover::after,.trust .t:hover::after{opacity:1}
 .step,.prob-card,.trust .t{position:relative}
@@ -129,7 +143,10 @@ body.bubble-open .cart-fab,body.bubble-open .mobile-cta{opacity:0;pointer-events
 .pill-link{--pill-bg:var(--blue-d);--pill-hover:var(--blue);--tilt:0deg;
   width:100%;min-height:107px;border-radius:999px;background:var(--pill-bg);color:#fff;
   font-family:"Sora",sans-serif;font-weight:700;letter-spacing:-.018em;
-  font-size:clamp(1.05rem,2.1vw,1.94rem);
+  /* Floor is 1.2rem (19.2px), not 1.05rem: bold text only qualifies as "large"
+     for the 3:1 contrast floor from 18.66px up. Below that these pills would
+     owe 4.5:1, which teal (3.09) and pink (3.86) don't clear. */
+  font-size:clamp(1.2rem,2.1vw,1.94rem);
   display:flex;align-items:center;justify-content:center;white-space:nowrap;
   box-shadow:0 16px 34px -20px rgba(15,26,51,.55);
   transform:scale(0) rotate(var(--tilt));
@@ -154,10 +171,10 @@ body.bubble-open .pill-label{opacity:1;transform:none;
 .btn{cursor:pointer;border:0;font-family:"Sora";font-weight:700;font-size:1rem;color:#fff;line-height:1.1;
   padding:.85em 1.6em;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:.5em;
   background:var(--blue);
-  box-shadow:0 8px 20px -8px rgba(37,99,235,.55);
+  box-shadow:0 8px 20px -8px rgba(3,74,209,.55);
   transition:transform .16s var(--ease), box-shadow .16s var(--ease), background-color .16s ease}
-.btn:hover{background:var(--blue-d);transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(37,99,235,.6)}
-.btn:active{transform:translateY(0);box-shadow:0 5px 14px -8px rgba(37,99,235,.5)}
+.btn:hover{background:var(--blue-d);transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(3,74,209,.6)}
+.btn:active{transform:translateY(0);box-shadow:0 5px 14px -8px rgba(3,74,209,.5)}
 .btn.ghost{background:#fff;color:var(--blue);border:1.5px solid color-mix(in srgb,var(--blue) 26%, transparent);box-shadow:0 8px 20px -10px rgba(15,26,51,.22)}
 .btn.ghost:hover{background:#fff;color:var(--blue-d);border-color:var(--blue);transform:translateY(-2px);box-shadow:0 14px 26px -12px rgba(15,26,51,.28)}
 .btn.ghost:active{transform:translateY(0);box-shadow:0 5px 14px -10px rgba(15,26,51,.2)}
@@ -255,10 +272,9 @@ section.block{padding:84px 0}
 .addon{position:relative;display:flex;gap:.7em;align-items:flex-start;border-radius:10px;color:#fff;padding:1.5em 1.2em 1.2em;
   background:var(--bc);
   box-shadow:0 12px 24px -14px rgba(15,26,51,.45);
-  --bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d);transition:transform .18s ease, box-shadow .18s ease}
+  --bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d);transition:transform .18s ease, box-shadow .18s ease;
+  --stud-w:1.45em;--stud-h:.66em;--stud-gap:1.24em}
 .addon:hover{transform:translateY(-5px) rotate(-.6deg)}
-.addon .studs{position:absolute;top:-.72em;left:7%;right:7%;display:flex;justify-content:space-between;pointer-events:none}
-.addon .studs i{display:block;width:1.7em;height:1em;border-radius:.45em .45em .16em .16em;background:var(--bc);box-shadow:inset 0 .14em 0 rgba(255,255,255,.16)}
 .addon-dot{flex:0 0 auto;display:flex;align-items:center;color:#fff;margin-top:1px}
 .addon-dot svg{display:block}
 .addon-body b{display:block;color:#fff;font-weight:800;margin-bottom:.2em}
@@ -275,8 +291,8 @@ section.block{padding:84px 0}
 .cart-fab{position:fixed;right:20px;bottom:20px;z-index:60;display:inline-flex;align-items:center;gap:.5em;
   background:var(--blue);color:#fff;font-family:"Sora";font-weight:700;font-size:.98rem;
   padding:.8em 1.3em;border-radius:999px;border:0;cursor:pointer;
-  box-shadow:0 14px 30px -10px rgba(37,99,235,.6);transition:transform .16s var(--ease),box-shadow .16s var(--ease)}
-.cart-fab:hover{transform:translateY(-3px);box-shadow:0 18px 36px -12px rgba(37,99,235,.65)}
+  box-shadow:0 14px 30px -10px rgba(3,74,209,.6);transition:transform .16s var(--ease),box-shadow .16s var(--ease)}
+.cart-fab:hover{transform:translateY(-3px);box-shadow:0 18px 36px -12px rgba(3,74,209,.65)}
 .cart-overlay{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px;
   background:rgba(11,18,32,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .cart-overlay.open{display:flex}
@@ -413,7 +429,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 .chip:nth-child(1){animation-delay:.35s}.chip:nth-child(2){animation-delay:.45s}
 .chip:nth-child(3){animation-delay:.55s}.chip:nth-child(4){animation-delay:.65s}
 .chip:nth-child(5){animation-delay:.75s}
-.chip:hover{border-color:color-mix(in srgb,var(--blue) 40%,transparent);box-shadow:0 10px 22px -12px rgba(37,99,235,.45)}
+.chip:hover{border-color:color-mix(in srgb,var(--blue) 40%,transparent);box-shadow:0 10px 22px -12px rgba(3,74,209,.45)}
 @keyframes chipin{to{opacity:1;transform:none}}
 
 /* ---------- PROBLEM SECTION ---------- */
@@ -462,7 +478,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 .faq{max-width:760px;margin-inline:auto;display:flex;flex-direction:column;gap:12px}
 .faq details{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;
   box-shadow:0 16px 34px -30px rgba(15,26,51,.5);transition:box-shadow .2s var(--ease),border-color .2s var(--ease)}
-.faq details[open]{border-color:color-mix(in srgb,var(--blue) 32%,transparent);box-shadow:0 22px 44px -28px rgba(37,99,235,.4)}
+.faq details[open]{border-color:color-mix(in srgb,var(--blue) 32%,transparent);box-shadow:0 22px 44px -28px rgba(3,74,209,.4)}
 .faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;
   padding:20px 22px;font-family:"Sora";font-weight:700;font-size:1.08rem;color:var(--ink)}
 .faq summary::-webkit-details-marker{display:none}
@@ -491,7 +507,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 .audit-form label{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:.86rem;color:var(--ink-soft)}
 .audit-form input{font-family:"Inter",sans-serif;font-size:1rem;color:var(--ink);background:#fff;
   border:1.5px solid var(--line);border-radius:12px;padding:.8em .95em;transition:border-color .18s ease,box-shadow .18s ease}
-.audit-form input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,235,.14)}
+.audit-form input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 4px rgba(3,74,209,.14)}
 .audit-form .btn{margin-top:6px;width:100%}
 .audit-form .fineprint{color:var(--ink-soft);font-size:.82rem;text-align:center}
 
@@ -511,7 +527,7 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   box-shadow:inset 0 2px 7px rgba(0,0,0,.24),0 5px 12px -9px rgba(15,26,51,.5);
   transition-duration:.06s}
 .cart-fab:active{transform:translateY(2px) scale(.985);
-  box-shadow:0 6px 16px -10px rgba(37,99,235,.5);transition-duration:.06s}
+  box-shadow:0 6px 16px -10px rgba(3,74,209,.5);transition-duration:.06s}
 .card:active,.post-card:active{transform:translateY(-2px) scale(.994);transition-duration:.07s}
 .stak-reset:active,.cart-close:active{transform:scale(.955)}
 .addon:active{transform:translateY(-1px) scale(.99);transition-duration:.07s}
