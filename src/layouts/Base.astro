@@ -7,10 +7,12 @@ import DotField from "../components/DotField.astro";
 interface Props {
   title?: string;
   description?: string;
+  ogType?: string;
 }
 const {
   title = "SiteStac — Websites built block by block",
   description = "SiteStac builds beautiful one-page websites for local businesses, then lets you stack on the features you need — blog, SEO, hosting and more. Free preview before you pay.",
+  ogType = "website",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL("/logo.png", Astro.site).href;
@@ -28,7 +30,7 @@ const ogImage = new URL("/logo.png", Astro.site).href;
     <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="SiteStac" />
     <meta property="og:image" content={ogImage} />

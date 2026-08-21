@@ -53,6 +53,12 @@ jobs:
           git commit -m "Blog: publish scheduled posts"
           git push
 
+      # Only now is a post actually published. Doing this before the push is
+      # what let three posts get marked done and then thrown away.
+      - name: Confirm published in the ledger
+        if: steps.commit.outputs.published == 'true'
+        run: npm run blog:confirm
+
   # This push is authenticated with GITHUB_TOKEN, which GitHub deliberately
   # stops from triggering further workflows — so deploy.yml's `on: push` never
   # fires for it. Call the deploy directly instead.

@@ -5,7 +5,7 @@
 //   npm run blog:generate             (the daily pass)
 //   npm run blog:generate -- --dry-run (draft to stdout, write nothing)
 
-import { existsSync, writeFileSync, appendFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
 import { getCluster } from "./clusters.mjs";
@@ -154,16 +154,11 @@ const { data: due, error } = await supabase
 
 if (error) throw error;
 
-// A post whose file is already on main was published by a merged PR (or an
-// earlier run) — reconcile the ledger rather than drafting it a second time.
+// A post whose file is already on main was written by an earlier run — skip it
+// rather than drafting it a second time. Marking it published is confirm-published.mjs's
+// job, which only runs once the commit has actually landed.
 const alreadyOnDisk = due.filter((p) => existsSync(join(BLOG_DIR, `${p.slug}.md`)));
-if (alreadyOnDisk.length && !dryRun) {
-  await supabase
-    .from("blog_posts")
-    .update({ status: "published", published_at: new Date().toISOString() })
-    .in("id", alreadyOnDisk.map((p) => p.id));
-  alreadyOnDisk.forEach((p) => note(`Published (already on main): ${p.slug}`));
-}
+alreadyOnDisk.forEach((p) => note(`Already on main, skipping: ${p.slug}`));
 
 const queue = due.filter((p) => !alreadyOnDisk.includes(p));
 
@@ -225,18 +220,67 @@ for (const post of queue) {
     continue;
   }
 
+  // Deliberately no ledger write here. A post is only "published" once its file
+  // is committed and pushed — marking it now is what silently burned three posts
+  // when the commit step was dropping them. confirm-published.mjs closes the loop.
   writeFileSync(join(BLOG_DIR, `${post.slug}.md`), markdown);
 
-  await supabase
-    .from("blog_posts")
-    .update({
-      status: "published",
-      published_at: new Date().toISOString(),
-      title: draft.title,
-    })
-    .eq("id", post.id);
-
   note(`Wrote ${post.slug}.md — ${draft.title}`);
+}
+
+// --- pillar back-links -----------------------------------------------------
+
+// A pillar is drafted before any of its supporting posts exist, so its `related`
+// list is always empty at write time and it never gains one. That leaves the
+// hub-and-spoke structure wired in one direction only: spokes point at the hub,
+// the hub points nowhere. Rewrite each pillar's `related` once its siblings are
+// on disk.
+function setRelated(slug, slugs) {
+  const file = join(BLOG_DIR, `${slug}.md`);
+  if (!existsSync(file)) return false;
+
+  const text = readFileSync(file, "utf8");
+  const end = text.indexOf("\n---", 3);
+  if (!text.startsWith("---") || end === -1) return false;
+
+  const fm = text.slice(4, end);
+  const body = text.slice(end + 4);
+
+  const block = slugs.length ? `related:\n${slugs.map((r) => `  - ${r}`).join("\n")}\n` : "";
+  // `related` sits between postType/location and faqs, and its list items are
+  // the only two-space-indented lines in that span.
+  const stripped = fm.replace(/related:\n(?:  - .*\n)*/, "");
+  const rebuilt = stripped.replace(/^faqs:/m, `${block}faqs:`);
+  if (rebuilt === fm) return false;
+
+  writeFileSync(file, `---\n${rebuilt}\n---${body}`);
+  return true;
+}
+
+if (!dryRun) {
+  const { data: published } = await supabase
+    .from("blog_posts")
+    .select("slug, cluster_id, post_type")
+    .eq("status", "published");
+
+  const byCluster = new Map();
+  for (const p of published ?? []) {
+    if (!byCluster.has(p.cluster_id)) byCluster.set(p.cluster_id, []);
+    byCluster.get(p.cluster_id).push(p);
+  }
+
+  for (const [clusterId, posts] of byCluster) {
+    const pillar = posts.find((p) => p.post_type === "pillar");
+    if (!pillar) continue;
+    const spokes = posts
+      .filter((p) => p.post_type !== "pillar" && existsSync(join(BLOG_DIR, `${p.slug}.md`)))
+      .slice(0, 3)
+      .map((p) => p.slug);
+    if (!spokes.length) continue;
+    if (setRelated(pillar.slug, spokes)) {
+      note(`Linked pillar ${pillar.slug} -> ${spokes.length} supporting post(s) [cluster ${clusterId}]`);
+    }
+  }
 }
 
 // --- runway ----------------------------------------------------------------

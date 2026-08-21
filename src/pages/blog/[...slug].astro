@@ -16,6 +16,39 @@ const related = post.data.related
   .map((slug) => posts.find((p) => p.id === slug))
   .filter((p) => p !== undefined && !p.data.draft);
 
+const url = new URL(`/blog/${post.id}/`, Astro.site).href;
+const ogImage = new URL("/logo.png", Astro.site).href;
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date.toISOString(),
+  dateModified: post.data.date.toISOString(),
+  mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  url,
+  image: ogImage,
+  author: { "@type": "Organization", name: "SiteStac", url: Astro.site?.href },
+  publisher: {
+    "@type": "Organization",
+    name: "SiteStac",
+    url: Astro.site?.href,
+    logo: { "@type": "ImageObject", url: ogImage },
+  },
+  ...(post.data.keyword ? { keywords: post.data.keyword } : {}),
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: Astro.site?.href },
+    { "@type": "ListItem", position: 2, name: "Blog", item: new URL("/blog/", Astro.site).href },
+    { "@type": "ListItem", position: 3, name: post.data.title, item: url },
+  ],
+};
+
 const faqSchema = post.data.faqs.length
   ? {
       "@context": "https://schema.org",
@@ -28,7 +61,9 @@ const faqSchema = post.data.faqs.length
     }
   : null;
 ---
-<Base title={`${post.data.title} — SiteStac`} description={post.data.description}>
+<Base title={`${post.data.title} — SiteStac`} description={post.data.description} ogType="article">
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <section class="block">
     <div class="wrap">
