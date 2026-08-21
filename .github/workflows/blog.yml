@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      published: ${{ steps.commit.outputs.published }}
     env:
       SUPABASE_URL: https://kbsjugijwmjpattzfmgi.supabase.co
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -34,8 +36,8 @@ jobs:
 
       - run: npm run blog:generate
 
-      # Committing to main triggers the existing Cloudflare deploy workflow.
       - name: Commit new posts
+        id: commit
         run: |
           git config user.name "sitestac-bot"
           git config user.email "bot@sitestac.com"
@@ -44,7 +46,18 @@ jobs:
           git add src/content/blog
           if git diff --cached --quiet -- src/content/blog; then
             echo "No new posts."
+            echo "published=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "published=true" >> "$GITHUB_OUTPUT"
           git commit -m "Blog: publish scheduled posts"
           git push
+
+  # This push is authenticated with GITHUB_TOKEN, which GitHub deliberately
+  # stops from triggering further workflows — so deploy.yml's `on: push` never
+  # fires for it. Call the deploy directly instead.
+  deploy:
+    needs: publish
+    if: needs.publish.outputs.published == 'true'
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch: {}
+  # Called by blog.yml. A push made with the default GITHUB_TOKEN does not
+  # trigger `on: push`, so the blog job has to invoke this deploy itself.
+  workflow_call: {}
 
 # Avoid overlapping deploys if pushes land close together.
 concurrency:
