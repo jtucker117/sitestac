@@ -45,7 +45,7 @@ const faqSchema = post.data.faqs.length
               {post.data.faqs.map((faq) => (
                 <details>
                   <summary>{faq.q}<span class="ic" aria-hidden="true">+</span></summary>
-                  <p>{faq.a}</p>
+                  <div class="ans"><p>{faq.a}</p></div>
                 </details>
               ))}
             </div>

@@ -376,7 +376,11 @@ section.block{padding:84px 0}
 .post-card time{font-size:.85rem;color:var(--ink-soft);font-weight:600}
 .post-card h3{font-size:1.35rem;font-weight:700;margin:.3em 0}
 .post-card p{color:var(--ink-soft);font-size:.96rem}
-.prose{max-width:68ch;margin-inline:auto}
+/* Long-form copy sits directly on the fixed DotField backdrop, and the dots
+   read straight through body text. Cards elsewhere on the site hide it by
+   having their own surface; the article needs the same. */
+.prose{max-width:68ch;margin-inline:auto;background:var(--panel);border:1px solid var(--line);
+  border-radius:20px;padding:clamp(24px,5vw,56px);box-shadow:0 24px 60px -44px rgba(15,26,51,.55)}
 .prose h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;margin-bottom:.2em}
 .prose .meta{color:var(--ink-soft);font-weight:600;margin-bottom:1.6em}
 .prose h2{font-size:1.6rem;font-weight:700;margin:1.4em 0 .4em}
@@ -468,6 +472,12 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 .faq .ans{padding:0 22px;max-height:0;overflow:hidden;color:var(--ink-soft);
   transition:max-height .3s var(--ease),padding .3s var(--ease)}
 .faq details[open] .ans{padding:0 22px 20px;max-height:320px}
+/* Blog FAQ answers run several times longer than the homepage's, which the
+   320px clamp silently cropped. */
+.prose .faq{max-width:none}
+.prose .faq details{background:var(--bg)}
+.prose .faq details[open] .ans{max-height:1200px}
+.prose .faq .ans p{margin-bottom:0}
 
 /* ---------- FREE AUDIT (lead capture) ---------- */
 .audit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
