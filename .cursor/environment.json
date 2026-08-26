@@ -1,0 +1,17 @@
+{
+  "name": "SiteStac (Astro)",
+  "install": "npm ci",
+  "terminals": [
+    {
+      "name": "astro-dev",
+      "command": "npm run dev -- --host",
+      "description": "Astro dev server for the SiteStac marketing site, served on http://localhost:4321"
+    }
+  ],
+  "ports": [
+    {
+      "name": "Astro dev server",
+      "port": 4321
+    }
+  ]
+}
