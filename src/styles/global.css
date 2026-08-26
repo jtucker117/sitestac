@@ -634,15 +634,19 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 /* ---- Pointer tilt on Work cards ----
    --rx/--ry are written by JS from the cursor position; the lift is composed in
    so hover-lift and tilt don't fight over `transform`. */
-.work-grid{perspective:1100px}
-.work-grid .card{transform-style:preserve-3d;--rx:0deg;--ry:0deg}
-.work-grid .card.tilting{transform:translateY(-6px) rotateX(var(--rx)) rotateY(var(--ry));
+.work-grid{perspective:900px}
+/* Snappy while tracking the cursor (.tilting), smooth on the way back out. */
+.work-grid .card{transform-style:preserve-3d;--rx:0deg;--ry:0deg;
+  transition:transform .3s var(--ease),box-shadow .2s var(--ease)}
+.work-grid .card.tilting{transition:transform .08s linear,box-shadow .2s var(--ease);
+  transform:translateY(-6px) rotateX(var(--rx)) rotateY(var(--ry));
   box-shadow:0 34px 60px -34px rgba(15,26,51,.6)}
 
-/* ---- Scroll progress bar (under the sticky header) ---- */
-.scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:80;pointer-events:none;background:transparent}
+/* ---- Scroll progress bar (over the sticky header) ---- */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:4px;z-index:90;pointer-events:none;background:transparent}
 .scroll-progress span{display:block;height:100%;width:0;transform-origin:left center;
-  background:linear-gradient(90deg,var(--blue),var(--teal),var(--pink))}
+  background:linear-gradient(90deg,var(--blue),var(--teal),var(--pink));
+  box-shadow:0 1px 6px -1px rgba(3,74,209,.55)}
 
 /* ---- Active section pill (visible when the bubble menu is open) ---- */
 .pill-link.is-active{box-shadow:0 16px 34px -20px rgba(15,26,51,.55),inset 0 0 0 3px rgba(255,255,255,.9)}
@@ -661,7 +665,10 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 .audit-note.show{opacity:1;transform:none}
 .audit-note svg{display:block;flex:0 0 auto}
 
-/* View-transition cross-fade tuning — keep the persisted backdrop calm. */
+/* View-transition tuning — a quick, snappy cross-fade. The default is long
+   enough that the outgoing and incoming pages visibly overlap mid-transition;
+   shortening it keeps the swap crisp. */
+::view-transition-old(root),::view-transition-new(root){animation-duration:.16s}
 @media(prefers-reduced-motion:reduce){
   .scroll-progress span{transition:none}
   ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}

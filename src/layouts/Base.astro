@@ -167,21 +167,20 @@ const ogImage = new URL("/logo.png", Astro.site).href;
           });
         }
 
-        // Pointer tilt on Work cards (mouse only; lift is composed via CSS class)
+        // Pointer tilt on Work cards (lift is composed into the tilt via CSS class)
         if (!reduce.matches) {
           document.querySelectorAll(".work-grid .card").forEach((card) => {
             if (card.dataset.tiltBound) return;
             card.dataset.tiltBound = "1";
-            card.addEventListener("pointermove", (e) => {
-              if (e.pointerType && e.pointerType !== "mouse") return;
+            card.addEventListener("mousemove", (e) => {
               const r = card.getBoundingClientRect();
               const px = (e.clientX - r.left) / r.width - 0.5;
               const py = (e.clientY - r.top) / r.height - 0.5;
               card.classList.add("tilting");
-              card.style.setProperty("--ry", `${px * 7}deg`);
-              card.style.setProperty("--rx", `${-py * 7}deg`);
+              card.style.setProperty("--ry", `${px * 10}deg`);
+              card.style.setProperty("--rx", `${-py * 10}deg`);
             });
-            card.addEventListener("pointerleave", () => {
+            card.addEventListener("mouseleave", () => {
               card.classList.remove("tilting");
               card.style.removeProperty("--rx");
               card.style.removeProperty("--ry");
