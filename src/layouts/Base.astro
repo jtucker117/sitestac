@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import DotField from "../components/DotField.astro";
@@ -46,6 +47,7 @@ const ogImage = new URL("/logo.png", Astro.site).href;
       href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <ClientRouter />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
@@ -71,7 +73,8 @@ const ogImage = new URL("/logo.png", Astro.site).href;
     )}
   </head>
   <body>
-    <DotField />
+    <div class="scroll-progress" aria-hidden="true" transition:persist><span></span></div>
+    <DotField transition:persist />
     <Nav />
     <main id="top">
       <slot />
@@ -84,36 +87,112 @@ const ogImage = new URL("/logo.png", Astro.site).href;
       // desktop-only — which is backwards for a site that's mostly phone traffic.
       document.addEventListener("touchstart", function () {}, { passive: true });
 
-      // Scroll reveal
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-        });
-      }, { threshold: 0.14 });
-      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-      // Magnetic CTA
-      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        document.querySelectorAll("[data-magnetic]").forEach((btn) => {
-          btn.addEventListener("mousemove", (e) => {
-            const r = btn.getBoundingClientRect();
-            const x = e.clientX - r.left - r.width / 2;
-            const y = e.clientY - r.top - r.height / 2;
-            btn.style.transform = `translate(${x * 0.25}px,${y * 0.35}px)`;
-          });
-          btn.addEventListener("mouseleave", () => (btn.style.transform = ""));
-        });
-      }
+      // ── Document-level listeners: bound ONCE (this inline script is not
+      // re-executed across view transitions). They query fresh each event, so
+      // they keep working after the page body is swapped. ──
 
-      // Card spotlight — one delegated listener feeds the gradient origin to
-      // whichever card is under the cursor. CSS in global.css does the rest.
+      // Card + CTA spotlight — feed the gradient origin to whatever is hovered.
       document.addEventListener("pointermove", (e) => {
-        const card = e.target.closest?.(".tier,.step,.prob-card,.trust .t");
+        const t = e.target;
+        const card = t && t.closest && t.closest(".tier,.step,.prob-card,.trust .t,.cta .box");
         if (!card) return;
         const r = card.getBoundingClientRect();
         card.style.setProperty("--mx", `${e.clientX - r.left}px`);
         card.style.setProperty("--my", `${e.clientY - r.top}px`);
       }, { passive: true });
+
+      // Scroll progress bar (persisted) + subtle hero-orb parallax.
+      document.addEventListener("scroll", () => {
+        const b = document.querySelector(".scroll-progress span");
+        if (b) {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          b.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+        }
+        if (!reduce.matches) {
+          const hb = document.querySelector(".hero-bg");
+          if (hb) hb.style.transform = `translate3d(0, ${window.scrollY * 0.08}px, 0)`;
+        }
+      }, { passive: true });
+
+      // ── Per-page setup: re-run on every (client-side) navigation. ──
+      let spyIO = null;
+      function setupSpy() {
+        if (spyIO) spyIO.disconnect();
+        const links = Array.from(document.querySelectorAll('.pill-link[href*="#"]'));
+        const map = new Map();
+        links.forEach((l) => {
+          l.classList.remove("is-active");
+          const hash = (l.getAttribute("href") || "").split("#")[1];
+          const sec = hash && document.getElementById(hash);
+          if (sec) map.set(sec, l);
+        });
+        if (!map.size) return;
+        spyIO = new IntersectionObserver((entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              links.forEach((l) => l.classList.remove("is-active"));
+              const active = map.get(en.target);
+              if (active) active.classList.add("is-active");
+            }
+          });
+        }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+        map.forEach((_, sec) => spyIO.observe(sec));
+      }
+
+      function initPage() {
+        // Scroll reveal
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+          });
+        }, { threshold: 0.14 });
+        document.querySelectorAll(".reveal:not(.in)").forEach((el) => io.observe(el));
+
+        // Magnetic CTA — compose the hover lift (-2px) into the magnetic offset
+        // so the two don't fight over `transform`.
+        if (!reduce.matches) {
+          document.querySelectorAll("[data-magnetic]").forEach((btn) => {
+            if (btn.dataset.magneticBound) return;
+            btn.dataset.magneticBound = "1";
+            btn.addEventListener("mousemove", (e) => {
+              const r = btn.getBoundingClientRect();
+              const x = e.clientX - r.left - r.width / 2;
+              const y = e.clientY - r.top - r.height / 2;
+              btn.style.transform = `translate(${x * 0.25}px, ${y * 0.35 - 2}px)`;
+            });
+            btn.addEventListener("mouseleave", () => (btn.style.transform = ""));
+          });
+        }
+
+        // Pointer tilt on Work cards (mouse only; lift is composed via CSS class)
+        if (!reduce.matches) {
+          document.querySelectorAll(".work-grid .card").forEach((card) => {
+            if (card.dataset.tiltBound) return;
+            card.dataset.tiltBound = "1";
+            card.addEventListener("pointermove", (e) => {
+              if (e.pointerType && e.pointerType !== "mouse") return;
+              const r = card.getBoundingClientRect();
+              const px = (e.clientX - r.left) / r.width - 0.5;
+              const py = (e.clientY - r.top) / r.height - 0.5;
+              card.classList.add("tilting");
+              card.style.setProperty("--ry", `${px * 7}deg`);
+              card.style.setProperty("--rx", `${-py * 7}deg`);
+            });
+            card.addEventListener("pointerleave", () => {
+              card.classList.remove("tilting");
+              card.style.removeProperty("--rx");
+              card.style.removeProperty("--ry");
+            });
+          });
+        }
+
+        setupSpy();
+      }
+
+      document.addEventListener("astro:page-load", initPage);
     </script>
   </body>
 </html>

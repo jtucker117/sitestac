@@ -97,7 +97,7 @@ const SHOW_REVIEWS = false;
           <Brick color="red" data-title="Social media setup" data-desc="We set up and brand your social profiles and connect them to your site — a clean, consistent presence customers can find.">Social media setup</Brick>
           <Brick color="blue" base class="stak-base" data-title="Landing page" data-desc="The foundation every site starts on — a fast, beautiful one-page site with your story, services, and one clear call to action that turns visitors into customers.">Landing page</Brick>
         </div>
-        <div class="stak-text reveal" id="stakText">
+        <div class="stak-text reveal" id="stakText" aria-live="polite">
           <span class="stak-hint"><Icon name="pointer" size={15} /> Tap any block to see what it does</span>
           <h3>One foundation. Endless add-ons.</h3>
           <p>Your landing page is the base brick — fast, modern, and built to convert visitors into customers. Everything else stacks on top, only when you want it.</p>
@@ -358,6 +358,7 @@ const SHOW_REVIEWS = false;
           <label>Website URL <span style="font-weight:500;text-transform:none">(optional)</span><input type="text" name="url" inputmode="url" placeholder="yourbusiness.com — or leave blank" /></label>
           <button class="btn" type="submit">Get my free audit</button>
           <span class="fineprint">We'll reply within one business day. No spam, ever.</span>
+          <div class="audit-note" id="auditNote" role="status" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> <span>Opening your email app with your details filled in…</span></div>
         </form>
       </div>
     </div>
@@ -421,7 +422,7 @@ const SHOW_REVIEWS = false;
         <div class="cart-stack-col">
           <span class="pick-label">Your stack</span>
           <div class="stack-zone" id="stackZone"></div>
-          <div class="stack-desc" id="stackDesc"></div>
+          <div class="stack-desc" id="stackDesc" aria-live="polite"></div>
           <div class="stack-summary">
             <span class="stack-count" id="stackCount"></span>
             <a class="btn" id="requestQuote" href="#">Send my stack to sales</a>
@@ -441,6 +442,7 @@ const SHOW_REVIEWS = false;
 
 <script>
   // Interactive "The Stak": click a block to read about it
+  function initStak() {
   const panel = document.getElementById("stakText");
   const bricks = Array.from(document.querySelectorAll<HTMLElement>("#stakBricks .brick"));
   if (panel && bricks.length) {
@@ -475,8 +477,10 @@ const SHOW_REVIEWS = false;
       });
     });
   }
+  }
 
   // ── Build your stack (cart modal) ───────────────────────────────
+  function initCart() {
   const overlay = document.getElementById("cartOverlay");
   const stackZone = document.getElementById("stackZone");
   const stackCount = document.getElementById("stackCount");
@@ -546,17 +550,42 @@ const SHOW_REVIEWS = false;
     baseOpts.slice(1).forEach((o) => o.classList.add("is-off"));
     renderBase(); refresh();
 
-    // open / close
-    const open = () => { overlay.classList.add("open"); document.body.style.overflow = "hidden"; };
-    const close = () => { overlay.classList.remove("open"); document.body.style.overflow = ""; };
+    // open / close (with focus management + trap)
+    const modal = overlay.querySelector<HTMLElement>(".cart-modal");
+    let lastFocused: HTMLElement | null = null;
+    const open = () => {
+      lastFocused = document.activeElement as HTMLElement;
+      overlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+      document.getElementById("cartClose")?.focus();
+    };
+    const close = () => {
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+      if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+    };
     document.querySelectorAll<HTMLElement>(".cart-open").forEach((t) => t.addEventListener("click", (e) => { e.preventDefault(); open(); }));
     document.getElementById("cartClose")?.addEventListener("click", close);
     overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+    // Escape + Tab trap, scoped to the dialog (focus is moved inside on open).
+    overlay.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { close(); return; }
+      if (e.key !== "Tab" || !modal) return;
+      const f = Array.from(modal.querySelectorAll<HTMLElement>(
+        'a[href],button:not([disabled]),input,[tabindex]:not([tabindex="-1"])'
+      )).filter((el) => el.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
   }
 
   // ── Free audit form → build a prefilled email (no backend needed) ──
+  function initAudit() {
   const auditForm = document.getElementById("auditForm") as HTMLFormElement | null;
+  const note = document.getElementById("auditNote");
   if (auditForm) {
     const AUDIT_EMAIL = "hello@sitestac.com";
     auditForm.addEventListener("submit", (e) => {
@@ -573,8 +602,14 @@ const SHOW_REVIEWS = false;
         "  • Email: " + email + "\n" +
         "  • Business: " + business + "\n" +
         "  • Website: " + (url || "(none yet)") + "\n\nThanks!";
+      if (note) { note.hidden = false; requestAnimationFrame(() => note.classList.add("show")); }
       window.location.href =
         "mailto:" + AUDIT_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
     });
   }
+  }
+
+  // Re-run on every client-side navigation (View Transitions swap the body).
+  function initHome() { initStak(); initCart(); initAudit(); }
+  document.addEventListener("astro:page-load", initHome);
 </script>

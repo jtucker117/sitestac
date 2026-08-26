@@ -52,18 +52,19 @@ const paint = (c: string) => (c.startsWith("--") ? `var(${c})` : c);
 </div>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>(".bubble-toggle");
-  const menu = document.querySelector<HTMLElement>(".bubble-menu");
+  // Re-runs on every client-side navigation (View Transitions): the header is
+  // not persisted, so its elements are recreated and must be rebound each time.
+  function initNav() {
+    const toggle = document.querySelector<HTMLButtonElement>(".bubble-toggle");
+    const menu = document.querySelector<HTMLElement>(".bubble-menu");
+    if (!toggle || !menu) return;
 
-  if (toggle && menu) {
     const isOpen = () => document.body.classList.contains("bubble-open");
-
     const open = () => {
       document.body.classList.add("bubble-open");
       toggle.setAttribute("aria-expanded", "true");
       menu.setAttribute("aria-hidden", "false");
     };
-
     const close = () => {
       document.body.classList.remove("bubble-open");
       toggle.setAttribute("aria-expanded", "false");
@@ -77,9 +78,21 @@ const paint = (c: string) => (c.startsWith("--") ? `var(${c})` : c);
     menu.addEventListener("click", (e) => {
       if (e.target === menu || (e.target as HTMLElement).closest("a")) close();
     });
+  }
 
+  // Escape closes the menu — a single global listener (guarded so navigation
+  // never stacks duplicates), reaching for the current toggle/menu at call time.
+  if (!(window as any).__navEsc) {
+    (window as any).__navEsc = true;
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && isOpen()) { close(); toggle.focus(); }
+      if (e.key !== "Escape" || !document.body.classList.contains("bubble-open")) return;
+      document.body.classList.remove("bubble-open");
+      const t = document.querySelector<HTMLButtonElement>(".bubble-toggle");
+      const m = document.querySelector<HTMLElement>(".bubble-menu");
+      if (t) { t.setAttribute("aria-expanded", "false"); t.focus(); }
+      if (m) m.setAttribute("aria-hidden", "true");
     });
   }
+
+  document.addEventListener("astro:page-load", initNav);
 </script>
