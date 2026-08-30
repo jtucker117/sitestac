@@ -6,6 +6,7 @@ draft: false
 cluster: 5
 keyword: "Website Essentials for Local Service Businesses"
 postType: pillar
+image: /blog/website-essentials-for-local-service-businesses/hero.webp
 faqs:
   - q: "How many pages does a local service business website need?"
     a: "Usually five to ten. A homepage, one page for each of your main services, an About page with your face on it, a reviews or recent work page, and a contact page. If you cover several towns, add an areas page. Start with your top three or four services and add more over time — a small site that's finished beats a big one that's half-built."
@@ -21,6 +22,8 @@ faqs:
 ## The short answer
 
 A local service business website needs six things: what you do, where you do it, proof you've done it before, a phone number that's easy to tap, a form that actually reaches you, and pages that load fast on a phone. Everything else is a nice-to-have. If you nail those six, you'll out-perform most of your competitors, because most of them are missing at least two.
+
+![The pages a local service site actually needs](/blog/website-essentials-for-local-service-businesses/hero.webp)
 
 That's the whole answer. Below is the longer version — what each of those pieces looks like in practice, the mistakes that cost you calls, and what to do first if you're starting from nothing.
 
