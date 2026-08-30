@@ -389,6 +389,7 @@ section.block{padding:84px 0}
 .post-list{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
 .post-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 22px 44px -32px rgba(15,26,51,.5);transition:transform .2s ease;display:block}
 .post-card:hover{transform:translateY(-5px)}
+.post-card .thumb{display:block;width:calc(100% + 52px);margin:-26px -26px 16px;aspect-ratio:16/9;object-fit:cover;border-radius:19px 19px 0 0}
 .post-card time{font-size:.85rem;color:var(--ink-soft);font-weight:600}
 .post-card h3{font-size:1.35rem;font-weight:700;margin:.3em 0}
 .post-card p{color:var(--ink-soft);font-size:.96rem}
@@ -403,6 +404,7 @@ section.block{padding:84px 0}
 .prose p{margin-bottom:1em;color:#26324a;font-size:1.08rem}
 .prose ul{margin:0 0 1em 1.2em;color:#26324a}
 .prose a{color:var(--blue);text-decoration:underline}
+.prose img,.prose figure{max-width:100%;height:auto;border-radius:12px;margin:1.2em 0;display:block}
 
 /* ---------- FOOTER ---------- */
 footer{padding:70px 0 40px;border-top:1px solid var(--line);position:relative}

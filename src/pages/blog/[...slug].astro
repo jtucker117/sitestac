@@ -17,7 +17,10 @@ const related = post.data.related
   .filter((p) => p !== undefined && !p.data.draft);
 
 const url = new URL(`/blog/${post.id}/`, Astro.site).href;
-const ogImage = new URL("/logo.png", Astro.site).href;
+const logoImage = new URL("/logo.png", Astro.site).href;
+const ogImage = post.data.image
+  ? new URL(post.data.image, Astro.site).href
+  : logoImage;
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -34,7 +37,7 @@ const articleSchema = {
     "@type": "Organization",
     name: "SiteStac",
     url: Astro.site?.href,
-    logo: { "@type": "ImageObject", url: ogImage },
+    logo: { "@type": "ImageObject", url: logoImage },
   },
   ...(post.data.keyword ? { keywords: post.data.keyword } : {}),
 };
@@ -61,7 +64,7 @@ const faqSchema = post.data.faqs.length
     }
   : null;
 ---
-<Base title={`${post.data.title} — SiteStac`} description={post.data.description} ogType="article">
+<Base title={`${post.data.title} — SiteStac`} description={post.data.description} ogType="article" ogImage={post.data.image}>
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
@@ -71,6 +74,16 @@ const faqSchema = post.data.faqs.length
         <a href="/blog" style="color:var(--blue);font-weight:600">← All posts</a>
         <h1 style="margin-top:.6em">{post.data.title}</h1>
         <div class="meta">{fmt(post.data.date)}</div>
+        {post.data.image && (
+          <img
+            src={post.data.image}
+            alt={post.data.title}
+            width="1200"
+            height="675"
+            loading="lazy"
+            decoding="async"
+          />
+        )}
         <Content />
 
         {post.data.faqs.length > 0 && (

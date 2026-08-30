@@ -8,14 +8,16 @@ interface Props {
   title?: string;
   description?: string;
   ogType?: string;
+  ogImage?: string;
 }
 const {
   title = "SiteStac — Websites built block by block",
   description = "SiteStac builds beautiful one-page websites for local businesses, then lets you stack on the features you need — blog, SEO, hosting and more. Free preview before you pay.",
   ogType = "website",
+  ogImage: ogImageProp,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL("/logo.png", Astro.site).href;
+const ogImage = new URL(ogImageProp ?? "/logo.png", Astro.site).href;
 ---
 <!doctype html>
 <html lang="en">

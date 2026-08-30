@@ -13,6 +13,7 @@ const blog = defineCollection({
     keyword: z.string().optional(),
     postType: z.enum(["pillar", "supporting", "local_variant"]).optional(),
     location: z.string().optional(),
+    image: z.string().optional(),
     related: z.array(z.string()).default([]),
     faqs: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
   }),
