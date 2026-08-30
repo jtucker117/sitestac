@@ -350,7 +350,7 @@ section.block{padding:84px 0}
 
 /* ---------- WORK ---------- */
 .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 22px 44px -30px rgba(15,26,51,.5);transition:transform .2s ease;display:block}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 22px 44px -30px rgba(15,26,51,.5);transition:transform .2s var(--ease),box-shadow .2s var(--ease);display:block}
 .card:hover{transform:translateY(-6px)}
 .card .thumb{aspect-ratio:16/11;position:relative;display:grid;place-items:center;color:#fff;font-family:"Sora";font-weight:800;font-size:1.5rem;overflow:hidden}
 .card .thumb .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center}
@@ -363,6 +363,7 @@ section.block{padding:84px 0}
 /* ---------- MARQUEE ---------- */
 .marquee{overflow:hidden;border-block:1px solid var(--line);padding:18px 0;background:linear-gradient(180deg,#fff,#f3f6fb)}
 .marquee .track{display:flex;gap:38px;white-space:nowrap;animation:scrollx 26s linear infinite;width:max-content}
+.marquee:hover .track{animation-play-state:paused}
 .marquee span{font-family:"Sora";font-weight:800;font-size:1.5rem;color:var(--ink);opacity:.85;display:inline-flex;align-items:center;gap:38px}
 .marquee span::after{content:"●";color:var(--blue);font-size:.7rem}
 @keyframes scrollx{to{transform:translateX(-50%)}}
@@ -485,15 +486,15 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
 .faq summary .ic{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;
   color:var(--blue);transition:transform .25s var(--ease),background .2s ease,color .2s ease}
 .faq details[open] summary .ic{transform:rotate(45deg);background:var(--blue);color:#fff;border-color:var(--blue)}
-.faq .ans{padding:0 22px;max-height:0;overflow:hidden;color:var(--ink-soft);
-  transition:max-height .3s var(--ease),padding .3s var(--ease)}
-.faq details[open] .ans{padding:0 22px 20px;max-height:320px}
-/* Blog FAQ answers run several times longer than the homepage's, which the
-   320px clamp silently cropped. */
+/* Height-agnostic reveal: animate grid-template-rows 0fr→1fr instead of a fixed
+   max-height clamp, so any answer length expands fully without cropping or a
+   too-tall guess. The inner wrapper must be min-height:0 + overflow:hidden. */
+.faq .ans{display:grid;grid-template-rows:0fr;padding:0 22px;color:var(--ink-soft);
+  transition:grid-template-rows .3s var(--ease),padding .3s var(--ease)}
+.faq .ans > *{min-height:0;overflow:hidden;margin:0}
+.faq details[open] .ans{grid-template-rows:1fr;padding:0 22px 20px}
 .prose .faq{max-width:none}
 .prose .faq details{background:var(--bg)}
-.prose .faq details[open] .ans{max-height:1200px}
-.prose .faq .ans p{margin-bottom:0}
 
 /* ---------- FREE AUDIT (lead capture) ---------- */
 .audit-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
@@ -599,4 +600,76 @@ footer::before{content:"";position:absolute;top:-1px;left:15%;right:15%;height:1
   .tstm{background:#fff;border-color:var(--line);-webkit-backdrop-filter:none;backdrop-filter:none}
   .cart-overlay{background:rgba(11,18,32,.92);-webkit-backdrop-filter:none;backdrop-filter:none}
   .card .thumb span.meta{background:rgba(15,26,51,.94);-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+
+/* ============================================================
+   V2 INTERACTION UPGRADES
+   ============================================================ */
+
+/* ---- Keyboard focus system ----
+   The only pre-existing focus style was on the audit inputs; interactive bricks
+   (tabindex=0), buttons, pills, cards and FAQ summaries had no visible ring for
+   keyboard users. One consistent brand-blue :focus-visible ring, using two
+   layered shadows so it reads on both light surfaces and colored bricks. */
+:where(a,button,summary,[tabindex]):focus-visible{outline:none}
+.btn:focus-visible,.bubble-toggle:focus-visible,.cart-close:focus-visible,
+.stak-reset:focus-visible,.foot-col a:focus-visible,.card:focus-visible,
+.post-card:focus-visible,.faq summary:focus-visible,.logo:focus-visible,
+.nav nav a:focus-visible{
+  box-shadow:0 0 0 3px #fff,0 0 0 6px var(--blue);border-radius:12px}
+.brick:focus-visible,.opt-brick:focus-visible,.pill-link:focus-visible{
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.45),0 0 0 3px #fff,0 0 0 6px var(--blue)}
+.audit-form input:focus-visible{outline:none}
+
+/* ---- Spotlight on the big CTA box (white wash on dark blue) ----
+   The card spotlight only lit the light cards. The CTA gets its own light-tinted
+   wash; content is lifted above it so the text never dims. */
+.cta .box{--mx:50%;--my:50%}
+.cta .box::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
+  background:radial-gradient(360px circle at var(--mx) var(--my),rgba(255,255,255,.18),transparent 70%);
+  opacity:0;transition:opacity .4s ease}
+.cta .box:hover::after{opacity:1}
+.cta .box > h2,.cta .box > p,.cta .box > a,.cta .box > div{position:relative;z-index:1}
+
+/* ---- Pointer tilt on Work cards ----
+   --rx/--ry are written by JS from the cursor position; the lift is composed in
+   so hover-lift and tilt don't fight over `transform`. */
+.work-grid{perspective:900px}
+/* Snappy while tracking the cursor (.tilting), smooth on the way back out. */
+.work-grid .card{transform-style:preserve-3d;--rx:0deg;--ry:0deg;
+  transition:transform .3s var(--ease),box-shadow .2s var(--ease)}
+.work-grid .card.tilting{transition:transform .08s linear,box-shadow .2s var(--ease);
+  transform:translateY(-6px) rotateX(var(--rx)) rotateY(var(--ry));
+  box-shadow:0 34px 60px -34px rgba(15,26,51,.6)}
+
+/* ---- Scroll progress bar (over the sticky header) ---- */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:4px;z-index:90;pointer-events:none;background:transparent}
+.scroll-progress span{display:block;height:100%;width:0;transform-origin:left center;
+  background:linear-gradient(90deg,var(--blue),var(--teal),var(--pink));
+  box-shadow:0 1px 6px -1px rgba(3,74,209,.55)}
+
+/* ---- Active section pill (visible when the bubble menu is open) ---- */
+.pill-link.is-active{box-shadow:0 16px 34px -20px rgba(15,26,51,.55),inset 0 0 0 3px rgba(255,255,255,.9)}
+
+/* ---- Audit form validation + success ----
+   Only style invalid AFTER the field has been touched, so the form doesn't look
+   angry before anyone types. */
+.audit-form input:not(:placeholder-shown):invalid{border-color:var(--red);
+  box-shadow:0 0 0 4px rgba(226,58,45,.12)}
+.audit-form input:not(:placeholder-shown):valid{border-color:color-mix(in srgb,var(--green) 55%,var(--line))}
+.audit-note{display:flex;align-items:center;gap:.5em;justify-content:center;text-align:center;
+  font-size:.9rem;font-weight:600;color:var(--green-d);
+  background:color-mix(in srgb,var(--green) 12%,#fff);border:1px solid color-mix(in srgb,var(--green) 30%,transparent);
+  border-radius:12px;padding:.7em 1em;margin-top:8px;
+  opacity:0;transform:translateY(6px);transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.audit-note.show{opacity:1;transform:none}
+.audit-note svg{display:block;flex:0 0 auto}
+
+/* View-transition tuning — a quick, snappy cross-fade. The default is long
+   enough that the outgoing and incoming pages visibly overlap mid-transition;
+   shortening it keeps the swap crisp. */
+::view-transition-old(root),::view-transition-new(root){animation-duration:.16s}
+@media(prefers-reduced-motion:reduce){
+  .scroll-progress span{transition:none}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
 }
