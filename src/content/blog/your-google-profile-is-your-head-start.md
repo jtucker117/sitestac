@@ -8,8 +8,6 @@ image: /blog/your-google-profile-is-your-head-start/hero.webp
 
 If you have a Google Business Profile, you've already done most of the hard work of building a website — you just don't know it yet. The photos, the reviews, the hours, the services: that's the raw material of a site that actually represents you.
 
-![Photos, reviews, and details on a Google profile are already most of a website](/blog/your-google-profile-is-your-head-start/hero.webp)
-
 ## We start where you already are
 
 Instead of handing you a blank questionnaire, we start with your Google profile. Your real photos become the visuals — and if you need a fresh set, we shoot photo and video in-house so the site, profile, and social all match. Your best reviews become the proof. Your hours and location become the practical details customers came looking for.

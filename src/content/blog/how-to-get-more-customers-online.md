@@ -28,8 +28,6 @@ You get more customers online when a stranger can find you, trust you in about t
 
 That is the whole mechanism. Search, check, call. Everything else on a small-business website is optional.
 
-![A SiteStac brick stack: website, phone number, and reviews leading to a call](/blog/how-to-get-more-customers-online/hero.webp)
-
 ## How a website actually gets you a customer
 
 Most owners think of a website as a digital business card. That is why so many of them get built, paid for, and then ignored.

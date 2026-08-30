@@ -25,8 +25,6 @@ faqs:
 ---
 A plumber's website in Houston has one job: turn a panicked phone search into a booked call before the homeowner scrolls to the next guy. That means it loads fast on a bad LTE connection, puts a tap-to-call button above the fold, names the suburbs you actually drive to, and shows your license number and reviews without making anyone hunt. Everything else — the photo gallery, the About page, the blog — is secondary.
 
-![A Houston plumber site stack: tap to call, suburbs, license, booked](/blog/plumber-website-design-houston/hero.webp)
-
 Houston is a harder market for this than most, and not for the reasons people assume.
 
 ## Demand here comes in spikes, and your website is the pressure valve

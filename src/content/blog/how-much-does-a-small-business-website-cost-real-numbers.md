@@ -25,8 +25,6 @@ A small business website costs whatever it costs to solve your specific problem 
 
 That's the useful answer. The rest of this page explains why the range is so wide, what pushes your number up or down, and how to tell a fair quote from a bad one.
 
-![How much does a website cost — DIY, freelancer, agency, monthly](/blog/how-much-does-a-small-business-website-cost-real-numbers/hero.webp)
-
 ## Why nobody will give you a number over the phone
 
 Ask three web companies what a website costs and you'll get three non-answers. It's annoying, but the reason is legitimate.

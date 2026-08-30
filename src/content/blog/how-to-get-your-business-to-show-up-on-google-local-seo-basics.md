@@ -27,8 +27,6 @@ That's the ten-minute version. But "on Google" and "found on Google" are two dif
 
 ## The three places you can show up
 
-![The three places you show up on Google: ads, map pack, organic](/blog/how-to-get-your-business-to-show-up-on-google-local-seo-basics/hero.webp)
-
 When someone searches "drain cleaning near me," Google shows them a page with three distinct sections. Understanding which is which saves you a lot of confusion later.
 
 **Ads at the top.** Paid. You bid, you pay per click. Some of these are Local Services Ads with the green "Google Guaranteed" badge, which is a separate program for home service trades.
