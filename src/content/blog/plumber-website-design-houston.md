@@ -7,6 +7,7 @@ cluster: 10
 keyword: "plumber website design Houston"
 postType: local_variant
 location: "Houston, TX"
+image: /blog/plumber-website-design-houston/hero.webp
 related:
   - website-designer-near-houston
   - web-design-houston-tx
@@ -23,6 +24,8 @@ faqs:
     a: "It matters for trust and for advertising compliance. Texas has requirements around displaying the responsible master plumber's license information in advertising — verify the current rules with the state board and put the number in your site footer. Houston homeowners are wary of unlicensed work, especially after major storms, so showing it plainly helps you win calls."
 ---
 A plumber's website in Houston has one job: turn a panicked phone search into a booked call before the homeowner scrolls to the next guy. That means it loads fast on a bad LTE connection, puts a tap-to-call button above the fold, names the suburbs you actually drive to, and shows your license number and reviews without making anyone hunt. Everything else — the photo gallery, the About page, the blog — is secondary.
+
+![A Houston plumber site stack: tap to call, suburbs, license, booked](/blog/plumber-website-design-houston/hero.webp)
 
 Houston is a harder market for this than most, and not for the reasons people assume.
 
@@ -52,6 +55,8 @@ The big operators run generic pages: "Houston Plumbing Services." They're vague 
 That's the same principle we covered in [Web Design in Houston TX: What Actually Wins Local Jobs](/blog/web-design-houston-tx/), and it holds double for plumbing, where the housing stock varies enormously from one side of the loop to the other.
 
 ## Service area pages, because Houston is enormous
+
+![Name the suburbs you actually drive to](/blog/plumber-website-design-houston/suburbs.webp)
 
 This is the single biggest miss on Houston plumber websites.
 

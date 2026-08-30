@@ -3,9 +3,12 @@ title: "Why a local business only needs one great page to start"
 description: "You don't need a ten-page website to win customers. Here's why a single, well-built landing page beats a bloated site every time."
 date: 2026-06-20
 draft: false
+image: /blog/why-local-businesses-need-one-good-page/hero.webp
 ---
 
 Most local businesses are sold websites they don't need — ten pages, a slider nobody reads, and a monthly bill that never seems to buy results. The truth is simpler: a single, focused page that loads fast and tells people exactly what you do will out-perform a bloated site almost every time.
+
+![One great landing page to start — stack a blog and extra pages later](/blog/why-local-businesses-need-one-good-page/hero.webp)
 
 ## One page, one job
 

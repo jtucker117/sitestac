@@ -6,6 +6,7 @@ draft: false
 cluster: 2
 keyword: "how much does a website cost for a small business"
 postType: pillar
+image: /blog/how-much-does-a-small-business-website-cost-real-numbers/hero.webp
 faqs:
   - q: "Is it cheaper to build my own small business website?"
     a: "In cash, yes — a DIY builder is by far the lowest outlay. In hours, usually not. Most owners underestimate how long copywriting, photo sourcing, and setup take, and a lot of DIY sites sit half-finished for months. If you genuinely have the time and a simple business, DIY works. If you're already flat out, paying someone is usually the cheaper option once you count the leads you missed while the site wasn't live."
@@ -23,6 +24,8 @@ faqs:
 A small business website costs whatever it costs to solve your specific problem — and the honest range is wide. A one-page site for a solo electrician sits at the bottom end. A twelve-page site with online booking, service-area pages, custom photography, and a form that pushes leads into your CRM sits several times higher. Most small businesses land somewhere in the middle, and for a trade doing decent ticket sizes, the whole build usually costs less than a single good job.
 
 That's the useful answer. The rest of this page explains why the range is so wide, what pushes your number up or down, and how to tell a fair quote from a bad one.
+
+![How much does a website cost — DIY, freelancer, agency, monthly](/blog/how-much-does-a-small-business-website-cost-real-numbers/hero.webp)
 
 ## Why nobody will give you a number over the phone
 
@@ -63,6 +66,8 @@ Someone builds it, hosts it, maintains it, and makes your edits — you pay mont
 The thing to check is ownership. Some subscription setups mean you never own the site and lose everything if you leave. Others mean you own the content and domain and can walk with them. Ask directly. A straight answer is a good sign.
 
 ## What actually drives your price up or down
+
+![What actually drives the price: pages, copy, photos, booking, areas, integrations](/blog/how-much-does-a-small-business-website-cost-real-numbers/drivers.webp)
 
 Here's where the number comes from. Almost every quote you'll ever get is some combination of these.
 

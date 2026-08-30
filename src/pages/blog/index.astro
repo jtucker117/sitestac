@@ -19,6 +19,17 @@ const fmt = (d: Date) =>
       <div class="post-list">
         {posts.map((post) => (
           <a class="post-card reveal in" href={`/blog/${post.id}/`}>
+            {post.data.image && (
+              <img
+                class="thumb"
+                src={post.data.image}
+                alt=""
+                width="640"
+                height="360"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
             <time>{fmt(post.data.date)}</time>
             <h3>{post.data.title}</h3>
             <p>{post.data.description}</p>

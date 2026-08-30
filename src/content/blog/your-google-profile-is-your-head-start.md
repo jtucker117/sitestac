@@ -3,9 +3,12 @@ title: "Your Google profile is your website's head start"
 description: "The photos, reviews and details on your Google Business Profile are already most of a great website. Here's how we turn them into one."
 date: 2026-06-27
 draft: false
+image: /blog/your-google-profile-is-your-head-start/hero.webp
 ---
 
 If you have a Google Business Profile, you've already done most of the hard work of building a website — you just don't know it yet. The photos, the reviews, the hours, the services: that's the raw material of a site that actually represents you.
+
+![Photos, reviews, and details on a Google profile are already most of a website](/blog/your-google-profile-is-your-head-start/hero.webp)
 
 ## We start where you already are
 

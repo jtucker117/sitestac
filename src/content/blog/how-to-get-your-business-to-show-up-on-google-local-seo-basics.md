@@ -6,6 +6,7 @@ draft: false
 cluster: 4
 keyword: "how to get my business on google"
 postType: pillar
+image: /blog/how-to-get-your-business-to-show-up-on-google-local-seo-basics/hero.webp
 faqs:
   - q: "Is it free to list my business on Google?"
     a: "Yes. A Google Business Profile is completely free to create, verify, and maintain. Google does not charge for listings, and anyone calling to say you must pay to stay listed is running a scam. The only Google products that cost money are ads, which are separate and optional."
@@ -25,6 +26,8 @@ To get your business on Google, create a free Google Business Profile at google.
 That's the ten-minute version. But "on Google" and "found on Google" are two different things. Plenty of plumbers have a verified profile that nobody ever sees. The rest of this covers how to actually get in front of people who are searching for what you do.
 
 ## The three places you can show up
+
+![The three places you show up on Google: ads, map pack, organic](/blog/how-to-get-your-business-to-show-up-on-google-local-seo-basics/hero.webp)
 
 When someone searches "drain cleaning near me," Google shows them a page with three distinct sections. Understanding which is which saves you a lot of confusion later.
 
