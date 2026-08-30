@@ -26,8 +26,6 @@ Good web design in Houston, TX means a fast, mobile-first site that makes it obv
 
 Below is what that looks like in practice, and what it costs you when you skip it.
 
-![Houston is a driving market: inside loop, Beltway 8, suburbs](/blog/web-design-houston-tx/hero.webp)
-
 ## Houston is a driving market, and your website should say so
 
 This metro sprawls. A homeowner in Cypress and a homeowner in Clear Lake are both "in Houston" and they're nowhere near each other. When either one pulls out a phone and types "AC repair near me," Google leans hard on where they're standing — not on the word Houston.

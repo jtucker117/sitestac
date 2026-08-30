@@ -8,8 +8,6 @@ image: /blog/why-local-businesses-need-one-good-page/hero.webp
 
 Most local businesses are sold websites they don't need — ten pages, a slider nobody reads, and a monthly bill that never seems to buy results. The truth is simpler: a single, focused page that loads fast and tells people exactly what you do will out-perform a bloated site almost every time.
 
-![One great landing page to start — stack a blog and extra pages later](/blog/why-local-businesses-need-one-good-page/hero.webp)
-
 ## One page, one job
 
 A landing page has one job — turn a visitor into a phone call, a booking, or a walk-in. When everything on the page points at that one action, conversion goes up. When you scatter attention across a dozen menu items, it goes down.

@@ -24,8 +24,6 @@ faqs:
 ---
 If you're searching for a website designer near Houston, the honest answer is that physical proximity matters less than you'd think — nobody needs to drive to your shop to build a website. What matters is whether they understand how Houston customers actually search: on a phone, from a driveway or a job site, with "near me" tacked onto the end, across a metro that stretches across five counties and a couple hundred ZIP codes.
 
-![A designer near Houston isn't enough — hire someone who knows the metro](/blog/website-designer-near-houston/hero.webp)
-
 That's the difference between a designer who happens to be in Houston and a designer who knows Houston.
 
 ## "Near Houston" is a bigger area than most people realize
