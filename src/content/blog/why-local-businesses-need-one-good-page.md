@@ -13,7 +13,7 @@ A landing page has one job — turn a visitor into a phone call, a booking, or a
 
 ## Start small, stack later
 
-The beauty of starting with one block is that you can add more whenever you're ready. Want a blog to post updates? Snap it on. Need extra service pages as you grow? Stack them up. You never pay for what you're not using yet.
+The beauty of starting with one block is that you can add more whenever you're ready. Want a blog to post updates? Snap it on. Need professional photos and video for the site and social? Add the shoot. Business cards or yard signs that match the brand? Stack print design. Extra service pages as you grow? Layer those on too. You never pay for what you're not using yet.
 
 ## Speed and security come standard
 

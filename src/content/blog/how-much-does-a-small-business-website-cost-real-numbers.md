@@ -70,7 +70,7 @@ Here's where the number comes from. Almost every quote you'll ever get is some c
 
 **Who writes the words.** This is the single biggest hidden cost driver. If you supply finished copy, you save real money. If someone has to interview you, understand your services, and write it — that's a skilled job that takes hours per page. Most business owners *say* they'll write it themselves. Most don't. Be realistic and price it in.
 
-**Photography.** Stock photos are cheap and they look like stock photos. Real photos of your crew, your vans, your finished work, and your shop convert dramatically better. If you already have a decent phone-photo library from past jobs, you've saved yourself a chunk. If you need a photographer on site, that's a line item.
+**Photography.** Stock photos are cheap and they look like stock photos. Real photos of your crew, your vans, your finished work, and your shop convert dramatically better. If you already have a decent phone-photo library from past jobs, you've saved yourself a chunk. If you need a photographer on site — or short video for the site and Google profile — that's a line item, and bundling it with the website usually costs less than hiring separately later. Same goes for matching [print design](/blog/custom-print-design-business-cards-yard-signs/) (cards, yard signs, trifolds) so offline materials don't look like a different company.
 
 **Custom design vs. template.** A good template, adapted properly to your brand, gets most small businesses 90% of the way there for a fraction of the cost. Fully custom design is where budgets balloon. Unless you're in a business where the look *is* the product — a high-end restaurant, a designer salon, a luxury remodeler — a well-executed template is usually the smarter buy.
 

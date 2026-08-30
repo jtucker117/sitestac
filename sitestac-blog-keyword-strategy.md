@@ -95,6 +95,11 @@ Pillar: **Small Business Website 101: Everything You Need Before You Launch**
 - mobile friendly website — why it matters
 - how fast should my website load
 - website photos — stock vs real photos
+- business photography near me
+- business video production near me
+- custom business card design near me
+- yard sign design for contractors
+- trifold brochure design for small business
 
 ## Cluster 10: Location-variant posts (programmatic local SEO, nationwide)
 These aren't unique topics — they're templates the Location Variant Engine fills from the `locations` table:
@@ -103,7 +108,23 @@ These aren't unique topics — they're templates the Location Variant Engine fil
 - [industry] website design {city} (e.g., "plumber website design Dallas")
 - small business website cost in {city}
 - how to get your {city} business on google
+- business photography near {city}
+- business video production {city}
+- custom print design / business cards / yard signs {city}
+- website photo video print near {city} (full-stack brand posts)
 - local business spotlight posts (interview real clients wherever they are — free backlinks + goodwill)
+
+## Cluster 11: Visual brand & print (new SiteStac blocks)
+Pillar: **Website, Photo, Video & Print: One Brand That Gets You Hired**
+- business photography near me
+- business video production near me
+- why real photos beat stock on local websites
+- Google Business Profile photo tips
+- custom business card design near me
+- yard sign design for local contractors
+- trifold and flyer design that matches your website
+- print design for small business — what to order first
+- how near-me searches reward consistent branding
 
 ---
 

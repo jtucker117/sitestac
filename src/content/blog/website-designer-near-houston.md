@@ -79,7 +79,7 @@ Skip "do you have an office near me." Ask these instead:
 
 Nobody can quote you a real number without knowing what you need, but here's what moves the needle.
 
-Page count is the biggest one. A five-page site for a single-location shop is a different job than forty pages covering six services across a dozen suburbs. Custom photography of your crews and your work costs more than stock but converts better — and in a market where every competitor uses the same stock photo of a smiling technician, it's one of the cheapest ways to look different.
+Page count is the biggest one. A five-page site for a single-location shop is a different job than forty pages covering six services across a dozen suburbs. Custom photography of your crews and your work costs more than stock but converts better — and in a market where every competitor uses the same stock photo of a smiling technician, it's one of the cheapest ways to look different. SiteStac shoots [photo and video in-house](/blog/business-photography-near-me-houston/) and can match [print](/blog/custom-print-design-business-cards-yard-signs/) to the same brand, so you're not coordinating three vendors.
 
 Booking systems, quote calculators, customer portals, and e-commerce all add scope. So does a second language done properly rather than run through a translation widget. On the other side, coming in with your logo, your service list, and your photos already sorted out saves real time.
 

@@ -78,7 +78,7 @@ Four things do the heavy lifting:
 
 **Reviews.** Pull your best Google reviews onto the site, with the reviewer's first name and town. Not a slider of anonymous five-star quotes — those read as fake because half of them are. Better still, link to your actual Google profile so people can see the full picture.
 
-**Photos of your own work.** This is the big one, and it's the thing most trades skip because it feels like a hassle. It isn't. Your phone is in your pocket. Before and after shots of a re-pointed chimney, a rewired consumer unit, a re-tiled bathroom — that's more persuasive than any paragraph you could write. Stock photos of a smiling model in a hard hat do the opposite; people recognise them instantly and it makes everything else look staged.
+**Photos of your own work.** This is the big one, and it's the thing most trades skip because it feels like a hassle. It isn't. Your phone is in your pocket. Before and after shots of a re-pointed chimney, a rewired consumer unit, a re-tiled bathroom — that's more persuasive than any paragraph you could write. Stock photos of a smiling model in a hard hat do the opposite; people recognise them instantly and it makes everything else look staged. When you're ready for a consistent set across your website, Google profile, social, and print, a professional [business photography](/blog/business-photography-near-me-houston/) and [video](/blog/business-video-production-near-me-houston/) shoot pays for itself fast.
 
 **Credentials, honestly stated.** Gas Safe, NICEIC, Checkatrade, City & Guilds, public liability cover, DBS checks if you're working around families. Show the badges and put the registration number next to them. A number says you'll be checked. A logo alone says nothing.
 
@@ -195,9 +195,9 @@ No numbers here, because every job's different — but here's what actually move
 If you're starting from nothing or rebuilding, this order gets you results fastest:
 
 1. Claim and fill in your Google Business Profile. Free, and it moves the needle immediately.
-2. Get a one-page site up: what you do, where, phone number, form, a handful of job photos. Live beats perfect.
-3. Add a page for each of your top services.
-4. Add reviews and a proper gallery of your own work.
+2. **Get a one-page site up:** what you do, where, phone number, form, a handful of job photos. Live beats perfect. If photos are thin, schedule a shoot so the site and Google profile launch strong.
+3. **Add a page for each of your top services.**
+4. **Add reviews and a proper gallery of your own work** — and matching print (cards, yard signs) once the digital brand is locked.
 5. Add service area pages if they're worth writing properly.
 6. Then, if it fits your trade, look at booking or quoting tools.
 

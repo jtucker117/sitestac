@@ -9,7 +9,7 @@ If you have a Google Business Profile, you've already done most of the hard work
 
 ## We start where you already are
 
-Instead of handing you a blank questionnaire, we start with your Google profile. Your real photos become the visuals. Your best reviews become the proof. Your hours and location become the practical details customers came looking for.
+Instead of handing you a blank questionnaire, we start with your Google profile. Your real photos become the visuals — and if you need a fresh set, we shoot photo and video in-house so the site, profile, and social all match. Your best reviews become the proof. Your hours and location become the practical details customers came looking for.
 
 ## A preview before you commit
 
@@ -17,6 +17,6 @@ Once we've built it, you get a private preview link — your actual site, not a 
 
 ## Then it grows with you
 
-Your first site is the base brick. A blog, SEO, more pages — they stack on whenever you're ready.
+Your first site is the base brick. A blog, SEO, photo and video, custom print (cards, yard signs, trifolds), more pages — they stack on whenever you're ready.
 
 [Send us your profile link](/#start) and see what we'd build for you.

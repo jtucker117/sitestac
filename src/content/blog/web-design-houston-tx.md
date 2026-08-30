@@ -79,7 +79,7 @@ You don't need the whole site translated. Homepage, main services, and contact u
 
 Stock photography of a smiling technician in a spotless uniform reads as fake to a Houston homeowner who's had three contractors ghost them. Your crew's actual photos — a re-piped attic, a new roof on a brick ranch, a repaired slab, a restaurant patio you built — do more selling than any headline.
 
-Put the city or neighborhood in the caption. That's free local relevance and it's honest.
+Put the city or neighborhood in the caption. That's free local relevance and it's honest. If your existing shots aren't strong enough, schedule a [professional photo and video shoot](/blog/business-photography-near-me-houston/) and reuse those assets on the site, Google profile, social, and [print](/blog/custom-print-design-business-cards-yard-signs/).
 
 ## What drives the cost up or down
 
@@ -97,4 +97,4 @@ One page trying to cover the whole metro. A phone number buried in the footer. S
 
 ## Talk it through
 
-If you're not sure whether your site is the problem or your Google listing is, that's usually a twenty-minute conversation. [Book a free consult with SiteStac](/contact) and we'll look at what you've got and tell you straight.
+If you're not sure whether your site is the problem or your Google listing is, that's usually a twenty-minute conversation. [Get a free website audit from SiteStac](/#audit) and we'll look at what you've got and tell you straight.
