@@ -10,8 +10,8 @@ interface Props {
   ogType?: string;
 }
 const {
-  title = "SiteStac — Websites built block by block",
-  description = "SiteStac builds beautiful one-page websites for local businesses, then lets you stack on the features you need — blog, SEO, hosting and more. Free preview before you pay.",
+  title = "SiteStac — Websites, photo, video & print for local businesses",
+  description = "SiteStac builds fast websites for local businesses, then stacks on in-house photo and video, custom print design, SEO, and hosting. Free preview before you pay.",
   ogType = "website",
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -24,7 +24,7 @@ const ogImage = new URL("/logo.png", Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content="small business website design, affordable business websites, contractor websites, local business web design, website for contractors, HVAC website design, roofer website, landscaper website, plumber website, lead generation website" />
+    <meta name="keywords" content="small business website design, website designer near me, professional business photography near me, business video production near me, business card design near me, yard sign design near me, trifold brochure design, print design for small business, local business web design, contractor websites, Houston web design" />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#034AD1" />
     <link rel="canonical" href={canonical} />
@@ -53,8 +53,12 @@ const ogImage = new URL("/logo.png", Astro.site).href;
       "description": description,
       "url": Astro.site?.href,
       "email": "hello@sitestac.com",
-      "areaServed": "United States",
-      "serviceType": "Website design and hosting for local businesses"
+      "areaServed": ["United States", "Houston, TX"],
+      "serviceType": [
+        "Website design and hosting for local businesses",
+        "Professional photography and video production",
+        "Custom print design for business cards, trifolds, yard signs, and marketing materials"
+      ]
     })} />
     {Astro.url.pathname === "/" && (
       <script type="application/ld+json" set:html={JSON.stringify({
@@ -65,6 +69,8 @@ const ogImage = new URL("/logo.png", Astro.site).href;
           { "@type": "Question", "name": "Do you offer hosting?", "acceptedAnswer": { "@type": "Answer", "text": "Yes — secure, fast hosting with SSL and DDoS protection is included with every plan, along with updates, backups and uptime monitoring." } },
           { "@type": "Question", "name": "Can you redesign my current site?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Send us your existing site and we'll rebuild it faster, cleaner, and built to convert. A free website audit is a great place to start." } },
           { "@type": "Question", "name": "Do you help with SEO?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every site ships with solid SEO structure, plus optional local search and Google Business Profile optimization so nearby customers can find you." } },
+          { "@type": "Question", "name": "Do you offer professional photo and video?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We shoot in-house photos and video for your website, social media, Google Business Profile, and other business marketing — so your brand looks consistent everywhere customers find you." } },
+          { "@type": "Question", "name": "Can you design business cards, yard signs, and other print?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We custom-design business cards, trifolds, yard signs, flyers, and other printables that match your website and brand — so every piece of marketing looks like it came from the same shop." } },
           { "@type": "Question", "name": "Is there a monthly plan?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. A simple monthly care plan covers hosting, security, backups and text edits. You can also choose to own your site outright with no lock-in." } }
         ]
       })} />

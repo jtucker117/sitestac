@@ -98,7 +98,7 @@ The ones worth uploading:
 
 A deck builder with thirty photos of finished decks will beat a competitor with two blurry pictures every time, even if the competitor is technically closer. Take five minutes at the end of a job and photograph the work. Upload a few every month. Steady activity on the profile is itself a signal.
 
-One practical note: shoot photos on your phone at the job site with location services on. Don't strip metadata, don't run them through a filter app. Just upload them.
+One practical note: shoot photos on your phone at the job site with location services on. Don't strip metadata, don't run them through a filter app. Just upload them. When you want a stronger foundation — cover photo, team shots, truck shots, and short video for the profile — a [professional business photography and video shoot](/blog/business-photography-near-me-houston/) fills the gaps faster than waiting for enough phone pics to accumulate.
 
 ## Step 5: Reviews are the engine
 

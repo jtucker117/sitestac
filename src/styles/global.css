@@ -285,6 +285,9 @@ section.block{padding:84px 0}
 .addon.b-green{--bc:var(--green);--bl:#4fc96e;--bd:var(--green-d)}
 .addon.b-teal{--bc:var(--teal);--bl:#3ec5c5;--bd:var(--teal-d)}
 .addon.b-blue{--bc:var(--blue);--bl:var(--blue-l);--bd:var(--blue-d)}
+.addon.b-red{--bc:var(--red);--bl:#f0685d;--bd:var(--red-d)}
+.addon.b-yellow{--bc:var(--yellow);--bl:#ffd25a;--bd:var(--yellow-d)}
+.addon.b-yellow .addon-dot{color:#3a2a00}
 .addons-tag{display:inline-block;margin-top:1.4em;color:var(--blue);font-weight:600}
 
 /* ---------- BUILD YOUR STACK — cart modal ---------- */

@@ -92,7 +92,7 @@ No giant hero videos. No sliders. No pop-up asking for an email address. Big tex
 
 ## What moves the cost
 
-A plumber site costs more when it needs many honest service-area and service pages, real photography of your crew and trucks, online booking tied to your dispatch software, and Spanish-language versions. It costs less when you already have decent photos, a clear service list, and a short list of neighborhoods you'll commit to.
+A plumber site costs more when it needs many honest service-area and service pages, real photography of your crew and trucks, online booking tied to your dispatch software, and Spanish-language versions. It costs less when you already have decent photos, a clear service list, and a short list of neighborhoods you'll commit to. If photos are thin, bundling an [in-house photo and video shoot](/blog/business-photography-near-me-houston/) with the website — plus [yard signs and cards](/blog/custom-print-design-business-cards-yard-signs/) that match — usually beats hiring three separate shops.
 
 What to watch for: builders who charge by the page and then generate fifty thin location pages, and anyone who won't hand over your domain and Google Business Profile logins. Ongoing hosting, updates, and someone available before a freeze weekend are worth paying for. Vague monthly "marketing" with no report attached usually isn't. We go deeper on vetting in [Website Designer Near Houston: How to Pick the Right One](/blog/website-designer-near-houston/).
 
