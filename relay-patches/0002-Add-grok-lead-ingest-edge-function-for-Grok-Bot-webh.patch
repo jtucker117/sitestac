@@ -1,0 +1,367 @@
+From 58056e1803fd4f20ee62ebf5804b945bd21f6184 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Tue, 1 Sep 2026 16:57:43 +0000
+Subject: [PATCH 2/2] Add grok-lead-ingest edge function for Grok Bot webhooks
+
+Accept batched lead payloads from Grok Bot with platform tagging
+(google/facebook), upsert into the shared leads table, and authenticate
+via GROK_INGEST_SECRET header.
+---
+ src/pages/Leads.tsx                          |  76 +++++++--
+ supabase/functions/grok-lead-ingest/index.ts | 167 +++++++++++++++++++
+ 2 files changed, 228 insertions(+), 15 deletions(-)
+ create mode 100644 supabase/functions/grok-lead-ingest/index.ts
+
+diff --git a/src/pages/Leads.tsx b/src/pages/Leads.tsx
+index a53794c..3bab758 100644
+--- a/src/pages/Leads.tsx
++++ b/src/pages/Leads.tsx
+@@ -6,6 +6,10 @@ import { supabase } from '../lib/supabase'
+ import { useAuth } from '../auth/AuthProvider'
+ import type { Lead, LeadStatus } from '../lib/types'
+ import { US_STATES } from '../lib/catalog'
++import {
++  SOURCE_FILTERS, SOURCE_META, dealSourceFromLead, matchSourceFilter, sourceMeta, sourceSortRank,
++  type SourceFilter,
++} from '../lib/leadSources'
+ 
+ // Shared outreach board — ports the standalone SiteStac lead tool into Relay.
+ // Search • coordinate map • per-lead outreach stages • notes • CSV export • manual add.
+@@ -26,7 +30,7 @@ const statusMeta = (id: LeadStatus) => STATUS.find((s) => s.id === id) ?? STATUS
+ const HOME_VIEW = { center: { lat: 30.19, lng: -95.62 }, zoom: 11 }
+ const todayISO = () => new Date().toISOString().slice(0, 10)
+ 
+-type SortKey = 'prospect' | 'reviews' | 'rating' | 'name' | 'area' | 'contacted'
++type SortKey = 'prospect' | 'reviews' | 'rating' | 'name' | 'area' | 'contacted' | 'newest' | 'source'
+ const num = (v: number | null | undefined) => (v == null ? -1 : v)
+ 
+ // How sellable a lead is, worst site first. `none` (no website at all) is the surest bet;
+@@ -51,6 +55,11 @@ const SORTS: Record<SortKey, { label: string; cmp: (a: Lead, b: Lead) => number
+   name: { label: 'Name (A–Z)', cmp: (a, b) => a.name.localeCompare(b.name) },
+   area: { label: 'Area', cmp: (a, b) => (a.area ?? '').localeCompare(b.area ?? '') || a.name.localeCompare(b.name) },
+   contacted: { label: 'Recently contacted', cmp: (a, b) => (b.contacted_on ?? '').localeCompare(a.contacted_on ?? '') },
++  newest: { label: 'Newest first', cmp: (a, b) => b.created_at.localeCompare(a.created_at) },
++  source: {
++    label: 'Source (Grok first)',
++    cmp: (a, b) => sourceSortRank(a.source) - sourceSortRank(b.source) || b.created_at.localeCompare(a.created_at),
++  },
+ }
+ 
+ export default function Leads() {
+@@ -67,6 +76,7 @@ export default function Leads() {
+   // Board-side state filter. Separate from `searchState` — that fences what live search
+   // fetches, this narrows what you're looking at, including leads saved before the fence.
+   const [stateFilter, setStateFilter] = useState<string>('all')
++  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all')
+   const [sort, setSort] = useState<SortKey>('prospect')
+   const [open, setOpen] = useState<Lead | null>(null)
+   const [showAdd, setShowAdd] = useState(false)
+@@ -123,11 +133,12 @@ export default function Leads() {
+   const matchCat = useCallback((l: Lead) => cat === 'all' || l.category === cat, [cat])
+   const matchStatus = useCallback((l: Lead) => status === 'all' || l.status === status, [status])
+   const matchState = useCallback((l: Lead) => stateFilter === 'all' || l.state === stateFilter, [stateFilter])
++  const matchSource = useCallback((l: Lead) => matchSourceFilter(l, sourceFilter), [sourceFilter])
+ 
+   const filtered = useMemo(
+-    () => base.filter((l) => matchText(l) && matchState(l) && matchArea(l) && matchCat(l) && matchStatus(l))
++    () => base.filter((l) => matchText(l) && matchState(l) && matchSource(l) && matchArea(l) && matchCat(l) && matchStatus(l))
+       .sort(SORTS[sort].cmp),
+-    [base, matchText, matchState, matchArea, matchCat, matchStatus, sort],
++    [base, matchText, matchState, matchSource, matchArea, matchCat, matchStatus, sort],
+   )
+ 
+   // Facet counts: every filter counted against the others, never against the raw board.
+@@ -137,24 +148,34 @@ export default function Leads() {
+     return c
+   }
+   const states = useMemo(() => {
+-    const c = tally(base.filter((l) => matchText(l) && matchArea(l) && matchCat(l) && matchStatus(l)), (l) => l.state)
++    const c = tally(base.filter((l) => matchText(l) && matchSource(l) && matchArea(l) && matchCat(l) && matchStatus(l)), (l) => l.state)
+     return [...c.entries()].map(([name, count]) => ({ name, count }))
+       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+-  }, [base, matchText, matchArea, matchCat, matchStatus])
++  }, [base, matchText, matchSource, matchArea, matchCat, matchStatus])
+   const areas = useMemo(() => {
+-    const c = tally(base.filter((l) => matchText(l) && matchState(l) && matchCat(l) && matchStatus(l)), (l) => l.area)
++    const c = tally(base.filter((l) => matchText(l) && matchState(l) && matchSource(l) && matchCat(l) && matchStatus(l)), (l) => l.area)
+     return [...c.entries()].map(([name, count]) => ({ name, count }))
+       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+-  }, [base, matchText, matchState, matchCat, matchStatus])
++  }, [base, matchText, matchState, matchSource, matchCat, matchStatus])
+   const cats = useMemo(() => {
+-    const c = tally(base.filter((l) => matchText(l) && matchState(l) && matchArea(l) && matchStatus(l)), (l) => l.category)
++    const c = tally(base.filter((l) => matchText(l) && matchState(l) && matchSource(l) && matchArea(l) && matchStatus(l)), (l) => l.category)
+     return [...c.entries()].map(([name, count]) => ({ name, count }))
+       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+-  }, [base, matchText, matchState, matchArea, matchStatus])
++  }, [base, matchText, matchState, matchSource, matchArea, matchStatus])
+   const statusPool = useMemo(
+-    () => base.filter((l) => matchText(l) && matchState(l) && matchArea(l) && matchCat(l)),
+-    [base, matchText, matchState, matchArea, matchCat],
++    () => base.filter((l) => matchText(l) && matchState(l) && matchSource(l) && matchArea(l) && matchCat(l)),
++    [base, matchText, matchState, matchSource, matchArea, matchCat],
+   )
++  const sourceCounts = useMemo(() => {
++    const pool = base.filter((l) => matchText(l) && matchState(l) && matchArea(l) && matchCat(l) && matchStatus(l))
++    const c: Record<SourceFilter, number> = { all: pool.length, relay: 0, grok_google: 0, grok_facebook: 0 }
++    for (const l of pool) {
++      if (matchSourceFilter(l, 'relay')) c.relay++
++      if (l.source === 'grok_google') c.grok_google++
++      if (l.source === 'grok_facebook') c.grok_facebook++
++    }
++    return c
++  }, [base, matchText, matchState, matchArea, matchCat, matchStatus])
+   const counts = useMemo(() => {
+     const c: Record<string, number> = {}
+     for (const l of statusPool) c[l.status] = (c[l.status] ?? 0) + 1
+@@ -248,7 +269,7 @@ export default function Leads() {
+       socials: (l.socials ?? []).map((s) => s.url).join('\n') || null,
+       industry: l.category,
+       package_id: 'one', addons: [], stage: 'lead',
+-      source: 'Leads board',
++      source: dealSourceFromLead(l.source),
+       // Carry the address and outreach notes over as the starting brief context.
+       notes: [l.address, l.notes].filter(Boolean).join('\n'),
+       brief: null,
+@@ -319,7 +340,7 @@ export default function Leads() {
+       await load()
+       // Drop any leftover filters — a stale Area/Industry/status from the last session
+       // would silently hide the results we just paid Google for.
+-      setArea('all'); setCat('all'); setStatus('all'); setStateFilter('all')
++      setArea('all'); setCat('all'); setStatus('all'); setStateFilter('all'); setSourceFilter('all')
+       setLiveResultIds(ids)   // pin the board to just these results
+       setLiveQuery(query)
+       setLiveMsg(null)
+@@ -401,7 +422,22 @@ export default function Leads() {
+         </div>
+       )}
+ 
+-      {/* Area + industry + sort */}
++      {/* Source — where did this lead come from? */}
++      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 10 }}>
++        <span style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '.06em', color: 'var(--ink-muted)', marginRight: 2 }}>Source</span>
++        {SOURCE_FILTERS.map((s) => (
++          <Chip
++            key={s.id}
++            active={sourceFilter === s.id}
++            onClick={() => { setSourceFilter(s.id); clearLive() }}
++            dot={s.id === 'relay' ? SOURCE_META.live.color : s.id === 'grok_google' ? SOURCE_META.grok_google.color : s.id === 'grok_facebook' ? SOURCE_META.grok_facebook.color : undefined}
++          >
++            {s.label}{sourceCounts[s.id] ? ` ${sourceCounts[s.id]}` : ''}
++          </Chip>
++        ))}
++      </div>
++
++      {/* Location + industry + sort */}
+       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginBottom: 10 }}>
+         <label style={selectWrap}>
+           <span style={{ color: 'var(--ink-muted)' }}>State</span>
+@@ -503,6 +539,7 @@ export default function Leads() {
+                     {l.area && <span style={metaChip}>{l.area}</span>}
+                     {l.rating != null && <span style={{ fontSize: 12.5, color: 'var(--ink-soft)' }} className="num">★ {l.rating} · {l.reviews ?? 0}</span>}
+                     <VerdictBadge lead={l} />
++                    <SourceBadge source={l.source} />
+                     {l.deal_id && <span style={pipelineBadge}>In pipeline</span>}
+                     {(l.socials ?? []).length > 0 && (
+                       <span style={metaChip} title={(l.socials ?? []).map((s) => s.url).join('\n')}>
+@@ -669,7 +706,7 @@ function OutreachDrawer({ lead, onClose, onPatch, onRemove, onConvert, convertin
+         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
+           {lead.rating != null && <span style={factChip} className="num">★ {lead.rating} · {lead.reviews ?? 0} reviews</span>}
+           <span style={factChip}>{lead.web_status}</span>
+-          <span style={factChip}>{lead.source}</span>
++          <span style={factChip}>{sourceMeta(lead.source).label}</span>
+         </div>
+ 
+         <dl style={{ margin: '18px 0 0', display: 'grid', gap: 10 }}>
+@@ -882,6 +919,15 @@ const VERDICT_STYLE: Record<string, { label: string; color: string; bg: string }
+ }
+ // The reason lives in the tooltip so the card stays scannable — hover tells you WHY
+ // we called a site outdated ("Copyright still says 2016") instead of asking for trust.
++function SourceBadge({ source }: { source: Lead['source'] }) {
++  const m = sourceMeta(source)
++  return (
++    <span style={{ ...metaChip, color: m.color, borderColor: `color-mix(in srgb, ${m.color} 30%, var(--line-3))` }} title={m.label}>
++      {m.short}
++    </span>
++  )
++}
++
+ function VerdictBadge({ lead }: { lead: Lead }) {
+   const key = lead.site_verdict ?? (!lead.website?.trim() ? 'none' : null)
+   if (!key) return null
+diff --git a/supabase/functions/grok-lead-ingest/index.ts b/supabase/functions/grok-lead-ingest/index.ts
+new file mode 100644
+index 0000000..79b6b90
+--- /dev/null
++++ b/supabase/functions/grok-lead-ingest/index.ts
+@@ -0,0 +1,167 @@
++// Supabase Edge Function: grok-lead-ingest
++// Webhook for Grok Bot to push leads from Google or Facebook into the Relay leads board.
++//
++// Deploy:  supabase functions deploy grok-lead-ingest   (Verify JWT: OFF — uses shared secret)
++// Secrets: supabase secrets set GROK_INGEST_SECRET=your-long-random-string
++//
++// POST body (single lead or batch):
++// {
++//   "platform": "google" | "facebook",   // required — sets source to grok_google / grok_facebook
++//   "leads": [
++//     {
++//       "id": "optional-stable-id",
++//       "name": "Business name",          // required
++//       "category": "Roofing",
++//       "area": "Conroe",
++//       "state": "TX",
++//       "phone": "555-123-4567",
++//       "address": "123 Main St",
++//       "zip": "77301",
++//       "website": "https://...",
++//       "rating": 4.5,
++//       "reviews": 42,
++//       "lat": 30.3,
++//       "lng": -95.4,
++//       "place_id": "ChIJ...",
++//       "notes": "Found via Grok search",
++//       "socials": [{ "platform": "facebook", "url": "https://facebook.com/..." }]
++//     }
++//   ]
++// }
++//
++// Auth: header `x-grok-secret: <GROK_INGEST_SECRET>` must match the secret.
++
++const cors = {
++  "Access-Control-Allow-Origin": "*",
++  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-grok-secret",
++  "Access-Control-Allow-Methods": "POST, OPTIONS",
++};
++
++const BUILD = "2026-09-01a";
++
++type Platform = "google" | "facebook";
++type LeadSource = "grok_google" | "grok_facebook";
++
++interface IngestLead {
++  id?: string;
++  name: string;
++  category?: string | null;
++  area?: string | null;
++  state?: string | null;
++  phone?: string | null;
++  address?: string | null;
++  zip?: string | null;
++  website?: string | null;
++  rating?: number | null;
++  reviews?: number | null;
++  lat?: number | null;
++  lng?: number | null;
++  place_id?: string | null;
++  notes?: string | null;
++  socials?: { platform: string; url: string }[] | null;
++  site_verdict?: string | null;
++  site_reason?: string | null;
++}
++
++const slug = (s: string) =>
++  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 48);
++
++const sourceForPlatform = (platform: Platform): LeadSource =>
++  platform === "facebook" ? "grok_facebook" : "grok_google";
++
++const makeId = (lead: IngestLead, platform: Platform) => {
++  if (lead.id?.trim()) return lead.id.trim();
++  if (lead.place_id?.trim()) return lead.place_id.trim();
++  const bits = [platform, lead.name, lead.zip ?? lead.area ?? ""].filter(Boolean).join("-");
++  return `grok-${slug(bits)}-${crypto.randomUUID().slice(0, 8)}`;
++};
++
++const normalize = (lead: IngestLead, platform: Platform) => {
++  const name = String(lead.name ?? "").trim();
++  if (!name) return null;
++  const website = lead.website?.trim() || null;
++  const siteVerdict = lead.site_verdict?.trim() || (!website ? "none" : null);
++  return {
++    id: makeId(lead, platform),
++    place_id: lead.place_id?.trim() || null,
++    name,
++    category: lead.category?.trim() || null,
++    area: lead.area?.trim() || null,
++    state: lead.state?.trim()?.toUpperCase() || null,
++    phone: lead.phone?.trim() || null,
++    address: lead.address?.trim() || null,
++    zip: lead.zip?.trim() || null,
++    rating: lead.rating ?? null,
++    reviews: lead.reviews ?? 0,
++    website,
++    site_verdict: siteVerdict,
++    site_reason: lead.site_reason?.trim() || (siteVerdict === "none" ? "No website at all" : null),
++    socials: Array.isArray(lead.socials) ? lead.socials.filter((s) => s?.url) : [],
++    lat: lead.lat ?? null,
++    lng: lead.lng ?? null,
++    source: sourceForPlatform(platform),
++    status: "new" as const,
++    web_status: website ? "likely" as const : "confirmed" as const,
++    notes: lead.notes?.trim() || null,
++  };
++};
++
++Deno.serve(async (req: Request) => {
++  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
++
++  try {
++    const secret = Deno.env.get("GROK_INGEST_SECRET");
++    if (!secret) throw new Error("GROK_INGEST_SECRET is not configured on this function.");
++    const provided = req.headers.get("x-grok-secret") ?? "";
++    if (provided !== secret) {
++      return new Response(JSON.stringify({ error: "Unauthorized" }), {
++        status: 401,
++        headers: { ...cors, "Content-Type": "application/json" },
++      });
++    }
++
++    const payload = await req.json();
++    const platform = String(payload?.platform ?? "").trim().toLowerCase() as Platform;
++    if (platform !== "google" && platform !== "facebook") {
++      throw new Error('Missing or invalid "platform" — use "google" or "facebook".');
++    }
++
++    const raw: IngestLead[] = Array.isArray(payload?.leads)
++      ? payload.leads
++      : payload?.name
++        ? [payload as IngestLead]
++        : [];
++    if (!raw.length) throw new Error('No leads provided — send "leads": [...] or a single lead object.');
++
++    const rows = raw.map((l) => normalize(l, platform)).filter(Boolean);
++    if (!rows.length) throw new Error("Every lead must include a non-empty name.");
++
++    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2.45.0");
++    const supabase = createClient(
++      Deno.env.get("SUPABASE_URL")!,
++      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
++    );
++
++    const { data, error } = await supabase
++      .from("leads")
++      .upsert(rows, { onConflict: "id" })
++      .select("id, name, source");
++
++    if (error) throw error;
++
++    return new Response(JSON.stringify({
++      ok: true,
++      build: BUILD,
++      platform,
++      source: sourceForPlatform(platform),
++      count: data?.length ?? rows.length,
++      leads: data ?? rows.map((r) => ({ id: r!.id, name: r!.name, source: r!.source })),
++    }), { headers: { ...cors, "Content-Type": "application/json" } });
++  } catch (e) {
++    const message = e instanceof Error ? e.message : "Ingest failed";
++    return new Response(JSON.stringify({ error: message }), {
++      status: 400,
++      headers: { ...cors, "Content-Type": "application/json" },
++    });
++  }
++});
+-- 
+2.43.0
+
