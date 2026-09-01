@@ -1,7 +1,7 @@
 From 58056e1803fd4f20ee62ebf5804b945bd21f6184 Mon Sep 17 00:00:00 2001
 From: Cursor Agent <cursoragent@cursor.com>
 Date: Tue, 1 Sep 2026 16:57:43 +0000
-Subject: [PATCH 2/2] Add grok-lead-ingest edge function for Grok Bot webhooks
+Subject: [PATCH 2/3] Add grok-lead-ingest edge function for Grok Bot webhooks
 
 Accept batched lead payloads from Grok Bot with platform tagging
 (google/facebook), upsert into the shared leads table, and authenticate
