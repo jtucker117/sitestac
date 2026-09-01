@@ -7,6 +7,8 @@ cluster: 2
 keyword: "how much does a website cost for a small business"
 postType: pillar
 image: /blog/how-much-does-a-small-business-website-cost-real-numbers/hero.webp
+related:
+  - website-design-pricing-small-business
 faqs:
   - q: "Is it cheaper to build my own small business website?"
     a: "In cash, yes — a DIY builder is by far the lowest outlay. In hours, usually not. Most owners underestimate how long copywriting, photo sourcing, and setup take, and a lot of DIY sites sit half-finished for months. If you genuinely have the time and a simple business, DIY works. If you're already flat out, paying someone is usually the cheaper option once you count the leads you missed while the site wasn't live."
