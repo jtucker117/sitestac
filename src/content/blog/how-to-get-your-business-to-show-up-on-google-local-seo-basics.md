@@ -7,6 +7,8 @@ cluster: 4
 keyword: "how to get my business on google"
 postType: pillar
 image: /blog/how-to-get-your-business-to-show-up-on-google-local-seo-basics/hero.webp
+related:
+  - how-to-rank-on-google-maps
 faqs:
   - q: "Is it free to list my business on Google?"
     a: "Yes. A Google Business Profile is completely free to create, verify, and maintain. Google does not charge for listings, and anyone calling to say you must pay to stay listed is running a scam. The only Google products that cost money are ads, which are separate and optional."
