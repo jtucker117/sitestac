@@ -8,6 +8,7 @@ keyword: "how to get my business on google"
 postType: pillar
 image: /blog/how-to-get-your-business-to-show-up-on-google-local-seo-basics/hero.webp
 related:
+  - google-business-profile-setup-guide
   - how-to-rank-on-google-maps
 faqs:
   - q: "Is it free to list my business on Google?"
