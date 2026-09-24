@@ -9,6 +9,7 @@ postType: pillar
 image: /blog/website-essentials-for-local-service-businesses/hero.webp
 related:
   - website-for-plumbing-company-what-it-needs
+  - hvac-company-website-examples-that-get-calls
 faqs:
   - q: "How many pages does a local service business website need?"
     a: "Usually five to ten. A homepage, one page for each of your main services, an About page with your face on it, a reviews or recent work page, and a contact page. If you cover several towns, add an areas page. Start with your top three or four services and add more over time — a small site that's finished beats a big one that's half-built."
