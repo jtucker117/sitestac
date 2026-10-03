@@ -6,6 +6,8 @@ draft: false
 cluster: 6
 keyword: "how to get more customers online"
 postType: pillar
+related:
+  - does-a-website-generate-leads
 faqs:
   - q: "How long does it take to start getting customers online?"
     a: "Google Business Profile changes and website conversion fixes can show results in a few weeks. Ranking organically for competitive service-plus-city searches usually takes three to six months of consistent work. Paid ads and Local Services Ads can produce calls within days, which is why they're useful while the organic side builds."
