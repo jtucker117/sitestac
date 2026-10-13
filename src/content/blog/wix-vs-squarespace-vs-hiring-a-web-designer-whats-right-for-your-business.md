@@ -6,6 +6,8 @@ draft: false
 cluster: 3
 keyword: "best website builder for small business"
 postType: pillar
+related:
+  - wix-vs-squarespace-vs-wordpress-for-small-business
 faqs:
   - q: "What is the easiest website builder for a small business owner with no tech experience?"
     a: "Squarespace is generally the easiest. The templates are designed so it's hard to make something ugly, and the editor is simple enough that most owners can get a basic site live over a couple of weekends. Wix is more flexible but takes more fiddling, and WordPress has a real learning curve."
