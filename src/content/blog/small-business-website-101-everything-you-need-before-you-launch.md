@@ -6,6 +6,8 @@ draft: false
 cluster: 9
 keyword: "what pages does a website need"
 postType: pillar
+related:
+  - how-to-choose-a-domain-name-for-my-business
 faqs:
   - q: "How many pages should a small business website have?"
     a: "Most small business sites land between 8 and 20 pages. Start with five essentials — home, services, about, contact, and reviews — then add a page for each individual service you offer, plus location pages if you cover multiple towns. Page count matters less than whether each page answers a real question someone would search for."
